@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Imgui</title>
+<title>imgui</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box }
 body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
@@ -256,7 +256,7 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 </div>
 
 <div id="games">
-	<div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/index.html','DELTARUNE')">
+	<div class="gcard" onclick="openGame('deltarune','DELTARUNE')">
 		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden">
 			<img src="https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/logo.png" style="width:80%;height:80%;object-fit:contain" alt="deltarune">
 		</div>
@@ -287,16 +287,57 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 <div id="particles-js"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
-function openGame(url, name) {
-	document.getElementById('gframe').src = url
+var games = {
+	deltarune: `<!DOCTYPE html><html><head>
+<base href="https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/">
+<meta charset="UTF-8"><link rel="stylesheet" href="style.css"></head><body>
+<div class="logo-container"><img src="logo.png" alt="Logo" class="logo"></div>
+<div class="menu">
+<a href="javascript:loadChapter(1)" class="row"><span class="chapter">Chapter 1</span><span class="title">The Beginning</span><img src="icons/1.png"></a>
+<a href="javascript:loadChapter(2)" class="row"><span class="chapter">Chapter 2</span><span class="title">A Cyber's World</span><img src="icons/2.png"></a>
+<a href="javascript:alert('Chapter 3 not included in demo!')" class="disabled-row"><span class="chapter">Chapter 3</span><span class="title">--</span><img src="icons/0.png"></a>
+<a href="javascript:alert('Chapter 4 not included in demo!')" class="disabled-row"><span class="chapter">Chapter 4</span><span class="title">--</span><img src="icons/0.png"></a>
+<a href="javascript:alert('Chapter 5 coming soon!')" class="disabled-row"><span class="chapter">Chapter 5</span><span class="disabled-title">--</span><img src="icons/0.png"></a>
+<a href="javascript:alert('Chapter 6 coming soon!')" class="disabled-row"><span class="chapter">Chapter 6</span><span class="disabled-title">--</span><img src="icons/0.png"></a>
+<a href="javascript:alert('Chapter 7 coming soon!')" class="disabled-row"><span class="chapter">Chapter 7</span><span class="disabled-title">--</span><img src="icons/0.png"></a>
+</div>
+<audio id="drone" loop autoplay hidden><source src="audios/AUDIO_DRONE.ogg" type="audio/ogg"></audio>
+<button id="mute">🔊</button>
+<script>
+var audio=document.getElementById('drone'),mute=document.getElementById('mute'),started=false;
+mute.onclick=function(){if(!started){audio.muted=!audio.muted;mute.textContent=audio.muted?'🔊':'🔇'}};
+function loadChapter(c){
+  fetch('chapter'+c+'/index.html').then(r=>r.text()).then(html=>{
+    started=true;document.documentElement.innerHTML=html;
+    document.querySelectorAll('script').forEach(s=>{var n=document.createElement('script');if(s.src)n.src=s.src;else n.textContent=s.textContent;document.body.appendChild(n)});
+  });
+}
+var mm=new Audio('audios/snd_menumove.mp3'),ms=new Audio('audios/snd_select.mp3');
+document.querySelectorAll('.row').forEach(r=>{r.onmouseenter=()=>{if(!started)mm.play()};r.onclick=()=>{if(!started)ms.play()}});
+var sel=null;
+document.onkeydown=function(e){
+  if(started)return;
+  var rows=document.querySelectorAll('.row');
+  if(e.key==='ArrowUp'){sel=sel===null?0:(sel-1+rows.length)%rows.length;rows.forEach(r=>r.classList.remove('selected'));rows[sel].classList.add('selected');mm.play();}
+  else if(e.key==='ArrowDown'){sel=sel===null?0:(sel+1)%rows.length;rows.forEach(r=>r.classList.remove('selected'));rows[sel].classList.add('selected');mm.play();}
+  else if(e.key==='Enter'&&sel!==null){window.location.href=rows[sel].href;ms.play();}
+}
+<\/script></body></html>`
+}
+
+function openGame(id, name) {
+	var f = document.getElementById('gframe')
+	if (games[id]) f.srcdoc = games[id]
+	else f.src = id
 	document.getElementById('gtitle').textContent = name.toUpperCase()
 	document.getElementById('gview').classList.add('show')
-	window.location.hash = name.toLowerCase().replace(/\s/g,'-')
+	window.location.hash = id
 }
 
 function closeGame() {
+	var f = document.getElementById('gframe')
+	f.srcdoc = ''; f.src = ''
 	document.getElementById('gview').classList.remove('show')
-	document.getElementById('gframe').src = ''
 	history.pushState('', '', window.location.pathname)
 }
 
