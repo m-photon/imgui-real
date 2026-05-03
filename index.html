@@ -227,6 +227,10 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 </head>
 <body>
 
+<div style="position:fixed;top:12px;left:16px;z-index:100">
+	<img src="https://i.imgur.com/placeholder.png" id="site-logo" style="width:52px;height:52px;border-radius:50%;mix-blend-mode:multiply;opacity:.9">
+</div>
+
 <div class="bar">
 	<span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
 		<svg viewBox="0 0 24 24">
@@ -267,6 +271,12 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 			<img src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/favicon.png" style="width:80%;height:80%;object-fit:contain" alt="fnf">
 		</div>
 		<span class="gname">Friday Night Funkin</span>
+	</div>
+	<div class="gcard" onclick="openGame('uty','UNDERTALE YELLOW')">
+		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden">
+			<img src="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png" style="width:80%;height:80%;object-fit:contain" alt="undertale yellow">
+		</div>
+		<span class="gname">Undertale Yellow</span>
 	</div>
 
 
@@ -353,6 +363,48 @@ html,body{margin:0;padding:0;height:100%;overflow:hidden}
 <noscript>Enable JavaScript to play.</noscript>
 <div id="openfl-content"></div>
 <script type="text/javascript">lime.embed("Funkin","openfl-content",1280,720,{parameters:{}})<\/script>
+</body></html>`
+,
+	uty: `<!DOCTYPE html><html lang="en-us"><head>
+<base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/">
+<meta charset="utf-8">
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+<title>UNDERTALE YELLOW</title>
+<style>
+html{background:#fff}
+body{font-family:arial;margin:0;padding:0;min-height:100vh;min-width:100vw;background-color:#000;display:flex;flex-direction:column;overflow-x:hidden;place-items:center}
+canvas.emscripten{display:none;background-color:#000;opacity:0;transition:opacity 5s ease-in;image-rendering:pixelated}
+canvas.active{animation-name:fadeIn;animation-duration:2s;opacity:1}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+@keyframes rotation{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.spinner{height:30px;width:30px;animation:rotation 0.8s linear infinite;border:5px solid #bdff00;border-top:5px solid #719900;border-radius:100%}
+#status{display:inline-block;vertical-align:top;font-weight:bold;color:#fff}
+#progress{width:250px;height:10px;appearance:none;padding:5px}
+progress[value]::-webkit-progress-bar{background-color:#8492a6;height:10px;border-radius:15px}
+progress[value]::-webkit-progress-value{background-image:-webkit-linear-gradient(left,#719900,#bdff00);height:10px;border-radius:15px}
+div.loading{position:absolute;top:0;bottom:0;left:0;right:0;display:flex;flex-direction:column;justify-content:center;align-items:center;pointer-events:none}
+div.loading>*{padding:10px;margin:10px}
+</style>
+</head><body>
+<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+<div class="loading">
+<div class="spinner" id="spinner"></div>
+<div id="status">Downloading...</div>
+<progress value="0" max="100" id="progress" hidden="1"></progress>
+</div>
+<script>
+function mergeFiles(parts){return new Promise((res,rej)=>{let bufs=[];function fetchPart(i){if(i>=parts.length){res(URL.createObjectURL(new Blob(bufs)));return}fetch(parts[i]).then(r=>r.arrayBuffer()).then(d=>{bufs.push(d);fetchPart(i+1)}).catch(rej)}fetchPart(0)})}
+function getParts(f,s,e){let p=[];for(let i=s;i<=e;i++)p.push(f+".part"+i);return p}
+mergeFiles(getParts("game.unx",1,12)).then(async url=>{
+  window.gameUnxUrl=url;
+  var oFetch=window.fetch;
+  window.fetch=async function(...a){let[u,o]=a;if(typeof u==='string'&&u.includes("game.unx"))u=window.gameUnxUrl;else if(u instanceof Request&&u.url.includes("game.unx"))u=new Request(window.gameUnxUrl,u);return oFetch.call(this,u,o)};
+  var oOpen=XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open=function(m,u,...r){if(u.includes("game.unx"))u=window.gameUnxUrl;return oOpen.call(this,m,u,...r)};
+  var s=document.createElement("script");s.src="index.js";document.body.appendChild(s);
+  var r=document.createElement("script");r.src="runner.js";document.body.appendChild(r);
+}).catch(e=>console.error("merge failed:",e));
+<\/script>
 </body></html>`
 }
 
