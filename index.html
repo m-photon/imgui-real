@@ -227,10 +227,6 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 </head>
 <body>
 
-<div style="position:fixed;top:12px;left:16px;z-index:100">
-	<img src="https://i.imgur.com/placeholder.png" id="site-logo" style="width:52px;height:52px;border-radius:50%;mix-blend-mode:multiply;opacity:.9">
-</div>
-
 <div class="bar">
 	<span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
 		<svg viewBox="0 0 24 24">
@@ -325,20 +321,20 @@ var games = {
 var audio=document.getElementById('drone'),mute=document.getElementById('mute'),started=false;
 mute.onclick=function(){if(!started){audio.muted=!audio.muted;mute.textContent=audio.muted?'🔊':'🔇'}};
 function loadChapter(c){
-  fetch('chapter'+c+'/index.html').then(r=>r.text()).then(html=>{
-    started=true;document.documentElement.innerHTML=html;
-    document.querySelectorAll('script').forEach(s=>{var n=document.createElement('script');if(s.src)n.src=s.src;else n.textContent=s.textContent;document.body.appendChild(n)});
-  });
+  fetch('chapter'+c+'/index.html').then(r=>r.text()).then(html=>{
+    started=true;document.documentElement.innerHTML=html;
+    document.querySelectorAll('script').forEach(s=>{var n=document.createElement('script');if(s.src)n.src=s.src;else n.textContent=s.textContent;document.body.appendChild(n)});
+  });
 }
 var mm=new Audio('audios/snd_menumove.mp3'),ms=new Audio('audios/snd_select.mp3');
 document.querySelectorAll('.row').forEach(r=>{r.onmouseenter=()=>{if(!started)mm.play()};r.onclick=()=>{if(!started)ms.play()}});
 var sel=null;
 document.onkeydown=function(e){
-  if(started)return;
-  var rows=document.querySelectorAll('.row');
-  if(e.key==='ArrowUp'){sel=sel===null?0:(sel-1+rows.length)%rows.length;rows.forEach(r=>r.classList.remove('selected'));rows[sel].classList.add('selected');mm.play();}
-  else if(e.key==='ArrowDown'){sel=sel===null?0:(sel+1)%rows.length;rows.forEach(r=>r.classList.remove('selected'));rows[sel].classList.add('selected');mm.play();}
-  else if(e.key==='Enter'&&sel!==null){window.location.href=rows[sel].href;ms.play();}
+  if(started)return;
+  var rows=document.querySelectorAll('.row');
+  if(e.key==='ArrowUp'){sel=sel===null?0:(sel-1+rows.length)%rows.length;rows.forEach(r=>r.classList.remove('selected'));rows[sel].classList.add('selected');mm.play();}
+  else if(e.key==='ArrowDown'){sel=sel===null?0:(sel+1)%rows.length;rows.forEach(r=>r.classList.remove('selected'));rows[sel].classList.add('selected');mm.play();}
+  else if(e.key==='Enter'&&sel!==null){window.location.href=rows[sel].href;ms.play();}
 }
 <\/script></body></html>`,
 
@@ -351,8 +347,8 @@ document.onkeydown=function(e){
 <script>
 window.addEventListener("touchmove",function(e){e.preventDefault()},{capture:false,passive:false});
 if(typeof window.devicePixelRatio!='undefined'&&window.devicePixelRatio>2){
-  var meta=document.getElementById("viewport");
-  meta.setAttribute('content','width=device-width, initial-scale='+(2/window.devicePixelRatio)+', user-scalable=no');
+  var meta=document.getElementById("viewport");
+  meta.setAttribute('content','width=device-width, initial-scale='+(2/window.devicePixelRatio)+', user-scalable=no');
 }
 <\/script>
 <style>
@@ -396,13 +392,13 @@ div.loading>*{padding:10px;margin:10px}
 function mergeFiles(parts){return new Promise((res,rej)=>{let bufs=[];function fetchPart(i){if(i>=parts.length){res(URL.createObjectURL(new Blob(bufs)));return}fetch(parts[i]).then(r=>r.arrayBuffer()).then(d=>{bufs.push(d);fetchPart(i+1)}).catch(rej)}fetchPart(0)})}
 function getParts(f,s,e){let p=[];for(let i=s;i<=e;i++)p.push(f+".part"+i);return p}
 mergeFiles(getParts("game.unx",1,12)).then(async url=>{
-  window.gameUnxUrl=url;
-  var oFetch=window.fetch;
-  window.fetch=async function(...a){let[u,o]=a;if(typeof u==='string'&&u.includes("game.unx"))u=window.gameUnxUrl;else if(u instanceof Request&&u.url.includes("game.unx"))u=new Request(window.gameUnxUrl,u);return oFetch.call(this,u,o)};
-  var oOpen=XMLHttpRequest.prototype.open;
-  XMLHttpRequest.prototype.open=function(m,u,...r){if(u.includes("game.unx"))u=window.gameUnxUrl;return oOpen.call(this,m,u,...r)};
-  var s=document.createElement("script");s.src="index.js";document.body.appendChild(s);
-  var r=document.createElement("script");r.src="runner.js";document.body.appendChild(r);
+  window.gameUnxUrl=url;
+  var oFetch=window.fetch;
+  window.fetch=async function(...a){let[u,o]=a;if(typeof u==='string'&&u.includes("game.unx"))u=window.gameUnxUrl;else if(u instanceof Request&&u.url.includes("game.unx"))u=new Request(window.gameUnxUrl,u);return oFetch.call(this,u,o)};
+  var oOpen=XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open=function(m,u,...r){if(u.includes("game.unx"))u=window.gameUnxUrl;return oOpen.call(this,m,u,...r)};
+  var s=document.createElement("script");s.src="index.js";document.body.appendChild(s);
+  var r=document.createElement("script");r.src="runner.js";document.body.appendChild(r);
 }).catch(e=>console.error("merge failed:",e));
 <\/script>
 </body></html>`
