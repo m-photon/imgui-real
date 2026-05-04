@@ -499,28 +499,7 @@ function getParts(file,start,end){var p=[];for(var i=start;i<=end;i++)p.push(fil
 Promise.all([mergeFiles(getParts("src/resources.zip",1,parts))]).then(function(r){window.fetch=async function(url,...args){if(url.endsWith("resources.zip"))return origFetch(r[0],...args);return origFetch(url,...args)};wedone()});
 }
 <\/script></body></html>`,
-<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/">
-<meta charset="utf-8">
-<title>Friday Night Funkin'</title>
-<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<script type="text/javascript" src="./Funkin.js"><\/script>
-<script>
-window.addEventListener("touchmove",function(e){e.preventDefault()},{capture:false,passive:false});
-if(typeof window.devicePixelRatio!='undefined'&&window.devicePixelRatio>2){
-  var meta=document.getElementById("viewport");
-  meta.setAttribute('content','width=device-width, initial-scale='+(2/window.devicePixelRatio)+', user-scalable=no');
-}
-<\/script>
-<style>
-html,body{margin:0;padding:0;height:100%;overflow:hidden}
-#openfl-content{background:#000;width:100%;height:100%}
-</style>
-</head><body>
-<noscript>Enable JavaScript to play.</noscript>
-<div id="openfl-content"></div>
-<script type="text/javascript">lime.embed("Funkin","openfl-content",1280,720,{parameters:{}})<\/script>
-</body></html>`
-,
+
 	uty: `<!DOCTYPE html><html lang="en-us"><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/">
 <meta charset="utf-8">
