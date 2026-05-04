@@ -500,6 +500,10 @@ Promise.all([mergeFiles(getParts("src/resources.zip",1,parts))]).then(function(r
 }
 <\/script></body></html>`,
 
+	fnf: `<!DOCTYPE html>
+<html><head><style>body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:none;}</style></head>
+<body><iframe src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html"></iframe></body></html>`,
+
 	uty: `<!DOCTYPE html><html lang="en-us"><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/">
 <meta charset="utf-8">
@@ -648,17 +652,22 @@ var gameIndex = ['deltarune','fnaf1','fnf','uty','baldi','pwrmessage']
 
 function openGame(id, name) {
 	var f = document.getElementById('gframe')
-	if (games[id]) f.srcdoc = games[id]
-	else f.src = id
+	if (games[id]) {
+		f.srcdoc = games[id]
+	} else {
+		f.src = id
+	}
 	document.getElementById('gtitle').textContent = name.toUpperCase()
 	document.getElementById('gview').classList.add('show')
+	
 	var num = gameIndex.indexOf(id)
 	window.location.hash = num >= 0 ? (num + 1) : id
 }
 
 function closeGame() {
 	var f = document.getElementById('gframe')
-	f.srcdoc = ''; f.src = ''
+	f.srcdoc = ''
+	f.src = ''
 	document.getElementById('gview').classList.remove('show')
 	history.pushState('', '', window.location.pathname)
 }
