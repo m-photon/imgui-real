@@ -14,6 +14,7 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 	width:100%; height:100%;
 }
 
+/* top bar */
 .bar {
 	position:fixed;
 	top:16px;
@@ -52,6 +53,7 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 	stroke-linejoin:round;
 }
 
+/* settings overlay */
 #soverlay {
 	display:none;
 	position:fixed;
@@ -132,6 +134,7 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 }
 .sarrow { opacity:.4; font-size:16px }
 
+/* game grid */
 #games {
 	position:fixed;
 	top:50%;
@@ -176,6 +179,7 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 	max-width:100px;
 }
 
+/* full page game view */
 #aoverlay {
 	display:none;
 	position:fixed;
@@ -311,6 +315,7 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 		</svg>
 	</span>
 	<span class="btn" onclick="openGame('https://guns.lol/macsen','guns.lol/macsen')" style="font:600 11px/1 monospace;letter-spacing:.3px">guns.lol</span>
+	<span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
 	<span class="btn" onclick="document.getElementById('aoverlay').classList.add('show')" style="font:600 11px/1 monospace;letter-spacing:.3px">apps</span>
 	<span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
 	<span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
@@ -355,7 +360,7 @@ body, html { width:100%; height:100%; background:#4B0082; overflow:hidden }
 		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000 url('https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/logo.png') center/70% no-repeat"></div>
 		<span class="gname">Deltarune</span>
 	</div>
-	<div class="gcard" onclick="openGame('fnaf1','FNAF 1')">
+	<div class="gcard" onclick="openGame('https://irv77.github.io/hd_fnaf/1/','FNAF 1')">
 		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000 url('data:image/jpeg;base64,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') center/cover no-repeat"></div>
 		<span class="gname">FNAF 1</span>
 	</div>
@@ -433,73 +438,29 @@ document.onkeydown=function(e){
 }
 <\/script></body></html>`,
 
-	fnaf1: `<!DOCTYPE html><html lang="en"><head>
-<base href="https://irv77.github.io/hd_fnaf/1/">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Five Nights at Freddy's 1</title>
+	fnf: `<html lang="en"><head>
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/">
+<meta charset="utf-8">
+<title>Friday Night Funkin'</title>
+<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<script type="text/javascript" src="./Funkin.js"><\/script>
+<script>
+window.addEventListener("touchmove",function(e){e.preventDefault()},{capture:false,passive:false});
+if(typeof window.devicePixelRatio!='undefined'&&window.devicePixelRatio>2){
+  var meta=document.getElementById("viewport");
+  meta.setAttribute('content','width=device-width, initial-scale='+(2/window.devicePixelRatio)+', user-scalable=no');
+}
+<\/script>
 <style>
-html{display:block;-webkit-user-select:none;-ms-user-select:none;user-select:none;overflow:hidden;height:100%}
-body{position:relative;background-color:black;background-image:url(resources/office.png);background-position:center;background-size:cover;display:flex;align-items:center;justify-content:center;margin:0;height:100%}
-a{text-decoration:none}
-.selection{height:auto;min-height:100vh;width:100%;display:flex;overflow:hidden}
-.launcher-text{position:absolute;left:50%;transform:translate(-50%,0);bottom:2.5vh;z-index:1}
-.vignette{position:absolute;top:0;left:0;width:100vw;height:100vh;pointer-events:none}
-.glitch{position:absolute;background-image:url(resources/background.gif);background-position:center;background-size:50vw;top:0;left:0;width:100vw;height:100vh;pointer-events:none;opacity:0.75;z-index:-1}
-canvas{display:none;user-select:none}
-#title{position:absolute;top:10vh;left:5vw;z-index:1;height:20vh}
-#animatronic{position:absolute;top:-5vh;right:7vw;height:120vh}
-.loader{position:absolute;display:flex;flex-direction:column;align-items:center;left:50%;transform:translate(-50%,0);bottom:12vh;z-index:1;color:white;font-family:monospace;text-align:center;font-weight:lighter;width:85vw}
-.loader h1{margin:0;font-size:5vw}
-.loader hr{margin:0;border:white solid 0.1vw;width:0%}
-.loader h2{margin:1vh 0;font-size:1.4vw}
+html,body{margin:0;padding:0;height:100%;overflow:hidden}
+#openfl-content{background:#000;width:100%;height:100%}
 </style>
 </head><body>
-<canvas id="MMFCanvas" width="1280" height="720">Your browser does not support Canvas.</canvas>
-<div class="selection" id="selection">
-<img id="title" src="resources/title.png">
-<img id="animatronic" src="resources/animatronic.png">
-<div class="loader">
-<h1 id="percentage">0%</h1>
-<hr id="bar">
-<h2 id="stage">STARTING UP...</h2>
-</div>
-</div>
-<div class="glitch"></div>
-<img src="resources/vignette.png" class="vignette">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"><\/script>
-<script>
-var parts=20,gametitle=document.title,runtimecanvas="resources/FNAF1HTML5.cch";
-window.addEventListener("scroll",function(e){window.scrollTo(0,0);e.preventDefault();e.stopPropagation()},false);
-window.addEventListener("touchmove",function(e){window.scrollTo(0,0);e.preventDefault();e.stopPropagation()},false);
-var pressedKeys={};
-document.addEventListener('keydown',function(e){pressedKeys[e.key]=true;if(pressedKeys['-']&&pressedKeys['=']){document.querySelector('canvas').requestFullscreen();delete pressedKeys[e.key]}});
-document.addEventListener('keyup',function(e){delete pressedKeys[e.key]});
-window.onload=function(){
-var map=new Map();
-function updateProgress(text,percent){document.title=percent+'% '+gametitle;document.getElementById('percentage').innerHTML=percent+'%';document.getElementById('bar').style.width=percent+'%';document.getElementById('stage').innerHTML=text}
-async function intercept(){
-var ogfetch=window.fetch;
-window.fetch=async function(input,init){if(typeof input==='string'&&input.startsWith('resources/')){var fn=input.split('/').pop();if(map.has(fn))return ogfetch(map.get(fn),init)}return ogfetch(input,init)};
-var ogopen=XMLHttpRequest.prototype.open;
-XMLHttpRequest.prototype.open=function(method,url){if(url.startsWith('resources/')){var fn=url.split('/').pop();if(map.has(fn))url=map.get(fn)}return ogopen.apply(this,arguments)};
-var types=[HTMLImageElement,HTMLAudioElement,HTMLVideoElement];
-for(var t of types){var desc=Object.getOwnPropertyDescriptor(t.prototype,'src');if(desc&&desc.set){(function(d){Object.defineProperty(t.prototype,'src',{configurable:true,enumerable:true,get:d.get,set:function(val){if(typeof val==='string'&&val.startsWith('resources/')){var fn=val.split('/').pop();if(map.has(fn))val=map.get(fn)}d.set.call(this,val)}})})(desc)}}
-}
-async function extract(){
-var res=await fetch("resources.zip"),contentLength=res.headers.get("Content-Length"),total=parseInt(contentLength,10),reader=res.body.getReader(),loaded=0,chunks=[];
-while(true){var x=await reader.read();if(x.done)break;chunks.push(x.value);loaded+=x.value.length;updateProgress('RETURNING GEARS...',Math.floor((loaded/total/2)*100))}
-var ab=await new Blob(chunks).arrayBuffer(),zip=await JSZip.loadAsync(ab),files=Object.keys(zip.files).filter(function(n){return!zip.files[n].dir}),tf=files.length;
-for(var i=0;i<tf;i++){var file=zip.files[files[i]],blob=await file.async("blob"),url=URL.createObjectURL(blob);map.set(files[i],url);updateProgress('BOOTING UP ARCHIVE...',Math.floor(((i+1)/tf/2)*100+50))}
-}
-async function wedone(){await extract();await intercept();var s=document.createElement('script');s.src='src/Runtime.js';s.onload=function(){new Runtime("MMFCanvas",runtimecanvas)};document.getElementById('MMFCanvas').style.display='block';document.getElementById('selection').style.display='none';document.title=gametitle;document.head.appendChild(s)}
-var origFetch=window.fetch;
-function mergeFiles(fileParts){return new Promise(function(resolve,reject){var buffers=[],totalSize=0,loadedSize=0;Promise.all(fileParts.map(function(part){return fetch(part,{method:'HEAD'}).then(function(res){if(!res.ok)throw new Error("Missing: "+part);return parseInt(res.headers.get("Content-Length")||"0",10)})})).then(function(sizes){totalSize=sizes.reduce(function(a,b){return a+b},0);function fetchPart(idx){if(idx>=fileParts.length){resolve(URL.createObjectURL(new Blob(buffers)));return}fetch(fileParts[idx]).then(function(r){if(!r.ok)throw new Error("Missing: "+fileParts[idx]);return r.arrayBuffer()}).then(function(data){buffers.push(data);loadedSize+=data.byteLength;updateProgress('LOCATING ARCHIVE...',Math.floor((loadedSize/totalSize/2)*100));fetchPart(idx+1)}).catch(reject)}fetchPart(0)}).catch(reject)})}
-function getParts(file,start,end){var p=[];for(var i=start;i<=end;i++)p.push(file+".part"+i);return p}
-Promise.all([mergeFiles(getParts("src/resources.zip",1,parts))]).then(function(r){window.fetch=async function(url,...args){if(url.endsWith("resources.zip"))return origFetch(r[0],...args);return origFetch(url,...args)};wedone()});
-}
-<\/script></body></html>`,
-
+<noscript>Enable JavaScript to play.</noscript>
+<div id="openfl-content"></div>
+<script type="text/javascript">lime.embed("Funkin","openfl-content",1280,720,{parameters:{}})<\/script>
+</body></html>`
+,
 	uty: `<!DOCTYPE html><html lang="en-us"><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/">
 <meta charset="utf-8">
@@ -581,6 +542,7 @@ function getParts(file,count){var p=[];for(var i=1;i<=count;i++)p.push(file+".pa
   script.onload=()=>{createUnityInstance(canvas,config,(p)=>{progressBarFull.style.width=100*p+"%"}).then((u)=>{loadingText.remove();loadingBar.style.display="none"}).catch(alert)};
   document.body.appendChild(script);
 })();
+<\/script></body></html>`
 <\/script></body></html>`,
 
 	pwrmessage: `<!DOCTYPE html>
@@ -644,16 +606,13 @@ function getParts(file,count){var p=[];for(var i=1;i<=count;i++)p.push(file+".pa
 </body></html>`
 }
 
-var gameIndex = ['deltarune','fnaf1','fnf','uty','baldi','pwrmessage']
-
 function openGame(id, name) {
 	var f = document.getElementById('gframe')
 	if (games[id]) f.srcdoc = games[id]
 	else f.src = id
 	document.getElementById('gtitle').textContent = name.toUpperCase()
 	document.getElementById('gview').classList.add('show')
-	var num = gameIndex.indexOf(id)
-	window.location.hash = num >= 0 ? (num + 1) : id
+	window.location.hash = id
 }
 
 function closeGame() {
