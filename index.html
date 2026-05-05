@@ -500,10 +500,6 @@ Promise.all([mergeFiles(getParts("src/resources.zip",1,parts))]).then(function(r
 }
 <\/script></body></html>`,
 
-	fnf: `<!DOCTYPE html>
-<html><head><style>body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden}iframe{width:100%;height:100%;border:none;}</style></head>
-<body><iframe src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html"></iframe></body></html>`,
-
 	uty: `<!DOCTYPE html><html lang="en-us"><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/">
 <meta charset="utf-8">
@@ -599,7 +595,7 @@ function getParts(file,count){var p=[];for(var i=1;i<=count;i++)p.push(file+".pa
 <div id="toast-container"></div>
 <div id="auth-view" class="flex items-center justify-center h-screen">
 <div class="bg-brand-panel p-8 rounded-3xl border border-brand accent-glow w-full max-w-sm backdrop-blur-imgui">
-<h1 class="text-2xl font-bold mb-6 tracking-tighter text-center">PwrMessage</h1>
+<h1 class="text-2xl font-bold mb-6 tracking-tighter text-center">pwRMessage</h1>
 <input id="auth-user" type="text" placeholder="Username" class="w-full bg-brand-glass p-4 rounded-xl mb-3 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub">
 <input id="auth-pass" type="password" placeholder="Password" class="w-full bg-brand-glass p-4 rounded-xl mb-6 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub">
 <div class="flex gap-2">
@@ -617,7 +613,7 @@ function getParts(file,count){var p=[];for(var i=1;i<=count;i++)p.push(file+".pa
 </div></div></div>
 <aside class="sidebar flex flex-col">
 <div class="p-6 border-b border-brand flex justify-between items-center">
-<h1 class="text-xl font-bold tracking-tighter">PwrMessage</h1>
+<h1 class="text-xl font-bold tracking-tighter">pwRMessage</h1>
 <button id="logoutBtn" class="text-xs font-bold text-brand-sub hover:text-white uppercase transition">Logout</button>
 </div>
 <div class="p-4 flex gap-2">
@@ -652,22 +648,17 @@ var gameIndex = ['deltarune','fnaf1','fnf','uty','baldi','pwrmessage']
 
 function openGame(id, name) {
 	var f = document.getElementById('gframe')
-	if (games[id]) {
-		f.srcdoc = games[id]
-	} else {
-		f.src = id
-	}
+	if (games[id]) f.srcdoc = games[id]
+	else f.src = id
 	document.getElementById('gtitle').textContent = name.toUpperCase()
 	document.getElementById('gview').classList.add('show')
-	
 	var num = gameIndex.indexOf(id)
 	window.location.hash = num >= 0 ? (num + 1) : id
 }
 
 function closeGame() {
 	var f = document.getElementById('gframe')
-	f.srcdoc = ''
-	f.src = ''
+	f.srcdoc = ''; f.src = ''
 	document.getElementById('gview').classList.remove('show')
 	history.pushState('', '', window.location.pathname)
 }
