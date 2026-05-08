@@ -352,25 +352,35 @@
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/logo.png');"></div>
         <span class="gname">Deltarune</span>
     </div>
-    
+
     <div class="gcard" onclick="openGame('fnf', 'FRIDAY NIGHT FUNKIN')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/favicon.png');"></div>
         <span class="gname">Friday Night Funkin</span>
     </div>
-    
+
     <div class="gcard" onclick="openGame('baldi', 'BALDIS BASICS PLUS')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
         <span class="gname">Baldi's Basics Plus</span>
     </div>
-    
+
     <div class="gcard" onclick="openGame('uty', 'UNDERTALE YELLOW')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
         <span class="gname">Undertale Yellow</span>
     </div>
-    
+
     <div class="gcard" onclick="openGame('slope', 'SLOPE')">
         <div class="gicon cover" style="background-image: url('https://play-lh.googleusercontent.com/uZnXsH0TDoB2vjA6h8W_wA0vE1WvB7FzN-vRqk1pG0zK1Z3F_P4Fw3c0B7_r1A_j7w');"></div>
         <span class="gname">Slope</span>
+    </div>
+
+    <div class="gcard" onclick="openGame('escaperoad', 'ESCAPE ROAD')">
+        <div class="gicon cover" style="background-image: url('https://cdn.jsdelivr.net/gh/bubbls/escape-road@45b2d69c626dc365753f6922d2c48c4075683ef5/drive.google.com/escape%20road/icon.png');"></div>
+        <span class="gname">Escape Road</span>
+    </div>
+
+    <div class="gcard" onclick="openGame('solarsmash', 'SOLAR SMASH')">
+        <div class="gicon cover" style="background-image: url('https://play-lh.googleusercontent.com/M9nXMBFH3NQCVkSV7LFkFfbhwF5RB_V4bUx_4DEBx0kf3T0HPWR-Y1DhZpXNnnOixA');"></div>
+        <span class="gname">Solar Smash</span>
     </div>
 </div>
 
@@ -557,12 +567,112 @@ window.onload=function(){
   });
 };
 <\/script>
-</head><body><div id="gameContainer"></div></body></html>`
+</head><body><div id="gameContainer"></div></body></html>`,
+
+        escaperoad: `<!DOCTYPE html><html lang="en-us"><head>
+<base href="https://cdn.jsdelivr.net/gh/bubbls/escape-road@45b2d69c626dc365753f6922d2c48c4075683ef5/drive.google.com/escape%20road/">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Escape Road</title>
+<link rel="shortcut icon" href="icon.png">
+<link rel="stylesheet" href="TemplateData/style.css">
+<style>
+@font-face{font-family:myFirstFont;src:url(Chainwhacks.otf)}
+#logo-canvas,body{font-family:myFirstFont}
+</style>
+</head><body class="dark">
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas"></canvas>
+</div>
+<div id="loading-cover" style="background:black;">
+<div id="unity-loading-bar">
+<canvas id="logo-canvas" style="position:absolute;background-color:black;">
+<img src="loading.png" id="ld_bg"><img src="car-icon.png" id="ld_car">
+</canvas>
+</div>
+</div>
+<img id="azlogo" class="az" src="az_logo.png">
+<script>
+const container=document.querySelector("#unity-container"),canvas=document.querySelector("#unity-canvas"),loadingCover=document.querySelector("#loading-cover");
+const buildUrl="TemplateData";
+const config={dataUrl:buildUrl+"/data.unityweb",frameworkUrl:buildUrl+"/framework.js.unityweb",codeUrl:buildUrl+"/wasm.unityweb",streamingAssetsUrl:"StreamingAssets",companyName:"1games.io",productName:"Escape Road",productVersion:"2.0"};
+if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){container.className="unity-mobile";config.devicePixelRatio=1;}
+var logo_loaded=false,logo_loading_percent=0;
+var logo_canvas=document.getElementById("logo-canvas");
+function resizeLogoCanvas(){var _w=window.innerWidth,_h=window.innerHeight,_nw=_h*16/9;if(_nw<=_w){logo_canvas.width=_nw;logo_canvas.height=_h;}else{logo_canvas.width=_w;logo_canvas.height=_w*9/16;}}
+function drawCanvas(_percent){if(logo_loaded)return;resizeLogoCanvas();var ctx=logo_canvas.getContext("2d"),ld_bg=document.getElementById("ld_bg");ctx.drawImage(ld_bg,0,0,logo_canvas.width,logo_canvas.height);var _sw=logo_canvas.width/1920,_sh=logo_canvas.height/1080,_lw=700,_lh=50;ctx.fillStyle="#977e21";ctx.fillRect((1920-_lw)*0.5*_sw,(1080-150)*_sh,_lw*_sw,_lh*_sh);ctx.fillStyle="#fad234";var _pad=5,_pw=(_lw-_pad*2),_ph=_lh-_pad*2,_px=(1920-_pw)*0.5;ctx.fillRect(_px*_sw,(1080-150+_pad)*_sh,_pw*_percent*_sw,_ph*_sh);ctx.font="35px myFirstFont";ctx.textAlign="center";ctx.fillStyle="#fff";ctx.shadowColor="black";ctx.shadowOffsetY=2;ctx.fillText(parseInt(_percent*100)+"%",logo_canvas.width/2,logo_canvas.height/2+_sh*425);}
+window.onresize=()=>drawCanvas(logo_loading_percent);
+window.onload=()=>drawCanvas(0);
+document.getElementById("azlogo").style.display="none";
+var script=document.createElement("script");
+script.src=buildUrl+"/loader.js";
+script.onload=()=>{createUnityInstance(canvas,config,(p)=>{logo_loading_percent=p;drawCanvas(p);}).then((u)=>{window.unityInstance=u;setTimeout(()=>{loadingCover.style.display="none";logo_loaded=true;window.focus();},2000);}).catch(alert);};
+document.body.appendChild(script);
+<\/script></body></html>`,
+
+        solarsmash: `<!DOCTYPE html><html lang="en-us"><head>
+<base href="https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@c5eefc5c13316b94c58e63cb5270b99a13c88fea/solar-smash/">
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solar Smash</title>
+<link rel="stylesheet" href="TemplateData/style.css">
+<script src="https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/ytgame.js"><\/script>
+</head><body>
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas" width=100% height=100% tabindex="-1"></canvas>
+<div id="unity-loading-bar">
+<div id="unity-logo"></div>
+<div id="unity-progress-bar-empty"><div id="unity-progress-bar-full"></div></div>
+</div>
+<div id="unity-warning"></div>
+</div>
+<script>
+var container=document.querySelector("#unity-container");
+var canvas=document.querySelector("#unity-canvas");
+var loadingBar=document.querySelector("#unity-loading-bar");
+var progressBarFull=document.querySelector("#unity-progress-bar-full");
+function unityShowBanner(msg,type){}
+var buildUrl="Build";
+var loaderUrl=buildUrl+"/Build.loader.js";
+var config={dataUrl:buildUrl+"/Build.data",frameworkUrl:buildUrl+"/Build.framework.js",codeUrl:buildUrl+"/Build.wasm",streamingAssetsUrl:"StreamingAssets",companyName:"Paradyme Games",productName:"Live - Solar Smash YouTube",productVersion:"0.1.0",showBanner:unityShowBanner};
+if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){var meta=document.createElement('meta');meta.name='viewport';meta.content='width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';document.getElementsByTagName('head')[0].appendChild(meta);container.className="unity-mobile";canvas.className="unity-mobile";}else{canvas.style.width="100%";canvas.style.height="100%";}
+loadingBar.style.display="block";
+const originalFetch=window.fetch;
+window.fetch=function(input,options){
+  if(typeof input==='string'&&input.endsWith("AssetBundles/WebGL/planets")){input='https://rawcdn.githack.com/bubbls/youtube-playables/c5eefc5c13316b94c58e63cb5270b99a13c88fea/solar-smash/StreamingAssets/AssetBundles/WebGL/planets';return originalFetch(input,options);}
+  else if(typeof input==='string'&&input.endsWith("AssetBundles/WebGL/planets2")){input='https://rawcdn.githack.com/bubbls/youtube-playables/c5eefc5c13316b94c58e63cb5270b99a13c88fea/solar-smash/StreamingAssets/AssetBundles/WebGL/planets2';return originalFetch(input,options);}
+  return originalFetch(input,options);
+};
+function UrlExists(url){var r=new XMLHttpRequest();r.open('HEAD',url,false);r.send();return r.status!=404;}
+function loadZipData(url,cb){fetch(url).then(r=>r.blob()).then(b=>cb(b));}
+var unityGameInstance=null;
+function InitUnitySection(){
+  var script=document.createElement("script");
+  script.src=loaderUrl;
+  script.onload=()=>{createUnityInstance(canvas,config,(p)=>{progressBarFull.style.width=100*p+"%";}).then((u)=>{unityGameInstance=u;loadingBar.style.display="none";}).catch((m)=>{console.error(m);});};
+  document.body.appendChild(script);
+}
+var dataUrl=config.dataUrl;
+if(!dataUrl.includes('.zip')&&UrlExists(dataUrl+'.zip')){
+  loadZipData(dataUrl+'.zip',function(blob){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var ab=e.target.result;
+      var dataBlob=new Blob([new Uint8Array(ab)],{type:'application/octet-stream'});
+      config.dataUrl=window.URL.createObjectURL(dataBlob);
+      InitUnitySection();
+    };
+    reader.readAsArrayBuffer(blob);
+  });
+}else{InitUnitySection();}
+<\/script>
+</body></html>`
     };
 
     window.openGame = (id, name) => {
         let frame = document.getElementById('gframe');
-        
+
         if (games[id]) {
             frame.removeAttribute('src');
             frame.srcdoc = games[id];
@@ -570,7 +680,7 @@ window.onload=function(){
             frame.removeAttribute('srcdoc');
             frame.src = id;
         }
-        
+
         document.getElementById('gtitle').textContent = name.toUpperCase();
         document.getElementById('gview').classList.add('show');
         location.hash = id;
@@ -578,10 +688,10 @@ window.onload=function(){
 
     window.closeGame = () => {
         let frame = document.getElementById('gframe');
-        
+
         frame.removeAttribute('srcdoc');
         frame.removeAttribute('src');
-        
+
         document.getElementById('gview').classList.remove('show');
         history.pushState('', '', location.pathname);
     };
