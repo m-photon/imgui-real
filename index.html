@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>imgui</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
-#particles-js{position:absolute;top:0;left:0;width:100%;height:100%}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>imgui</title>
     <style>
         * {
@@ -18,10 +12,6 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
             box-sizing: border-box;
         }
 
-.bar{position:fixed;top:16px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:100}
-.btn{width:48px;height:48px;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.15);border-radius:12px;backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,.85);transition:background .2s,transform .2s,border-color .2s;user-select:none}
-.btn:hover{background:rgba(0,0,0,.85);border-color:rgba(255,255,255,.35);transform:translateY(-2px)}
-.btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
         body, html {
             width: 100%;
             height: 100%;
@@ -29,8 +19,6 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
             overflow: hidden;
         }
 
-#soverlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(10,0,20,.6);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);align-items:center;justify-content:center}
-#soverlay.show{display:flex;animation:pop .2s ease}
         #particles-js {
             position: absolute;
             top: 0;
@@ -39,10 +27,6 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
             height: 100%;
         }
 
-@keyframes pop{
-	from{opacity:0;transform:scale(.97)}
-	to{opacity:1;transform:scale(1)}
-}
         .bar {
             position: fixed;
             top: 16px;
@@ -53,34 +37,6 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
             z-index: 100;
         }
 
-.spanel{background:rgba(30,0,60,.8);border:1px solid rgba(180,100,255,.25);border-radius:20px;padding:48px 52px;width:420px;max-width:92vw;text-align:center;position:relative;box-shadow:0 0 60px rgba(130,0,255,.25)}
-.sclose{position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(255,255,255,.35);font-size:22px;cursor:pointer;line-height:1;transition:color .2s}
-.sclose:hover{color:#fff}
-.stitle{font:700 22px/1 'Segoe UI',sans-serif;color:#fff;letter-spacing:.5px;margin-bottom:6px}
-.ssub{font:13px 'Segoe UI',sans-serif;color:rgba(200,160,255,.65);margin-bottom:32px}
-.slinks{display:flex;flex-direction:column;gap:12px}
-.slink{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 18px;color:rgba(255,255,255,.85);font:500 14px 'Segoe UI',sans-serif;cursor:pointer;transition:background .2s,border-color .2s,transform .15s}
-.slink:hover{background:rgba(160,80,255,.18);border-color:rgba(160,80,255,.45);transform:translateX(3px)}
-.slink-inner{display:flex;align-items:center;gap:10px}
-.slink-inner svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.sarrow{opacity:.4;font-size:16px}
-
-#games{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:50;padding:20px 30px;display:flex;flex-wrap:wrap;gap:18px;justify-content:center;max-height:80vh;max-width:90vw;overflow-y:auto}
-.gcard{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:transform .15s}
-.gcard:hover{transform:translateY(-4px)}
-.gcard img{width:100px;height:100px;border-radius:16px;object-fit:contain;object-position:center;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000}
-.gname{font-family:'Comic Sans MS','Chalkboard SE',cursive;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(255,255,255,.85);text-align:center;max-width:100px}
-
-#gview{display:none;position:fixed;inset:0;z-index:998;flex-direction:column}
-#gview.show{display:flex}
-#gview iframe{width:100%;flex:1;border:none;background:#000}
-#gbar{background:#1a1a1a;display:flex;align-items:center;justify-content:space-between;padding:0 14px;height:42px;flex-shrink:0}
-#gbar-l,#gbar-r{display:flex;align-items:center;gap:10px}
-#ghome,.gctrl{background:none;border:none;color:rgba(255,255,255,.55);cursor:pointer;padding:4px;transition:color .2s;display:flex}
-#ghome:hover,.gctrl:hover{color:#fff}
-#ghome svg,.gctrl svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-#gtitle{font:600 12px/1 'Segoe UI',sans-serif;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.7)}
-</style>
         .btn {
             width: 48px;
             height: 48px;
@@ -351,13 +307,6 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
 <body>
 
 <div class="bar">
-	<span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
-		<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-	</span>
-	<span class="btn" onclick="openGame('https://guns.lol/macsen','guns.lol/macsen')" style="font:600 11px/1 monospace;letter-spacing:.3px">guns.lol</span>
-	<span class="btn" onclick="openGame('pwrmessage','pwRMessage')"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
-	<span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
-	<span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
     <span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </span>
@@ -369,73 +318,30 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
     <span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
 </div>
 
-<div id="soverlay" onclick="if(event.target===this)this.classList.remove('show')">
-	<div class="spanel">
-		<button class="sclose" onclick="document.getElementById('soverlay').classList.remove('show')">✕</button>
-		<div class="stitle">Settings</div>
-		<div class="ssub">Customize your experience</div>
-		<div class="slinks">
-			<div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> Theme</span><span class="sarrow">›</span></div>
-			<div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Sound</span><span class="sarrow">›</span></div>
-			<div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg> Particles</span><span class="sarrow">›</span></div>
-			<div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</span><span class="sarrow">›</span></div>
-			<div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About</span><span class="sarrow">›</span></div>
-		</div>
-	</div>
 <div id="soverlay" onclick="if(event.target === this) this.classList.remove('show')">
     <div class="spanel">
         <button class="sclose" onclick="document.getElementById('soverlay').classList.remove('show')">✕</button>
         <div class="stitle">Settings</div>
         <div class="ssub">Customize your experience</div>
         <div class="slinks">
-            <div class="slink">
-                <span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> Theme</span>
-                <span class="sarrow">›</span>
-            </div>
-            <div class="slink">
-                <span class="slink-inner"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Sound</span>
-                <span class="sarrow">›</span>
-            </div>
-            <div class="slink">
-                <span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg> Particles</span>
-                <span class="sarrow">›</span>
-            </div>
-            <div class="slink">
-                <span class="slink-inner"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</span>
-                <span class="sarrow">›</span>
-            </div>
-            <div class="slink">
-                <span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About</span>
-                <span class="sarrow">›</span>
-            </div>
+            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> Theme</span><span class="sarrow">›</span></div>
+            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Sound</span><span class="sarrow">›</span></div>
+            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg> Particles</span><span class="sarrow">›</span></div>
+            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</span><span class="sarrow">›</span></div>
+            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About</span><span class="sarrow">›</span></div>
         </div>
     </div>
 </div>
 
 <div id="games">
-	<div class="gcard" onclick="openGame('deltarune','DELTARUNE')">
-		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000 url('https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/logo.png') center/70% no-repeat"></div>
-		<span class="gname">Deltarune</span>
-	</div>
-	<div class="gcard" onclick="openGame('https://irv77.github.io/hd_fnaf/1/','FNAF 1')">
-		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000 url('data:image/jpeg;base64,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') center/cover no-repeat"></div>
-		<span class="gname">FNAF 1</span>
-	</div>
-	<div class="gcard" onclick="openGame('fnf','FRIDAY NIGHT FUNKIN')">
-		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000 url('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/favicon.png') center/70% no-repeat"></div>
-		<span class="gname">Friday Night Funkin</span>
-	</div>
-	<div class="gcard" onclick="openGame('baldi','BALDIS BASICS PLUS')">
-		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000 url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico') center/70% no-repeat"></div>
-		<span class="gname">Baldi's Basics Plus</span>
-	</div>
-	<div class="gcard" onclick="openGame('uty','UNDERTALE YELLOW')">
-		<div style="width:100px;height:100px;border-radius:16px;border:2px solid rgba(255,255,255,.1);box-shadow:0 4px 20px rgba(0,0,0,.5);background:#000 url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png') center/70% no-repeat"></div>
-		<span class="gname">Undertale Yellow</span>
-	</div>
     <div class="gcard" onclick="openGame('deltarune', 'DELTARUNE')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/logo.png');"></div>
         <span class="gname">Deltarune</span>
+    </div>
+    
+    <div class="gcard" onclick="openGame('https://irv77.github.io/hd_fnaf/1/', 'FNAF 1')">
+        <div class="gicon" style="background-image: url('data:image/jpeg;base64,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');"></div>
+        <span class="gname">FNAF 1</span>
     </div>
     
     <div class="gcard" onclick="openGame('fnf', 'FRIDAY NIGHT FUNKIN')">
@@ -454,29 +360,12 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
     </div>
     
     <div class="gcard" onclick="openGame('slope', 'SLOPE')">
-        <div class="gicon cover" style="background-image: url('https://play-lh.googleusercontent.com/uZnXsH0TDoB2vjA6h8W_wA0vE1WvB7FzN-vRqk1pG0zK1Z3F_P4Fw3c0B7_r1A_j7w');"></div>
+        <div class="gicon cover" style="background-image: url('https://googleusercontent.com/profile/picture/0');"></div>
         <span class="gname">Slope</span>
     </div>
 </div>
 
 <div id="gview">
-	<iframe id="gframe" src="" allowfullscreen></iframe>
-	<div id="gbar">
-		<div id="gbar-l">
-			<button id="ghome" onclick="closeGame()">
-				<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-			</button>
-			<span id="gtitle"></span>
-		</div>
-		<div id="gbar-r">
-			<button class="gctrl" onclick="let f=document.getElementById('gframe');f.src=f.src">
-				<svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-			</button>
-			<button class="gctrl" onclick="document.getElementById('gview').requestFullscreen()">
-				<svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-			</button>
-		</div>
-	</div>
     <iframe id="gframe" src="" allowfullscreen></iframe>
     <div id="gbar">
         <div id="gbar-l">
@@ -499,14 +388,11 @@ body,html{width:100%;height:100%;background:#4B0082;overflow:hidden}
 <div id="particles-js"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
-const $ = q => document.querySelector(q);
+    const $ = q => document.querySelector(q);
 
-const games = {
-	pwrmessage: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>pwRMessage</title><link rel="icon" href="https://cdn.teampwr.dev/pwrmessage/favicon.ico"><link rel="stylesheet" href="https://cdn.teampwr.dev/pwrmessage/imgui/tailwind.css"><script src="https://cdn.teampwr.dev/pwrmessage/socket.io.min.js"><\/script></head><body class="bg-brand-bg text-white"><div id="toast-container"></div><div id="auth-view" class="flex items-center justify-center h-screen"><div class="bg-brand-panel p-8 rounded-3xl border border-brand accent-glow w-full max-w-sm backdrop-blur-imgui"><h1 class="text-2xl font-bold mb-6 tracking-tighter text-center">pwRMessage</h1><input id="auth-user" type="text" placeholder="Username" class="w-full bg-brand-glass p-4 rounded-xl mb-3 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><input id="auth-pass" type="password" placeholder="Password" class="w-full bg-brand-glass p-4 rounded-xl mb-6 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><div class="flex gap-2"><button onclick="handleAuth('login')" class="flex-grow bg-brand-accent text-white p-4 rounded-xl font-bold hover:opacity-80 transition-imgui shadow-[0_0_15px_rgba(160,80,255,0.4)]">Login</button><button onclick="handleAuth('register')" class="flex-grow border-2 border-brand p-4 rounded-xl font-bold hover:bg-brand-glass transition-imgui">Sign Up</button></div></div></div><div id="app-view" class="hidden h-screen flex relative"><div id="customModal" class="modal-overlay"><div class="modal-card"><h2 id="modalTitle" class="text-xl font-bold mb-2"></h2><p id="modalDesc" class="text-brand-sub mb-6 text-sm"></p><input id="modalInput" type="text" class="w-full bg-brand-glass p-4 rounded-xl outline-none border border-brand focus:ring-2 focus:ring-brand-accent mb-6 text-white"><div class="flex gap-3"><button onclick="closeModal()" class="flex-grow p-3 rounded-xl font-bold text-brand-sub hover:bg-brand-glass transition">Cancel</button><button id="modalConfirm" class="flex-grow p-3 rounded-xl font-bold bg-brand-accent text-white hover:opacity-90 transition shadow-[0_0_10px_rgba(160,80,255,0.3)]">Confirm</button></div></div></div><aside class="sidebar flex flex-col"><div class="p-6 border-b border-brand flex justify-between items-center"><h1 class="text-xl font-bold tracking-tighter">pwRMessage</h1><button id="logoutBtn" class="text-xs font-bold text-brand-sub hover:text-white uppercase transition">Logout</button></div><div class="p-4 flex gap-2"><button onclick="uiCreateChat()" class="flex-grow bg-brand-accent text-white font-semibold py-3 rounded-xl hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.2)]">New Chat</button><button onclick="requestNotifs()" class="bg-brand-glass border border-brand p-3 rounded-xl hover:bg-brand-panel transition"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button></div><div id="userList" class="flex-grow overflow-y-auto px-2"></div></aside><main class="flex-grow flex flex-col bg-[rgba(30,0,60,0.2)] backdrop-blur-md"><header class="p-5 border-b border-brand flex items-center gap-3 bg-brand-glass"><div class="flex flex-col items-start"><span id="headerName" class="text-lg font-bold leading-tight">Select a contact</span><span id="headerStatus" class="text-xs font-medium h-4 text-brand-sub"></span></div><span id="typing-indicator" class="text-xs font-normal text-brand-accent italic ml-auto"></span></header><div id="messageDisplay" class="flex-grow p-6 overflow-y-auto flex flex-col gap-2"></div><div class="p-4 bg-brand-glass border-t border-brand flex items-center gap-3"><input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleImageUpload(this)"><button onclick="document.getElementById('imageInput').click()" class="bg-brand-glass border border-brand p-4 rounded-2xl hover:bg-brand-panel transition"><img width="24" height="24" src="https://cdn.teampwr.dev/pwrmessage/image-upload.svg" class="invert"></button><input id="msgInput" type="text" placeholder="Write a message..." class="flex-grow bg-brand-glass border border-brand p-4 rounded-2xl outline-none focus:ring-1 focus:ring-brand-accent text-white placeholder-brand-text-sub"><button id="sendBtn" class="bg-brand-accent text-white px-8 h-full rounded-2xl font-bold hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.3)]">Send</button></div></main></div><script src="https://cdn.teampwr.dev/pwrmessage/imgui/script.js"><\/script></body></html>`,
     const games = {
         pwrmessage: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>pwRMessage</title><link rel="icon" href="https://cdn.teampwr.dev/pwrmessage/favicon.ico"><link rel="stylesheet" href="https://cdn.teampwr.dev/pwrmessage/imgui/tailwind.css"><script src="https://cdn.teampwr.dev/pwrmessage/socket.io.min.js"><\/script></head><body class="bg-brand-bg text-white"><div id="toast-container"></div><div id="auth-view" class="flex items-center justify-center h-screen"><div class="bg-brand-panel p-8 rounded-3xl border border-brand accent-glow w-full max-w-sm backdrop-blur-imgui"><h1 class="text-2xl font-bold mb-6 tracking-tighter text-center">pwRMessage</h1><input id="auth-user" type="text" placeholder="Username" class="w-full bg-brand-glass p-4 rounded-xl mb-3 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><input id="auth-pass" type="password" placeholder="Password" class="w-full bg-brand-glass p-4 rounded-xl mb-6 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><div class="flex gap-2"><button onclick="handleAuth('login')" class="flex-grow bg-brand-accent text-white p-4 rounded-xl font-bold hover:opacity-80 transition-imgui shadow-[0_0_15px_rgba(160,80,255,0.4)]">Login</button><button onclick="handleAuth('register')" class="flex-grow border-2 border-brand p-4 rounded-xl font-bold hover:bg-brand-glass transition-imgui">Sign Up</button></div></div></div><div id="app-view" class="hidden h-screen flex relative"><div id="customModal" class="modal-overlay"><div class="modal-card"><h2 id="modalTitle" class="text-xl font-bold mb-2"></h2><p id="modalDesc" class="text-brand-sub mb-6 text-sm"></p><input id="modalInput" type="text" class="w-full bg-brand-glass p-4 rounded-xl outline-none border border-brand focus:ring-2 focus:ring-brand-accent mb-6 text-white"><div class="flex gap-3"><button onclick="closeModal()" class="flex-grow p-3 rounded-xl font-bold text-brand-sub hover:bg-brand-glass transition">Cancel</button><button id="modalConfirm" class="flex-grow p-3 rounded-xl font-bold bg-brand-accent text-white hover:opacity-90 transition shadow-[0_0_10px_rgba(160,80,255,0.3)]">Confirm</button></div></div></div><aside class="sidebar flex flex-col"><div class="p-6 border-b border-brand flex justify-between items-center"><h1 class="text-xl font-bold tracking-tighter">pwRMessage</h1><button id="logoutBtn" class="text-xs font-bold text-brand-sub hover:text-white uppercase transition">Logout</button></div><div class="p-4 flex gap-2"><button onclick="uiCreateChat()" class="flex-grow bg-brand-accent text-white font-semibold py-3 rounded-xl hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.2)]">New Chat</button><button onclick="requestNotifs()" class="bg-brand-glass border border-brand p-3 rounded-xl hover:bg-brand-panel transition"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button></div><div id="userList" class="flex-grow overflow-y-auto px-2"></div></aside><main class="flex-grow flex flex-col bg-[rgba(30,0,60,0.2)] backdrop-blur-md"><header class="p-5 border-b border-brand flex items-center gap-3 bg-brand-glass"><div class="flex flex-col items-start"><span id="headerName" class="text-lg font-bold leading-tight">Select a contact</span><span id="headerStatus" class="text-xs font-medium h-4 text-brand-sub"></span></div><span id="typing-indicator" class="text-xs font-normal text-brand-accent italic ml-auto"></span></header><div id="messageDisplay" class="flex-grow p-6 overflow-y-auto flex flex-col gap-2"></div><div class="p-4 bg-brand-glass border-t border-brand flex items-center gap-3"><input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleImageUpload(this)"><button onclick="document.getElementById('imageInput').click()" class="bg-brand-glass border border-brand p-4 rounded-2xl hover:bg-brand-panel transition"><img width="24" height="24" src="https://cdn.teampwr.dev/pwrmessage/image-upload.svg" class="invert"></button><input id="msgInput" type="text" placeholder="Write a message..." class="flex-grow bg-brand-glass border border-brand p-4 rounded-2xl outline-none focus:ring-1 focus:ring-brand-accent text-white placeholder-brand-text-sub"><button id="sendBtn" class="bg-brand-accent text-white px-8 h-full rounded-2xl font-bold hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.3)]">Send</button></div></main></div><script src="https://cdn.teampwr.dev/pwrmessage/imgui/script.js"><\/script></body></html>`,
 
-	deltarune: `<!DOCTYPE html><html><head>
         deltarune: `<!DOCTYPE html><html><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/">
 <meta charset="UTF-8"><link rel="stylesheet" href="style.css"></head><body>
@@ -515,7 +401,6 @@ const games = {
 }
 <\/script></body></html>`,
 
-	fnf: `<html lang="en"><head>
         fnf: `<html lang="en"><head>
 <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/">
 <meta charset="utf-8">
@@ -524,7 +409,6 @@ const games = {
 <script type="text/javascript">lime.embed("Funkin","openfl-content",1280,720,{parameters:{}})<\/script>
 </body></html>`,
 
-	uty: `<!DOCTYPE html><html lang="en-us"><head>
         uty: `<!DOCTYPE html><html lang="en-us"><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/">
 <meta charset="utf-8">
@@ -533,7 +417,6 @@ const games = {
 <\/script>
 </body></html>`,
 
-	baldi: `<!DOCTYPE html><html lang="en-us"><head>
         baldi: `<!DOCTYPE html><html lang="en-us"><head>
 <meta charset="utf-8">
 <title>Baldi's Basics Plus</title>
@@ -542,18 +425,8 @@ const games = {
   script.onload=()=>{createUnityInstance(canvas,config,(p)=>{progressBarFull.style.width=100*p+"%"}).then((u)=>{loadingText.remove();loadingBar.style.display="none"}).catch(alert)};
   document.body.appendChild(script);
 })();
-<\/script></body></html>`
-}
 <\/script></body></html>`,
 
-window.openGame = (id, name) => {
-	let f = $('#gframe');
-	if(games[id]) f.srcdoc = games[id];
-	else f.src = id;
-	$('#gtitle').textContent = name.toUpperCase();
-	$('#gview').classList.add('show');
-	location.hash = id;
-}
         slope: `<html lang="en-us"><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/google-class/slope/">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/genizy/google-class/slope/TemplateData/style.css"/>
@@ -572,13 +445,6 @@ window.onload=function(){
 </head><body><div id="gameContainer"></div></body></html>`
     };
 
-window.closeGame = () => {
-	let f = $('#gframe');
-	f.srcdoc = ''; 
-    f.src = '';
-	$('#gview').classList.remove('show');
-	history.pushState('', '', location.pathname);
-}
     window.openGame = (id, name) => {
         let frame = document.getElementById('gframe');
         
@@ -595,32 +461,6 @@ window.closeGame = () => {
         location.hash = id;
     };
 
-window.addEventListener('popstate', () => {
-	if(!location.hash) closeGame();
-})
-
-particlesJS('particles-js', {
-	particles: {
-		number:{value:120,density:{enable:true,value_area:800}},
-		color:{value:['#cc99ff','#ffffff','#9933ff','#e0b3ff']},
-		shape:{type:'circle'},
-		opacity:{value:.7,random:true,anim:{enable:true,speed:1,opacity_min:.2,sync:false}},
-		size:{value:3,random:true,anim:{enable:true,speed:2,size_min:.5,sync:false}},
-		line_linked:{enable:true,distance:130,color:'#9933ff',opacity:.3,width:1},
-		move:{enable:true,speed:2,direction:'none',random:true,straight:false,out_mode:'out',bounce:false}
-	},
-	interactivity: {
-		detect_on:'canvas',
-		events:{onhover:{enable:true,mode:'repulse'},onclick:{enable:true,mode:'push'},resize:true},
-		modes:{repulse:{distance:100,duration:.4},push:{particles_nb:4}}
-	},
-	retina_detect: true
-})
-
-document.oncontextmenu = e => e.preventDefault();
-document.onkeydown = e => {
-	if(e.ctrlKey || e.keyCode === 123) e.preventDefault();
-}
     window.closeGame = () => {
         let frame = document.getElementById('gframe');
         
