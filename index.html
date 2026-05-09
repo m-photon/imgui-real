@@ -334,6 +334,11 @@
 </div>
 
 <div id="games">
+    <div class="gcard" onclick="openGame('crazycattle3d', 'CRAZY CATTLE 3D')">
+        <div class="gicon cover" style="background-image: url('https://rawcdn.githack.com/genizy/cc3d-mobile/main/CrazyCattle3D.png');"></div>
+        <span class="gname">Crazy Cattle 3D</span>
+    </div>
+
     <div class="gcard" onclick="openGame('deltarune', 'DELTARUNE')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
         <span class="gname">Deltarune</span>
@@ -396,6 +401,255 @@
     const $ = q => document.querySelector(q);
 
     const games = {
+        crazycattle3d: `<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<base href="https://rawcdn.githack.com/genizy/cc3d-mobile/main/">
+		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"><\/script>
+		<meta charset="utf-8">
+		<style>
+  html, body {
+    margin: 0;
+    overflow: hidden;
+    touch-action: none;
+  }
+</style>
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>CrazyCattle3D</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+}
+
+#canvas {
+	display: block;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: #000000;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+}
+		</style>
+		<link id="-gd-engine-icon" rel="icon" type="image/png" href="CrazyCattle3D.icon.png" />
+<link rel="apple-touch-icon" href="CrazyCattle3D.apple-touch-icon.png"/>
+<link rel="manifest" href="CrazyCattle3D.manifest.json">
+
+	</head>
+	<body>
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="CrazyCattle3D.png" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
+
+		<script src="CrazyCattle3D.js"><\/script>
+		<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"CrazyCattle3D","experimentalVK":false,"fileSizes":{"CrazyCattle3D.pck":28642672,"CrazyCattle3D.wasm":43444261},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"CrazyCattle3D.service.worker.js"};
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+        });
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred.');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			// There's a chance that installing the service worker would fix the issue
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				// For some reason, \`getRegistration()\` can stall
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				// Reload if there was no error.
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			// Display the message as usual
+			const missingMsg = 'Error\\nThe following features required to run Godot projects on the Web are missing:\\n';
+			displayFailureNotice(missingMsg + missing.join('\\n'));
+		}
+	} else {
+		setStatusMode('progress');
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+		<\/script>
+		<script>
+  document.addEventListener("touchstart", function(e) {
+    if (e.touches.length > 1) e.preventDefault();
+  }, { passive: false });
+
+  document.addEventListener("gesturestart", function(e) {
+    e.preventDefault();
+  });
+
+  window.addEventListener("touchmove", function(e) {
+    if (e.touches[0].clientY < 50) e.preventDefault();
+  }, { passive: false });
+
+  window.addEventListener("beforeunload", function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+  });
+<\/script>
+
+	</body>
+</html>`,
+
         pwrmessage: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>pwRMessage</title><link rel="icon" href="https://cdn.teampwr.dev/pwrmessage/favicon.ico"><link rel="stylesheet" href="https://cdn.teampwr.dev/pwrmessage/imgui/tailwind.css"><script src="https://cdn.teampwr.dev/pwrmessage/socket.io.min.js"><\/script></head><body class="bg-brand-bg text-white"><div id="toast-container"></div><div id="auth-view" class="flex items-center justify-center h-screen"><div class="bg-brand-panel p-8 rounded-3xl border border-brand accent-glow w-full max-w-sm backdrop-blur-imgui"><h1 class="text-2xl font-bold mb-6 tracking-tighter text-center">pwRMessage</h1><input id="auth-user" type="text" placeholder="Username" class="w-full bg-brand-glass p-4 rounded-xl mb-3 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><input id="auth-pass" type="password" placeholder="Password" class="w-full bg-brand-glass p-4 rounded-xl mb-6 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><div class="flex gap-2"><button onclick="handleAuth('login')" class="flex-grow bg-brand-accent text-white p-4 rounded-xl font-bold hover:opacity-80 transition-imgui shadow-[0_0_15px_rgba(160,80,255,0.4)]">Login</button><button onclick="handleAuth('register')" class="flex-grow border-2 border-brand p-4 rounded-xl font-bold hover:bg-brand-glass transition-imgui">Sign Up</button></div></div></div><div id="app-view" class="hidden h-screen flex relative"><div id="customModal" class="modal-overlay"><div class="modal-card"><h2 id="modalTitle" class="text-xl font-bold mb-2"></h2><p id="modalDesc" class="text-brand-sub mb-6 text-sm"></p><input id="modalInput" type="text" class="w-full bg-brand-glass p-4 rounded-xl outline-none border border-brand focus:ring-2 focus:ring-brand-accent mb-6 text-white"><div class="flex gap-3"><button onclick="closeModal()" class="flex-grow p-3 rounded-xl font-bold text-brand-sub hover:bg-brand-glass transition">Cancel</button><button id="modalConfirm" class="flex-grow p-3 rounded-xl font-bold bg-brand-accent text-white hover:opacity-90 transition shadow-[0_0_10px_rgba(160,80,255,0.3)]">Confirm</button></div></div></div><aside class="sidebar flex flex-col"><div class="p-6 border-b border-brand flex justify-between items-center"><h1 class="text-xl font-bold tracking-tighter">pwRMessage</h1><button id="logoutBtn" class="text-xs font-bold text-brand-sub hover:text-white uppercase transition">Logout</button></div><div class="p-4 flex gap-2"><button onclick="uiCreateChat()" class="flex-grow bg-brand-accent text-white font-semibold py-3 rounded-xl hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.2)]">New Chat</button><button onclick="requestNotifs()" class="bg-brand-glass border border-brand p-3 rounded-xl hover:bg-brand-panel transition"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button></div><div id="userList" class="flex-grow overflow-y-auto px-2"></div></aside><main class="flex-grow flex flex-col bg-[rgba(30,0,60,0.2)] backdrop-blur-md"><header class="p-5 border-b border-brand flex items-center gap-3 bg-brand-glass"><div class="flex flex-col items-start"><span id="headerName" class="text-lg font-bold leading-tight">Select a contact</span><span id="headerStatus" class="text-xs font-medium h-4 text-brand-sub"></span></div><span id="typing-indicator" class="text-xs font-normal text-brand-accent italic ml-auto"></span></header><div id="messageDisplay" class="flex-grow p-6 overflow-y-auto flex flex-col gap-2"></div><div class="p-4 bg-brand-glass border-t border-brand flex items-center gap-3"><input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleImageUpload(this)"><button onclick="document.getElementById('imageInput').click()" class="bg-brand-glass border border-brand p-4 rounded-2xl hover:bg-brand-panel transition"><img width="24" height="24" src="https://cdn.teampwr.dev/pwrmessage/image-upload.svg" class="invert"></button><input id="msgInput" type="text" placeholder="Write a message..." class="flex-grow bg-brand-glass border border-brand p-4 rounded-2xl outline-none focus:ring-1 focus:ring-brand-accent text-white placeholder-brand-text-sub"><button id="sendBtn" class="bg-brand-accent text-white px-8 h-full rounded-2xl font-bold hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.3)]">Send</button></div></main></div><script src="https://cdn.teampwr.dev/pwrmessage/imgui/script.js"><\/script></body></html>`,
 
         slope: `<html lang="en-us"><head>
