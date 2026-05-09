@@ -335,21 +335,21 @@
 
 <div id="games">
     <div class="gcard" onclick="openGame('deltarune', 'DELTARUNE')">
-        <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/logo.png');"></div>
+        <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
         <span class="gname">Deltarune</span>
     </div>
     
-    <div class="gcard" onclick="openGame('fnf', 'FRIDAY NIGHT FUNKIN')">
+    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html', 'FRIDAY NIGHT FUNKIN')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/favicon.png');"></div>
         <span class="gname">Friday Night Funkin</span>
     </div>
     
-    <div class="gcard" onclick="openGame('baldi', 'BALDIS BASICS PLUS')">
+    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/index.html', 'BALDIS BASICS PLUS')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
         <span class="gname">Baldi's Basics Plus</span>
     </div>
     
-    <div class="gcard" onclick="openGame('uty', 'UNDERTALE YELLOW')">
+    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/index.html', 'UNDERTALE YELLOW')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
         <span class="gname">Undertale Yellow</span>
     </div>
@@ -388,40 +388,6 @@
     const games = {
         pwrmessage: `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>pwRMessage</title><link rel="icon" href="https://cdn.teampwr.dev/pwrmessage/favicon.ico"><link rel="stylesheet" href="https://cdn.teampwr.dev/pwrmessage/imgui/tailwind.css"><script src="https://cdn.teampwr.dev/pwrmessage/socket.io.min.js"><\/script></head><body class="bg-brand-bg text-white"><div id="toast-container"></div><div id="auth-view" class="flex items-center justify-center h-screen"><div class="bg-brand-panel p-8 rounded-3xl border border-brand accent-glow w-full max-w-sm backdrop-blur-imgui"><h1 class="text-2xl font-bold mb-6 tracking-tighter text-center">pwRMessage</h1><input id="auth-user" type="text" placeholder="Username" class="w-full bg-brand-glass p-4 rounded-xl mb-3 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><input id="auth-pass" type="password" placeholder="Password" class="w-full bg-brand-glass p-4 rounded-xl mb-6 outline-none border border-brand focus:ring-2 focus:ring-brand-accent text-white placeholder-brand-text-sub"><div class="flex gap-2"><button onclick="handleAuth('login')" class="flex-grow bg-brand-accent text-white p-4 rounded-xl font-bold hover:opacity-80 transition-imgui shadow-[0_0_15px_rgba(160,80,255,0.4)]">Login</button><button onclick="handleAuth('register')" class="flex-grow border-2 border-brand p-4 rounded-xl font-bold hover:bg-brand-glass transition-imgui">Sign Up</button></div></div></div><div id="app-view" class="hidden h-screen flex relative"><div id="customModal" class="modal-overlay"><div class="modal-card"><h2 id="modalTitle" class="text-xl font-bold mb-2"></h2><p id="modalDesc" class="text-brand-sub mb-6 text-sm"></p><input id="modalInput" type="text" class="w-full bg-brand-glass p-4 rounded-xl outline-none border border-brand focus:ring-2 focus:ring-brand-accent mb-6 text-white"><div class="flex gap-3"><button onclick="closeModal()" class="flex-grow p-3 rounded-xl font-bold text-brand-sub hover:bg-brand-glass transition">Cancel</button><button id="modalConfirm" class="flex-grow p-3 rounded-xl font-bold bg-brand-accent text-white hover:opacity-90 transition shadow-[0_0_10px_rgba(160,80,255,0.3)]">Confirm</button></div></div></div><aside class="sidebar flex flex-col"><div class="p-6 border-b border-brand flex justify-between items-center"><h1 class="text-xl font-bold tracking-tighter">pwRMessage</h1><button id="logoutBtn" class="text-xs font-bold text-brand-sub hover:text-white uppercase transition">Logout</button></div><div class="p-4 flex gap-2"><button onclick="uiCreateChat()" class="flex-grow bg-brand-accent text-white font-semibold py-3 rounded-xl hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.2)]">New Chat</button><button onclick="requestNotifs()" class="bg-brand-glass border border-brand p-3 rounded-xl hover:bg-brand-panel transition"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button></div><div id="userList" class="flex-grow overflow-y-auto px-2"></div></aside><main class="flex-grow flex flex-col bg-[rgba(30,0,60,0.2)] backdrop-blur-md"><header class="p-5 border-b border-brand flex items-center gap-3 bg-brand-glass"><div class="flex flex-col items-start"><span id="headerName" class="text-lg font-bold leading-tight">Select a contact</span><span id="headerStatus" class="text-xs font-medium h-4 text-brand-sub"></span></div><span id="typing-indicator" class="text-xs font-normal text-brand-accent italic ml-auto"></span></header><div id="messageDisplay" class="flex-grow p-6 overflow-y-auto flex flex-col gap-2"></div><div class="p-4 bg-brand-glass border-t border-brand flex items-center gap-3"><input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp" class="hidden" onchange="handleImageUpload(this)"><button onclick="document.getElementById('imageInput').click()" class="bg-brand-glass border border-brand p-4 rounded-2xl hover:bg-brand-panel transition"><img width="24" height="24" src="https://cdn.teampwr.dev/pwrmessage/image-upload.svg" class="invert"></button><input id="msgInput" type="text" placeholder="Write a message..." class="flex-grow bg-brand-glass border border-brand p-4 rounded-2xl outline-none focus:ring-1 focus:ring-brand-accent text-white placeholder-brand-text-sub"><button id="sendBtn" class="bg-brand-accent text-white px-8 h-full rounded-2xl font-bold hover:opacity-80 transition shadow-[0_0_15px_rgba(160,80,255,0.3)]">Send</button></div></main></div><script src="https://cdn.teampwr.dev/pwrmessage/imgui/script.js"><\/script></body></html>`,
 
-        deltarune: `<!DOCTYPE html><html><head>
-<base href="https://cdn.jsdelivr.net/gh/genizy/web-port@7aaf14f96983e501a2757aca01c4a500505b2646/deltarune/">
-<meta charset="UTF-8"><link rel="stylesheet" href="style.css"></head><body>
-<div class="logo-container"><img src="logo.png" alt="Logo" class="logo"></div>
-@@ -165,7 +436,7 @@
-}
-<\/script></body></html>`,
-
-        fnf: `<html lang="en"><head>
-<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/">
-<meta charset="utf-8">
-<title>Friday Night Funkin'</title>
-@@ -188,7 +459,7 @@
-<script type="text/javascript">lime.embed("Funkin","openfl-content",1280,720,{parameters:{}})<\/script>
-</body></html>`,
-
-        uty: `<!DOCTYPE html><html lang="en-us"><head>
-<base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/">
-<meta charset="utf-8">
-<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
-@@ -230,7 +501,7 @@
-<\/script>
-</body></html>`,
-
-        baldi: `<!DOCTYPE html><html lang="en-us"><head>
-<meta charset="utf-8">
-<title>Baldi's Basics Plus</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/style.css">
-@@ -269,52 +540,82 @@
-  script.onload=()=>{createUnityInstance(canvas,config,(p)=>{progressBarFull.style.width=100*p+"%"}).then((u)=>{loadingText.remove();loadingBar.style.display="none"}).catch(alert)};
-  document.body.appendChild(script);
-})();
-<\/script></body></html>`,
-
         slope: `<html lang="en-us"><head>
 <base href="https://cdn.jsdelivr.net/gh/genizy/google-class/slope/">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/genizy/google-class/slope/TemplateData/style.css"/>
@@ -437,7 +403,169 @@ window.onload=function(){
   });
 };
 <\/script>
-</head><body><div id="gameContainer"></div></body></html>`
+</head><body><div id="gameContainer"></div></body></html>`,
+
+        deltarune: `<!DOCTYPE html>
+<html>
+<head>
+  <base href="https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="logo-container">
+    <img src="logo.png" alt="Logo" class="logo">
+  </div>
+  
+  <div class="menu">
+    <a href="javascript:loadChapter(1)" class="row">
+      <span class="chapter">Chapter 1</span>
+      <span class="title">The Beginning</span>
+      <img src="icons/1.png">
+    </a>
+    <a href="javascript:loadChapter(2)" class="row">
+      <span class="chapter">Chapter 2</span>
+      <span class="title">A Cyber's World</span>
+      <img src="icons/2.png">
+    </a>
+    <a href="javascript:loadChapter(3)" class="row">
+      <span class="chapter">Chapter 3</span>
+      <span class="title">Late Night</span>
+      <img src="icons/3.png">
+    </a>
+    <a href="javascript:loadChapter(4)" class="row">
+      <span class="chapter">Chapter 4</span>
+      <span class="title">Prophecy</span>
+      <img src="icons/4.png">
+    </a>
+    <a href="javascript:alert('Chapter 5 coming soon!')" class="disabled-row">
+      <span class="chapter">Chapter 5</span>
+      <span class="disabled-title">--</span>
+      <img src="icons/0.png">
+    </a>
+    <a href="javascript:alert('Chapter 6 coming soon!')" class="disabled-row">
+      <span class="chapter">Chapter 6</span>
+      <span class="disabled-title">--</span>
+      <img src="icons/0.png">
+    </a>
+    <a href="javascript:alert('Chapter 7 coming soon!')" class="disabled-row">
+      <span class="chapter">Chapter 7</span>
+      <span class="disabled-title">--</span>
+      <img src="icons/0.png">
+    </a>
+    <a href="javascript:window.open('https://truffled.lol', '_blank')" class="row">
+      <span class="chapter"></span>
+      <span class="title">port by bog :o</span>
+      <span class="badge"></span>
+    </a>
+  </div>
+  <audio id="drone" controls loop autoplay hidden>
+    <source src="audios/AUDIO_DRONE.ogg" type="audio/ogg">
+    your slow ass browser doesnt support AUDIO?
+  </audio>
+  <button id="mute">🔊</button>
+  <script>
+    const audio = document.getElementById('drone');
+    const mute = document.getElementById('mute');
+    let gamestarted = false;
+  
+    mute.addEventListener('click', () => {
+      if (!gamestarted) {
+        audio.muted = !audio.muted;
+        updateButton(); 
+      }
+    });
+  
+    function updateButton() {
+      if (!gamestarted) {
+        mute.textContent = audio.muted ? '🔊' : '🔇';
+      }
+    }
+  
+    updateButton();
+
+    function loadChapter(chapter) {
+      fetch(\`chapter\${chapter}/index.html\`).then(res => res.text()).then(html => {
+        gamestarted = true;
+        document.documentElement.innerHTML = html;
+        document.documentElement.querySelectorAll('script').forEach(oldScript => {
+          const newScript = document.createElement('script');
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+          document.body.appendChild(newScript);
+        });
+      });
+    }
+
+    const hoverSound = document.getElementById('hover-sound');
+
+    const menumoveaudio = new Audio('audios/snd_menumove.mp3');
+    const menuselectaudio = new Audio('audios/snd_select.mp3');
+    document.querySelectorAll('.row').forEach(row => {
+      row.addEventListener('mouseenter', () => {
+        if (!gamestarted) {
+          menumoveaudio.play();
+          if (selectedChapter) {
+            document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+          }
+        }
+      });
+      row.addEventListener('click', () => {
+        if (!gamestarted) {
+          menuselectaudio.play();
+        }
+      });
+    });
+
+    let selectedChapter = null;
+    document.addEventListener('keydown', function(event) {
+      if (!gamestarted) {
+      if (event.key === 'ArrowUp') {
+        if (selectedChapter === null) {
+          selectedChapter = 0;
+          document.querySelectorAll('.row')[0].classList.add("selected");
+          menumoveaudio.play();
+        } else {
+          document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+          selectedChapter--;
+          if (selectedChapter < 0) {
+            selectedChapter = document.querySelectorAll('.row').length - 1;
+          }
+          document.querySelectorAll('.row')[selectedChapter].classList.add("selected");
+          menumoveaudio.play();
+        }
+      } else if (event.key === 'ArrowDown') {
+        if (selectedChapter === null) {
+          selectedChapter = 0;
+          document.querySelectorAll('.row')[0].classList.add("selected");
+          menumoveaudio.play();
+        } else {
+          if (selectedChapter+1 >= document.querySelectorAll('.row').length) {
+            document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+            selectedChapter = 0;
+            document.querySelectorAll('.row')[0].classList.add("selected");
+            menumoveaudio.play();
+          } else {
+            document.querySelectorAll('.row')[selectedChapter].classList.remove("selected");
+            selectedChapter++;
+            document.querySelectorAll('.row')[selectedChapter].classList.add("selected");
+            menumoveaudio.play();
+          }
+        }
+      } else if (event.key === 'Enter') {
+        if (selectedChapter !== null) {
+          window.location.href = document.querySelectorAll('.row')[selectedChapter].href;
+          menuselectaudio.play();
+        } 
+      }
+      }
+    });
+  <\/script>
+</body>
+</html>`
     };
 
     window.openGame = (id, name) => {
