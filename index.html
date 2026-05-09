@@ -17,6 +17,7 @@
             height: 100%;
             background: #4B0082;
             overflow: hidden;
+            transition: background 0.3s ease;
         }
 
         #particles-js {
@@ -25,6 +26,7 @@
             left: 0;
             width: 100%;
             height: 100%;
+            z-index: 0;
         }
 
         .bar {
@@ -51,6 +53,8 @@
             color: rgba(255, 255, 255, 0.85);
             transition: background 0.2s, transform 0.2s, border-color 0.2s;
             user-select: none;
+            position: relative;
+            z-index: 101;
         }
 
         .btn:hover {
@@ -69,7 +73,7 @@
             stroke-linejoin: round;
         }
 
-        #soverlay {
+        .overlay {
             display: none;
             position: fixed;
             inset: 0;
@@ -81,7 +85,7 @@
             justify-content: center;
         }
 
-        #soverlay.show {
+        .overlay.show {
             display: flex;
             animation: pop 0.2s ease;
         }
@@ -151,6 +155,7 @@
             font: 500 14px 'Segoe UI', sans-serif;
             cursor: pointer;
             transition: background 0.2s, border-color 0.2s, transform 0.15s;
+            position: relative;
         }
 
         .slink:hover {
@@ -181,6 +186,18 @@
             font-size: 16px;
         }
 
+        .about-content {
+            color: rgba(255, 255, 255, 0.85);
+            font: 14px/1.6 'Segoe UI', sans-serif;
+            text-align: left;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 150px;
+        }
+
         #games {
             position: fixed;
             top: 50%;
@@ -204,6 +221,8 @@
             gap: 8px;
             cursor: pointer;
             transition: transform 0.15s;
+            position: relative;
+            z-index: 51;
         }
 
         .gcard:hover {
@@ -306,6 +325,8 @@
 </head>
 <body>
 
+<div id="particles-js"></div>
+
 <div class="bar">
     <span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -318,17 +339,45 @@
     <span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
 </div>
 
-<div id="soverlay" onclick="if(event.target === this) this.classList.remove('show')">
+<div id="soverlay" class="overlay" onclick="if(event.target === this) this.classList.remove('show')">
     <div class="spanel">
         <button class="sclose" onclick="document.getElementById('soverlay').classList.remove('show')">✕</button>
         <div class="stitle">Settings</div>
         <div class="ssub">Customize your experience</div>
         <div class="slinks">
-            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> Theme</span><span class="sarrow">›</span></div>
-            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg> Sound</span><span class="sarrow">›</span></div>
-            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/><circle cx="5" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg> Particles</span><span class="sarrow">›</span></div>
-            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Links</span><span class="sarrow">›</span></div>
-            <div class="slink"><span class="slink-inner"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About</span><span class="sarrow">›</span></div>
+            <div class="slink" onclick="document.getElementById('theme-picker').click()">
+                <span class="slink-inner">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> 
+                    Theme
+                </span>
+                <input type="color" id="theme-picker" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="document.body.style.background = this.value;">
+                <span class="sarrow">›</span>
+            </div>
+            <div class="slink" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
+                <span class="slink-inner">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 
+                    About
+                </span>
+                <span class="sarrow">›</span>
+            </div>
+            <div class="slink">
+                <span class="slink-inner">
+                    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> 
+                    Links
+                </span>
+                <span class="sarrow">›</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="aoverlay" class="overlay" onclick="if(event.target === this) this.classList.remove('show')">
+    <div class="spanel">
+        <button class="sclose" onclick="document.getElementById('aoverlay').classList.remove('show')">✕</button>
+        <div class="stitle">About</div>
+        <div class="ssub" style="margin-bottom: 0;">Information & Credits</div>
+        <div class="about-content">
+            <p>This is imgui, project that was made after the hit game site ''pIZZA menu''. This site will have more better higher quality updates and games; in the future we plan to add more universal tools to make your gaming experience better-M.m</p>
         </div>
     </div>
 </div>
@@ -395,11 +444,8 @@
     </div>
 </div>
 
-<div id="particles-js"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
-    const $ = q => document.querySelector(q);
-
     const games = {
         crazycattle3d: `<!DOCTYPE html>
 <html lang="en">
@@ -923,109 +969,37 @@ window.onload=function(){
         body { margin: 0; background-image: linear-gradient(rgb(0, 0, 0), rgb(0, 102, 255)); overflow: hidden; }
         #gameContainer { width: 100vw; height: 100vh; }
         canvas { width: 100%; height: 100%; display: block; }
-        #loader { position: absolute; left: 0; top: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-image: linear-gradient(rgb(0, 0, 0), rgb(0, 102, 255)); }
-        .logo { max-width: 100vw; max-height: 70vh; }
-        .pos_progress { position: absolute; bottom: 15%; width: 100%; }
-        .progress { margin: 1.5em auto; max-width: 436px; display: none; position: relative; }
-        .full { width: 97%; transform-origin: top left; }
-        .box_process { width: 100%; }
-        .progress .posfull, .progress .posbox { position: absolute; display: flex; align-items: center; justify-content: center; }
-        .progress .posfull { top: 8px; z-index: 1; }
-        .progress .posbox { top: 0; z-index: 2; }
     </style>
 </head>
 <body>
-    <div id="gameContainer"><canvas id="#canvas"></canvas></div>
-    <div id="loader">
-        <img class="logo" src="image/loading.png?v=1">
-        <div class="pos_progress">
-            <div class="progress">
-                <div class="posfull"><img class="full" src="image/process_bar_back.png"></div>
-                <div class="posbox"><img class="box_process" src="image/process_bar_front.png"></div>
-            </div>
-        </div>
+    <div id="gameContainer">
+        <canvas id="canvas"></canvas>
     </div>
-    <script src="Build/UnityLoader.js"><\/script>
-    <script>
-        var gameInstance = UnityLoader.instantiate("gameContainer", "Build/GeometryDashLite.json", {
-            onProgress: UnityProgress
-        });
-        function UnityProgress(gameInstance, progress) {
-            if (!gameInstance.Module) return;
-            const loader = document.querySelector("#loader");
-            if (!gameInstance.progress) {
-                const progressEl = document.querySelector("#loader .progress");
-                progressEl.style.display = "block";
-                gameInstance.progress = progressEl.querySelector(".full");
-            }
-            gameInstance.progress.style.transform = \`scaleX(\${progress})\`;
-            if (progress === 1 && !gameInstance.removeTimeout) {
-                gameInstance.removeTimeout = setTimeout(function() {
-                    loader.style.display = "none";
-                }, 2000);
-            }
-        }
-    <\/script>
+    <script src="gdlite.js"><\/script>
 </body>
 </html>`
     };
 
-    window.openGame = (id, name) => {
-        let frame = document.getElementById('gframe');
-        
+    function openGame(id, title) {
+        let frame = document.getElementById('gframe')
+        document.getElementById('gtitle').textContent = title
         if (games[id]) {
-            frame.removeAttribute('src');
-            frame.srcdoc = games[id];
+            frame.removeAttribute('src')
+            frame.srcdoc = games[id]
         } else {
-            frame.removeAttribute('srcdoc');
-            frame.src = id;
+            frame.removeAttribute('srcdoc')
+            frame.src = id
         }
-        
-        document.getElementById('gtitle').textContent = name.toUpperCase();
-        document.getElementById('gview').classList.add('show');
-        location.hash = id;
-    };
+        document.getElementById('gview').classList.add('show')
+    }
 
-    window.closeGame = () => {
-        let frame = document.getElementById('gframe');
-        
-        frame.removeAttribute('srcdoc');
-        frame.removeAttribute('src');
-        
-        document.getElementById('gview').classList.remove('show');
-        history.pushState('', '', location.pathname);
-    };
+    function closeGame() {
+        let f = document.getElementById('gframe')
+        f.srcdoc = ''; f.src = ''
+        document.getElementById('gview').classList.remove('show')
+    }
 
-    window.addEventListener('popstate', () => {
-        if (!location.hash) {
-            closeGame();
-        }
-    });
-
-    particlesJS('particles-js', {
-        particles: {
-            number: { value: 120, density: { enable: true, value_area: 800 } },
-            color: { value: ['#cc99ff', '#ffffff', '#9933ff', '#e0b3ff'] },
-            shape: { type: 'circle' },
-            opacity: { value: 0.7, random: true, anim: { enable: true, speed: 1, opacity_min: 0.2, sync: false } },
-            size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.5, sync: false } },
-            line_linked: { enable: true, distance: 130, color: '#9933ff', opacity: 0.3, width: 1 },
-            move: { enable: true, speed: 2, direction: 'none', random: true, straight: false, out_mode: 'out', bounce: false }
-        },
-        interactivity: {
-            detect_on: 'canvas',
-            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
-            modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } }
-        },
-        retina_detect: true
-    });
-
-    document.oncontextmenu = e => e.preventDefault();
-    document.onkeydown = e => {
-        if (e.ctrlKey || e.keyCode === 123) {
-            e.preventDefault();
-        }
-    };
+    particlesJS("particles-js", {particles:{number:{value:80,density:{enable:true,value_area:800}},color:{value:"#ffffff"},shape:{type:"circle"},opacity:{value:0.4,random:true},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:"#a050ff",opacity:0.2,width:1},move:{enable:true,speed:1.5,direction:"none",random:true,out_mode:"out"}},interactivity:{detect_on:"canvas",events:{onhover:{enable:true,mode:"repulse"},onclick:{enable:true,mode:"push"}},modes:{repulse:{distance:80},push:{particles_nb:4}}},retina_detect:true})
 </script>
 </body>
 </html>
