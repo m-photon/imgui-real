@@ -384,7 +384,7 @@
 
 <div id="games">
     <div class="gcard" onclick="openGame('crazycattle3d', 'CRAZY CATTLE 3D')">
-        <div class="gicon cover" style="background-image: url('https://rawcdn.githack.com/genizy/cc3d-mobile/main/CrazyCattle3D.png');"></div>
+        <div class="gicon cover" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/cc3d-mobile@main/CrazyCattle3D.png');"></div>
         <span class="gname">Crazy Cattle 3D</span>
     </div>
 
@@ -393,17 +393,17 @@
         <span class="gname">Deltarune</span>
     </div>
     
-    <div class="gcard" onclick="openGame('https://raw.githack.com/bubbls/UGS-Assets/main/fnf0.7.5/index.html', 'FRIDAY NIGHT FUNKIN')">
+    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html', 'FRIDAY NIGHT FUNKIN')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/favicon.png');"></div>
         <span class="gname">Friday Night Funkin</span>
     </div>
     
-    <div class="gcard" onclick="openGame('https://raw.githack.com/genizy/web-port/main/baldi-plus/index.html', 'BALDIS BASICS PLUS')">
+    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/web-port@main/baldi-plus/index.html', 'BALDIS BASICS PLUS')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
         <span class="gname">Baldi's Basics Plus</span>
     </div>
     
-    <div class="gcard" onclick="openGame('https://raw.githack.com/genizy/web-port/main/undertale-yellow/index.html', 'UNDERTALE YELLOW')">
+    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/index.html', 'UNDERTALE YELLOW')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
         <span class="gname">Undertale Yellow</span>
     </div>
@@ -418,7 +418,7 @@
         <span class="gname">Retro Bowl</span>
     </div>
 
-    <div class="gcard" onclick="openGame('https://rawcdn.githack.com/genizy/google-class/main/gdlite/index.html', 'GEOMETRY DASH')">
+    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/google-class@main/gdlite/index.html', 'GEOMETRY DASH')"">
         <div class="gicon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
         <span class="gname">Geometry Dash</span>
     </div>
@@ -450,7 +450,7 @@
         crazycattle3d: `<!DOCTYPE html>
 <html lang="en">
 	<head>
-		<base href="https://rawcdn.githack.com/genizy/cc3d-mobile/main/">
+		<base href="https://cdn.jsdelivr.net/gh/genizy/cc3d-mobile@main/">
 		<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837" crossorigin="anonymous"><\/script>
 		<meta charset="utf-8">
 		<style>
@@ -684,7 +684,7 @@ const engine = new Engine(GODOT_CONFIG);
   });
 
   window.addEventListener("touchmove", function(e) {
-    if (e.touches[0].clientY < 50) e.preventDefault();
+    if (e.touches.length > 0 && e.touches[0].clientY < 50) e.preventDefault();
   }, { passive: false });
 
   window.addEventListener("beforeunload", function (e) {
