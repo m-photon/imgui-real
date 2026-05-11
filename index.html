@@ -393,17 +393,17 @@
         <span class="gname">Deltarune</span>
     </div>
     
-    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html', 'FRIDAY NIGHT FUNKIN')">
+    <div class="gcard" onclick="openGame('fnf', 'FRIDAY NIGHT FUNKIN')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/favicon.png');"></div>
         <span class="gname">Friday Night Funkin</span>
     </div>
     
-    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/web-port@main/baldi-plus/index.html', 'BALDIS BASICS PLUS')">
+    <div class="gcard" onclick="openGame('baldi', 'BALDIS BASICS PLUS')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
         <span class="gname">Baldi's Basics Plus</span>
     </div>
     
-    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/index.html', 'UNDERTALE YELLOW')">
+    <div class="gcard" onclick="openGame('utyellow', 'UNDERTALE YELLOW')">
         <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
         <span class="gname">Undertale Yellow</span>
     </div>
@@ -418,7 +418,7 @@
         <span class="gname">Retro Bowl</span>
     </div>
 
-    <div class="gcard" onclick="openGame('https://cdn.jsdelivr.net/gh/genizy/google-class@main/gdlite/index.html', 'GEOMETRY DASH')"">
+    <div class="gcard" onclick="openGame('geodash', 'GEOMETRY DASH')">
         <div class="gicon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
         <span class="gname">Geometry Dash</span>
     </div>
@@ -570,7 +570,7 @@ body {
 
 		<script src="CrazyCattle3D.js"><\/script>
 		<script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"CrazyCattle3D","experimentalVK":false,"fileSizes":{"CrazyCattle3D.pck":28642672,"CrazyCattle3D.wasm":43444261},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"CrazyCattle3D.service.worker.js"};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"CrazyCattle3D","experimentalVK":false,"fileSizes":{"CrazyCattle3D.pck":28642672,"CrazyCattle3D.wasm":43444261},"focusCanvas":true,"gdextensionLibs":[],"serviceWorker":"CrazyCattle3D.service.worker.js"};
 const GODOT_THREADS_ENABLED = false;
 const engine = new Engine(GODOT_CONFIG);
 
@@ -876,6 +876,44 @@ window.onload=function(){
   <\/script>
 </body>
 </html>`,
+
+        geodash: `<!DOCTYPE html><html><head><base href="https://cdn.jsdelivr.net/gh/genizy/google-class@main/gdlite/"><meta charset="UTF-8"><style>*{margin:0;padding:0}body{background:#000;overflow:hidden}</style></head><body><script>
+fetch('https://cdn.jsdelivr.net/gh/genizy/google-class@main/gdlite/index.html')
+  .then(r=>r.text())
+  .then(html=>{
+    const base = document.querySelector('base');
+    document.open();document.write(html);document.close();
+    if(!document.querySelector('base')){
+      const b=document.createElement('base');
+      b.href='https://cdn.jsdelivr.net/gh/genizy/google-class@main/gdlite/';
+      document.head.prepend(b);
+    }
+  });
+<\/script></body></html>`,
+
+        fnf: `<!DOCTYPE html><html><head><base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/"><meta charset="UTF-8"><style>*{margin:0;padding:0}body{background:#000;overflow:hidden}</style></head><body><script>
+fetch('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html')
+  .then(r=>r.text())
+  .then(html=>{document.open();document.write(html);document.close();
+    if(!document.querySelector('base')){const b=document.createElement('base');b.href='https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/';document.head.prepend(b);}
+  });
+<\/script></body></html>`,
+
+        baldi: `<!DOCTYPE html><html><head><base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/baldi-plus/"><meta charset="UTF-8"><style>*{margin:0;padding:0}body{background:#000;overflow:hidden}</style></head><body><script>
+fetch('https://cdn.jsdelivr.net/gh/genizy/web-port@main/baldi-plus/index.html')
+  .then(r=>r.text())
+  .then(html=>{document.open();document.write(html);document.close();
+    if(!document.querySelector('base')){const b=document.createElement('base');b.href='https://cdn.jsdelivr.net/gh/genizy/web-port@main/baldi-plus/';document.head.prepend(b);}
+  });
+<\/script></body></html>`,
+
+        utyellow: `<!DOCTYPE html><html><head><base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/"><meta charset="UTF-8"><style>*{margin:0;padding:0}body{background:#000;overflow:hidden}</style></head><body><script>
+fetch('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/index.html')
+  .then(r=>r.text())
+  .then(html=>{document.open();document.write(html);document.close();
+    if(!document.querySelector('base')){const b=document.createElement('base');b.href='https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/';document.head.prepend(b);}
+  });
+<\/script></body></html>`,
 
         retrobowl: `<html lang="en"><head>
 <script>
