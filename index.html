@@ -428,7 +428,7 @@
         <span class="gname">Geometry Dash</span>
     </div>
 
-    <div class="gcard" onclick="openGame('games/ragdollhit.html', 'RAGDOLL HIT')">
+    <div class="gcard" onclick="openGame('games/ragdoll-hit/index.html', 'RAGDOLL HIT')">
         <div class="gicon cover" style="background-image: url('https://tse4.mm.bing.net/th/id/OIP.mb_sbBFxZndMHpPOY5emhAHaDV?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
         <span class="gname">Ragdoll Hit</span>
     </div>
@@ -471,7 +471,6 @@
         document.getElementById('gview').classList.remove('show');
     }
 
-    // Safely load particles so it doesn't crash the rest of your buttons
     document.addEventListener("DOMContentLoaded", function() {
         try {
             if (typeof particlesJS !== 'undefined') {
