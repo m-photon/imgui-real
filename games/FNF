@@ -1,0 +1,7 @@
+<!DOCTYPE html><html><head><base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/"><meta charset="UTF-8"><style>*{margin:0;padding:0}body{background:#000;overflow:hidden}</style></head><body><script>
+fetch('https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html')
+  .then(r=>r.text())
+  .then(html=>{document.open();document.write(html);document.close();
+    if(!document.querySelector('base')){const b=document.createElement('base');b.href='https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/';document.head.prepend(b);}
+  });
+</script></body></html>
