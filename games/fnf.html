@@ -1,13 +1,3 @@
-<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0}body{background:#000;overflow:hidden}</style></head><body><script>
-const BASE = 'https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/';
-fetch(BASE + 'index.html')
-  .then(r => r.text())
-  .then(html => {
-    html = html.replace(/<base[^>]*>/gi, '');
-    html = html.replace(/src="\.?\//g, 'src="' + BASE);
-    html = html.replace(/href="\.?\//g, 'href="' + BASE);
-    html = html.replace(/url\('\.?\//g, "url('" + BASE);
-    html = html.replace('<head>', '<head><base href="' + BASE + '">');
-    document.open(); document.write(html); document.close();
-  });
-</script></body></html>
+<!DOCTYPE html><html><head><meta charset="UTF-8"><style>*{margin:0;padding:0}body,html{width:100%;height:100%;overflow:hidden;background:#000}iframe{width:100%;height:100%;border:none;display:block}</style></head><body>
+<iframe src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/fnf0.7.5/index.html" allowfullscreen allow="autoplay; fullscreen"></iframe>
+</body></html>
