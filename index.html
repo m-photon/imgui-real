@@ -427,11 +427,6 @@
         <div class="gicon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
         <span class="gname">Geometry Dash</span>
     </div>
-
-    <div class="gcard" onclick="openGame('games/ragdollhit.html?t=' + Date.now(), 'RAGDOLL HIT')">
-        <div class="gicon cover" style="background-image: url('https://tse4.mm.bing.net/th/id/OIP.mb_sbBFxZndMHpPOY5emhAHaDV?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="gname">Ragdoll Hit</span>
-    </div>
 </div>
 
 <div id="gview">
@@ -471,15 +466,7 @@
         document.getElementById('gview').classList.remove('show');
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
-        try {
-            if (typeof particlesJS !== 'undefined') {
-                particlesJS("particles-js", {particles:{number:{value:80,density:{enable:true,value_area:800}},color:{value:"#ffffff"},shape:{type:"circle"},opacity:{value:0.4,random:true},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:"#a050ff",opacity:0.2,width:1},move:{enable:true,speed:1.5,direction:"none",random:true,out_mode:"out"}},interactivity:{detect_on:"canvas",events:{onhover:{enable:true,mode:"repulse"},onclick:{enable:true,mode:"push"}},modes:{repulse:{distance:80},push:{particles_nb:4}}},retina_detect:true});
-            }
-        } catch(e) {
-            console.log("Particles script status: Blocked or Offline. Fallback activated.");
-        }
-    });
+    particlesJS("particles-js", {particles:{number:{value:80,density:{enable:true,value_area:800}},color:{value:"#ffffff"},shape:{type:"circle"},opacity:{value:0.4,random:true},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:"#a050ff",opacity:0.2,width:1},move:{enable:true,speed:1.5,direction:"none",random:true,out_mode:"out"}},interactivity:{detect_on:"canvas",events:{onhover:{enable:true,mode:"repulse"},onclick:{enable:true,mode:"push"}},modes:{repulse:{distance:80},push:{particles_nb:4}}},retina_detect:true});
 </script>
 </body>
 </html>
