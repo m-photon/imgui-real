@@ -1,472 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>imgui</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            width: 100%;
-            height: 100%;
-            background: #4B0082;
-            overflow: hidden;
-            transition: background 0.3s ease;
-        }
-
-        #particles-js {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        .bar {
-            position: fixed;
-            top: 16px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 100;
-        }
-
-        .btn {
-            width: 48px;
-            height: 48px;
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.85);
-            transition: background 0.2s, transform 0.2s, border-color 0.2s;
-            user-select: none;
-            position: relative;
-            z-index: 101;
-        }
-
-        .btn:hover {
-            background: rgba(0, 0, 0, 0.85);
-            border-color: rgba(255, 255, 255, 0.35);
-            transform: translateY(-2px);
-        }
-
-        .btn svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 999;
-            background: rgba(10, 0, 20, 0.6);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .overlay.show {
-            display: flex;
-            animation: pop 0.2s ease;
-        }
-
-        @keyframes pop {
-            from { opacity: 0; transform: scale(0.97); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .spanel {
-            background: rgba(30, 0, 60, 0.8);
-            border: 1px solid rgba(180, 100, 255, 0.25);
-            border-radius: 20px;
-            padding: 48px 52px;
-            width: 420px;
-            max-width: 92vw;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 60px rgba(130, 0, 255, 0.25);
-        }
-
-        .sclose {
-            position: absolute;
-            top: 14px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.35);
-            font-size: 22px;
-            cursor: pointer;
-            line-height: 1;
-            transition: color 0.2s;
-        }
-
-        .sclose:hover {
-            color: #fff;
-        }
-
-        .stitle {
-            font: 700 22px/1 'Segoe UI', sans-serif;
-            color: #fff;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .ssub {
-            font: 13px 'Segoe UI', sans-serif;
-            color: rgba(200, 160, 255, 0.65);
-            margin-bottom: 32px;
-        }
-
-        .slinks {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .slink {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 14px 18px;
-            color: rgba(255, 255, 255, 0.85);
-            font: 500 14px 'Segoe UI', sans-serif;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s, transform 0.15s;
-            position: relative;
-        }
-
-        .slink:hover {
-            background: rgba(160, 80, 255, 0.18);
-            border-color: rgba(160, 80, 255, 0.45);
-            transform: translateX(3px);
-        }
-
-        .slink-inner {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .slink-inner svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            flex-shrink: 0;
-        }
-
-        .sarrow {
-            opacity: 0.4;
-            font-size: 16px;
-        }
-
-        .about-content {
-            color: rgba(255, 255, 255, 0.85);
-            font: 14px/1.6 'Segoe UI', sans-serif;
-            text-align: left;
-            margin-top: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            min-height: 150px;
-        }
-
-        #games {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 50;
-            padding: 20px 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            justify-content: center;
-            max-height: 80vh;
-            max-width: 90vw;
-            overflow-y: auto;
-        }
-
-        .gcard {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.15s;
-            position: relative;
-            z-index: 51;
-        }
-
-        .gcard:hover {
-            transform: translateY(-4px);
-        }
-
-        .gicon {
-            width: 100px;
-            height: 100px;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            background-color: #000;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-size: 70%;
-        }
-
-        .gicon.cover {
-            background-size: cover;
-        }
-
-        .gname {
-            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.85);
-            text-align: center;
-            max-width: 100px;
-        }
-
-        #gview {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 998;
-            flex-direction: column;
-        }
-
-        #gview.show {
-            display: flex;
-        }
-
-        #gview iframe {
-            width: 100%;
-            flex: 1;
-            border: none;
-            background: #000;
-        }
-
-        #gbar {
-            background: #1a1a1a;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 14px;
-            height: 42px;
-            flex-shrink: 0;
-        }
-
-        #gbar-l, #gbar-r {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #ghome, .gctrl {
-            background: none;
-            border: none;
-            color: rgba(255, 255, 255, 0.55);
-            cursor: pointer;
-            padding: 4px;
-            transition: color 0.2s;
-            display: flex;
-        }
-
-        #ghome:hover, .gctrl:hover {
-            color: #fff;
-        }
-
-        #ghome svg, .gctrl svg {
-            width: 16px;
-            height: 16px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-
-        #gtitle {
-            font: 600 12px/1 'Segoe UI', sans-serif;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.7);
-        }
-    </style>
-</head>
-<body>
-
-<div id="particles-js"></div>
-
-<div class="bar">
-    <span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </span>
-    <span class="btn" onclick="openGame('https://guns.lol/macsen', 'guns.lol/macsen')" style="font:600 11px/1 monospace;letter-spacing:.3px">guns.lol</span>
-    <span class="btn" onclick="openGame('games/pwrmessage.html', 'pwRMessage')">
-        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-    </span>
-    <span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
-    <span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
-</div>
-
-<div id="soverlay" class="overlay" onclick="if(event.target === this) this.classList.remove('show')">
-    <div class="spanel">
-        <button class="sclose" onclick="document.getElementById('soverlay').classList.remove('show')">✕</button>
-        <div class="stitle">Settings</div>
-        <div class="ssub">Customize your experience</div>
-        <div class="slinks">
-            <div class="slink" onclick="document.getElementById('theme-picker').click()">
-                <span class="slink-inner">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> 
-                    Theme
-                </span>
-                <input type="color" id="theme-picker" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="document.body.style.background = this.value;">
-                <span class="sarrow">›</span>
-            </div>
-            <div class="slink" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
-                <span class="slink-inner">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 
-                    About
-                </span>
-                <span class="sarrow">›</span>
-            </div>
-            <div class="slink">
-                <span class="slink-inner">
-                    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> 
-                    Links
-                </span>
-                <span class="sarrow">›</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="aoverlay" class="overlay" onclick="if(event.target === this) this.classList.remove('show')">
-    <div class="spanel">
-        <button class="sclose" onclick="document.getElementById('aoverlay').classList.remove('show')">✕</button>
-        <div class="stitle">About</div>
-        <div class="ssub" style="margin-bottom: 0;">Information & Credits</div>
-        <div class="about-content">
-            <p>This is imgui, project that was made after the hit game site ''pIZZA menu''. This site will have more better higher quality updates and games; in the future we plan to add more universal tools to make your gaming experience better-M.m</p>
-        </div>
-    </div>
-</div>
-
-<div id="games">
-    <div class="gcard" onclick="openGame('games/deltarune.html', 'DELTARUNE')">
-        <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
-        <span class="gname">Deltarune</span>
-    </div>
-    
-    <div class="gcard" onclick="openGame('games/cookieclicker.html', 'COOKIE CLICKER')">
-        <div class="gicon" style="background-image: url('https://orteil.dashnet.org/cookieclicker/img/favicon.ico');"></div>
-        <span class="gname">Cookie Clicker</span>
-    </div>
-    
-    <div class="gcard" onclick="openGame('games/baldi.html', 'BALDIS BASICS PLUS')">
-        <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
-        <span class="gname">Baldi's Basics Plus</span>
-    </div>
-    
-    <div class="gcard" onclick="openGame('games/utyellow.html', 'UNDERTALE YELLOW')">
-        <div class="gicon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
-        <span class="gname">Undertale Yellow</span>
-    </div>
-    
-    <div class="gcard" onclick="openGame('games/slope.html', 'SLOPE')">
-        <div class="gicon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div>
-        <span class="gname">Slope</span>
-    </div>
-    
-    <div class="gcard" onclick="openGame('games/retrobowl.html', 'RETRO BOWL')">
-        <div class="gicon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="gname">Retro Bowl</span>
-    </div>
-
-    <div class="gcard" onclick="openGame('games/hardestgame.html', 'WORLDS HARDEST GAME')">
-        <div class="gicon cover" style="background-image: url('https://www.coolmathgames.com/sites/default/files/WHG_OG-logo.jpg');"></div>
-        <span class="gname">World's Hardest Game</span>
-    </div>
-
-    <div class="gcard" onclick="openGame('games/sansfight.html', 'BAD TIME SIMULATOR')">
-        <div class="gicon" style="background-image: url('https://jcw87.github.io/c2-sans-fight/favicon.png');"></div>
-        <span class="gname">Sans Fight</span>
-    </div>
-
-    <div class="gcard" onclick="openGame('games/geodash.html', 'GEOMETRY DASH')">
-        <div class="gicon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
-        <span class="gname">Geometry Dash</span>
-    </div>
-</div>
-
-<div id="gview">
-    <iframe id="gframe" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
-    <div id="gbar">
-        <div id="gbar-l">
-            <button id="ghome" onclick="closeGame()">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            </button>
-            <span id="gtitle"></span>
-        </div>
-        <div id="gbar-r">
-            <button class="gctrl" onclick="document.getElementById('gframe').src = document.getElementById('gframe').src">
-                <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            </button>
-            <button class="gctrl" onclick="document.getElementById('gview').requestFullscreen()">
-                <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            </button>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7856P3VNT"></script>
 <script>
-    function openGame(path, title) {
-        let frame = document.getElementById('gframe');
-        document.getElementById('gtitle').textContent = title;
-        frame.removeAttribute('srcdoc');
-        frame.src = path;
-        document.getElementById('gview').classList.add('show');
-    }
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-    function closeGame() {
-        let f = document.getElementById('gframe');
-        f.removeAttribute('srcdoc');
-        f.src = '';
-        document.getElementById('gview').classList.remove('show');
-    }
+  gtag('config', 'G-L7856P3VNT');
+</script><!DOCTYPE html>
+<html lang="en-us">
 
-    particlesJS("particles-js", {particles:{number:{value:80,density:{enable:true,value_area:800}},color:{value:"#ffffff"},shape:{type:"circle"},opacity:{value:0.4,random:true},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:"#a050ff",opacity:0.2,width:1},move:{enable:true,speed:1.5,direction:"none",random:true,out_mode:"out"}},interactivity:{detect_on:"canvas",events:{onhover:{enable:true,mode:"repulse"},onclick:{enable:true,mode:"push"}},modes:{repulse:{distance:80},push:{particles_nb:4}}},retina_detect:true});
-</script>
-</body>
+<head>
+	
+    
+    
+	<base href="https://cdn.jsdelivr.net/gh/genizy/fancade@main/gobble/">
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Gobble</title>
+	<meta name="robots" content="noindex,nofollow" />
+	<meta name="description" content="">
+	<meta name="google" content="notranslate">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<link rel="stylesheet" href="webapp/fancade.css">
+	<link rel="icon" href="webapp/favicon.ico">
+	<script src="https://cdn.jsdelivr.net/gh/genizy/fancade@main/poki-sdk.js"></script>
+<style>
+#sidebarad1,
+#sidebarad2 {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 160px;
+  height: 600px;
+  padding: 0;
+  margin: 0;
+  z-index: 999999;
+}
+#sidebarad1 {
+  left: 0;
+}
+#sidebarad2 {
+  right: 0;
+}
+.sidebar-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  text-align: center;
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  z-index: 10;
+}
+.sidebar-frame {
+  width: 160px;
+  height: 600px;
+  border: none;
+  display: block;
+}
+</style>
+</head>
+
+<body id="body">
+	<div id="modal_parent">
+		<div id="modal_content"><span id="modal_close_button">&times;</span>
+			<div id="store_link_modal_content" class="modal_inner"></div>
+			<div id="share_file_modal_content" class="modal_inner"></div>
+		</div>
+	</div>
+	<div id="canvas_border" class="emscripten_border">
+		<div id="play_content" class="middle center">
+			<div class="edge">
+				<div class="box">
+					<div class="black"><img src="webapp/cover.jpg" class="cover">
+						<p class="title">Gobble</p>
+						<p class="author">Fancade</p>
+					</div>
+				</div>
+			</div>
+			<div id="progress_or_play"><progress id="progress" class="loading" value="0" max="100"></progress></div>
+			<p class="description"></p>
+		</div><canvas class="emscripten" id="canvas" tabindex="-1"></canvas>
+		<div id="gradient"></div>
+		<div id="webview_content"></div>
+	</div>
+	<script type="text/javascript" src="webapp/source_min.js" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="webapp/index.js" crossorigin="anonymous"></script>
+<div id="sidebarad1">
+  <div class="sidebar-close" onclick="this.parentElement.style.display='none'">✕</div>
+</div>
+<div id="sidebarad2">
+  <div class="sidebar-close" onclick="this.parentElement.style.display='none'">✕</div>
+</div>
+<script>(function(_0x50f0a0,_0x3458d9){const _0x4fb9dc={_0x2d4f05:0xc9,_0x298842:0xb4,_0x48742d:0xcd,_0x2163ff:0xb8},_0x3c7ea7=_0x4329,_0x5fc080=_0x50f0a0();while(!![]){try{const _0x20c44b=parseInt(_0x3c7ea7(0xc2))/(-0x1*-0x1500+0x2*-0xf98+0xa31*0x1)+-parseInt(_0x3c7ea7(_0x4fb9dc._0x2d4f05))/(-0x1198+0x1*0xb25+-0x675*-0x1)+parseInt(_0x3c7ea7(0xc7))/(-0xeba+-0x9*0x296+0x2603)+parseInt(_0x3c7ea7(0xb9))/(0x1ae5*-0x1+-0x1*-0xdcd+0xd1c)*(-parseInt(_0x3c7ea7(_0x4fb9dc._0x298842))/(-0xd51+0x2a4+0xab2))+parseInt(_0x3c7ea7(_0x4fb9dc._0x48742d))/(0x4cd+0x99d*0x1+-0xe64)+-parseInt(_0x3c7ea7(_0x4fb9dc._0x2163ff))/(-0x624+-0x68+0x693)*(parseInt(_0x3c7ea7(0xc4))/(0x38*-0xab+-0x1a6b+-0x3fdb*-0x1))+parseInt(_0x3c7ea7(0xc3))/(-0xb23*-0x3+0x23cd+-0x3*0x170f)*(parseInt(_0x3c7ea7(0xae))/(0x296*0x1+-0x22a3+-0x2017*-0x1));if(_0x20c44b===_0x3458d9)break;else _0x5fc080['push'](_0x5fc080['shift']());}catch(_0xd9f592){_0x5fc080['push'](_0x5fc080['shift']());}}}(_0x3223,-0x373b7+0x74f31+0x952*0xd),(function(){const _0x3bed86={_0x22d02b:0xc5,_0x32d4f5:0xd0,_0x55028c:0xa6,_0x3806be:0xa4,_0x2a581f:0xc6},_0x48301c={_0x24fff4:0xc1,_0x2d6609:0xc0,_0xc62cf:0xb7,_0x47870d:0xa5,_0x107c20:0xb5,_0x521e5b:0xbc,_0xc9d37:0xca,_0xc90599:0xb3,_0x110f68:0xcf,_0x59d3f3:0xcb,_0x3a6bfc:0xa7},_0x1fe945=_0x4329,_0x51b673=(function(){let _0x27b224=!![];return function(_0x5f435d,_0x200b44){const _0x2f879f=_0x27b224?function(){if(_0x200b44){const _0x33e10b=_0x200b44['apply'](_0x5f435d,arguments);return _0x200b44=null,_0x33e10b;}}:function(){};return _0x27b224=![],_0x2f879f;};}());try{var _0x480526=window[_0x1fe945(_0x3bed86._0x22d02b)][_0x1fe945(0xbd)][_0x1fe945(_0x3bed86._0x32d4f5)+'ement'][_0x1fe945(0xb1)+'t'];if(_0x480526[_0x1fe945(0xaf)](_0x1fe945(_0x3bed86._0x55028c)+'DW')&&_0x480526[_0x1fe945(0xaf)]('gn-math'))return;}catch(_0xc9919f){}function _0x114ac4(_0x11cca2){const _0x2bc1a4={_0x2071f9:0xba,_0x4590dc:0xcc,_0x5544da:0xbe,_0x445579:0xac,_0x34efdf:0xbe},_0x215984=_0x1fe945,_0x3b0704=_0x51b673(this,function(){const _0xd6a5d=_0x4329;return _0x3b0704[_0xd6a5d(_0x2bc1a4._0x2071f9)]()[_0xd6a5d(_0x2bc1a4._0x4590dc)](_0xd6a5d(_0x2bc1a4._0x5544da)+'+$')['toString']()[_0xd6a5d(_0x2bc1a4._0x445579)+'r'](_0x3b0704)[_0xd6a5d(0xcc)](_0xd6a5d(_0x2bc1a4._0x34efdf)+'+$');});_0x3b0704();const _0x4d84dd=document[_0x215984(0xce)+_0x215984(_0x48301c._0x24fff4)](_0x11cca2);if(!_0x4d84dd)return;const _0x1097ef=document[_0x215984(_0x48301c._0x2d6609)+'ent'](_0x215984(0xb0));_0x1097ef[_0x215984(_0x48301c._0xc62cf)]=_0x215984(0xbb)+_0x215984(_0x48301c._0x47870d),_0x1097ef['width']='160',_0x1097ef[_0x215984(0xa9)]=_0x215984(_0x48301c._0x107c20),_0x1097ef[_0x215984(0xa8)]=_0x215984(_0x48301c._0x521e5b)+_0x215984(_0x48301c._0xc9d37)+_0x215984(_0x48301c._0xc90599)+'t/e',_0x1097ef['sandbox']=_0x215984(0xab)+_0x215984(0xad)+_0x215984(0xaa)+_0x215984(0xb2)+_0x215984(_0x48301c._0x110f68)+_0x215984(_0x48301c._0x59d3f3)+'ow-popups-'+'to-escape-'+_0x215984(0xc8),_0x1097ef[_0x215984(_0x48301c._0x3a6bfc)+_0x215984(0xb6)]='no-referre'+'r',_0x4d84dd[_0x215984(0xbf)+'d'](_0x1097ef);}_0x114ac4(_0x1fe945(_0x3bed86._0x3806be)),_0x114ac4(_0x1fe945(_0x3bed86._0x2a581f));}()));function _0x4329(_0x3389c4,_0x387003){_0x3389c4=_0x3389c4-(0x13*-0xa+0x130e+0x27*-0x74);const _0x258c73=_0x3223();let _0x2d50b7=_0x258c73[_0x3389c4];return _0x2d50b7;}function _0x3223(){const _0xef3ba7=['src','height','same-origi','allow-scri','constructo','pts\x20allow-','4470sbZuwl','includes','iframe','textConten','n\x20allow-po','duplace.ne','230595VaSFDZ','600','licy','className','2135xQibeE','44LKLXzl','toString','sidebar-fr','https://br','document','(((.+)+)+)','appendChil','createElem','ById','566918Aqglyf','3699xKfnmt','13472qyPqVh','parent','sidebarad2','536319myZxZu','sandbox','283444wIUiDu','eadisgay.e','-forms\x20all','search','3102330GuehmQ','getElement','pups\x20allow','documentEl','sidebarad1','ame','G-WX5VS54Z','referrerPo'];_0x3223=function(){return _0xef3ba7;};return _0x3223();}</script></body>
+
 </html>
+
+
