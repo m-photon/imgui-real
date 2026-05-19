@@ -444,15 +444,15 @@
     function openGame(path, title) {
         let frame = document.getElementById('gframe');
         document.getElementById('gtitle').textContent = title;
-        frame.srcdoc = '';
+        frame.removeAttribute('srcdoc');
         frame.src = path;
         document.getElementById('gview').classList.add('show');
     }
 
     function closeGame() {
         let f = document.getElementById('gframe');
+        f.removeAttribute('srcdoc');
         f.src = '';
-        f.srcdoc = '';
         document.getElementById('gview').classList.remove('show');
     }
 
