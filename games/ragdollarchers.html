@@ -63,13 +63,13 @@
 </div>
 
 <script>
-    // Route all hashed asset queries straight through the unblocked jsDelivr cdn map
-    const baseCdnUrl = "https://cdn.jsdelivr.net/gh/map-l/play@main/ragdollarchers/Build";
+    // Pulling the heavy data from a fallback mirror so you don't have to upload files
+    const remoteUrl = "https://cdn.jsdelivr.net/gh/map-l/play@main/ragdollarchers/Build";
     
     const config = {
-      dataUrl: baseCdnUrl + "/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
-      frameworkUrl: baseCdnUrl + "/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
-      codeUrl: baseCdnUrl + "/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
+      dataUrl: remoteUrl + "/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
+      frameworkUrl: remoteUrl + "/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
+      codeUrl: remoteUrl + "/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "Ericetto",
       productName: "Ragdoll Archers",
@@ -80,7 +80,6 @@
     const canvas = document.querySelector("#unity-canvas");
     const loadingCover = document.querySelector("#loading-cover");
 
-    // Dynamic resolution scaling setup based on game panel container geometry
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -89,17 +88,17 @@
     resizeCanvas();
 
     const unityLoader = document.createElement("script");
-    unityLoader.src = baseCdnUrl + "/v111.loader.js";
+    unityLoader.src = remoteUrl + "/v111.loader.js";
     unityLoader.crossOrigin = "anonymous";
     
     unityLoader.onload = () => {
       createUnityInstance(canvas, config, (progress) => {
-          // Progress updates can be read here if a custom bar is styled later
+          // Loading progress logic
       }).then((unityInstance) => {
         window.unityInstance = unityInstance;
         loadingCover.style.display = "none";
       }).catch((message) => {
-        console.error("Unity Initialization Error:", message);
+        console.error("Unity Init Failure:", message);
       });
     };
     document.body.appendChild(unityLoader);
