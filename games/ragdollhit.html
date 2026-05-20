@@ -4,8 +4,39 @@
     <meta name="robots" content="noindex,nofollow" />
 	<meta charset="utf-8">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Ragdoll Hit</title>
-	            <script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+	<title>Ragdoll Hit - Poki</title>
+    
+    <style>
+        /* Force layout container to lock dimensions and stop viewport bouncing */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden !important;
+            position: fixed;
+            touch-action: none; /* Stops swipe-down actions from pulling down a browser UI */
+            background-color: #000;
+        }
+    </style>
+
+    <script>
+      // COUNTERMEASURE: Intercept and disable any automated window scrolling that triggers the URL bar
+      window.scrollTo = function() {};
+      window.scroll = function() {};
+      window.scrollBy = function() {};
+      
+      // Stop master-loader from changing or monitoring layout bounds
+      Object.defineProperty(window, 'innerHeight', { writable: false, value: window.innerHeight });
+      Object.defineProperty(window, 'innerWidth', { writable: false, value: window.innerWidth });
+
+      // Kill swipe down to refresh / reveal address bar gesture
+      window.addEventListener('blur', function() {
+          // Instantly reclaim focus if master-loader causes frame shifts
+          window.focus();
+      });
+
       window.fileMergerConfig = {
         files: [
           { name: '959bf1c60308f1c34bf072f43c3c17d4.data.unityweb', parts: 1 },
@@ -45,5 +76,9 @@
 </head>
 <body>
 	<script src="master-loader.js"></script>
+    <script>
+        // Additional layer to trap mouse clicks/drags inside the canvas iframe panel
+        document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+    </script>
 </body>
 </html>
