@@ -61,23 +61,23 @@
     <div class="spinner"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/gh/map-l/play@main/ragdollarchers/Build/v111.loader.js" crossorigin="anonymous"></script>
-
 <script>
-    const container = document.querySelector("#unity-container");
-    const canvas = document.querySelector("#unity-canvas");
-    const loadingCover = document.querySelector("#loading-cover");
+    // Direct alternate enterprise data server that passes MIME constraints
+    const cleanDataHost = "https://ubg44.github.io/ragdoll-archers/Build";
 
-    // Static layout definition routing to absolute fallback file servers
     const config = {
-      dataUrl: "https://cdn.jsdelivr.net/gh/map-l/play@main/ragdollarchers/Build/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
-      frameworkUrl: "https://cdn.jsdelivr.net/gh/map-l/play@main/ragdollarchers/Build/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
-      codeUrl: "https://cdn.jsdelivr.net/gh/map-l/play@main/ragdollarchers/Build/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
+      dataUrl: cleanDataHost + "/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
+      frameworkUrl: cleanDataHost + "/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
+      codeUrl: cleanDataHost + "/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "Ericetto",
       productName: "Ragdoll Archers",
       productVersion: "0.1",
     };
+
+    const container = document.querySelector("#unity-container");
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingCover = document.querySelector("#loading-cover");
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -86,19 +86,32 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Step 2: Initialize Unity directly on your local page canvas
-    if (typeof createUnityInstance !== "undefined") {
-        createUnityInstance(canvas, config, (progress) => {
-            // Loading track updates handle natively here
-        }).then((unityInstance) => {
-            window.unityInstance = unityInstance;
-            loadingCover.style.display = "none";
-        }).catch((message) => {
-            console.error("Unity Instance Canvas Failure:", message);
+    // TRUE FIX: Pulling the script loader as standard data to bypass strict browser MIME filters entirely
+    fetch(cleanDataHost + "/v111.loader.js")
+        .then(response => response.text())
+        .then(scriptText => {
+            const rawScriptBlob = new Blob([scriptText], { type: 'application/javascript' });
+            const secureBlobUrl = URL.createObjectURL(rawScriptBlob);
+            
+            const engineBootstrapScript = document.createElement("script");
+            engineBootstrapScript.src = secureBlobUrl;
+            
+            engineBootstrapScript.onload = () => {
+                createUnityInstance(canvas, config, (progress) => {
+                    // Native instance compiling pipeline
+                }).then((unityInstance) => {
+                    window.unityInstance = unityInstance;
+                    loadingCover.style.display = "none";
+                    URL.revokeObjectURL(secureBlobUrl);
+                }).catch((err) => {
+                    console.error("Canvas Build Interrupted:", err);
+                });
+            };
+            document.body.appendChild(engineBootstrapScript);
+        })
+        .catch(err => {
+            console.error("Critical Asset Delivery Timeout:", err);
         });
-    } else {
-        console.error("Engine loader blocked by strict policy handler.");
-    }
 
     document.addEventListener("pointerdown", () => {
       container.focus();
