@@ -429,4 +429,61 @@
     </div>
 
     <div class="gcard" onclick="openGame('games/ragdollhit.html', 'RAGDOLL HIT')">
-        <div class="gicon cover" style="background-image: url
+        <div class="gicon cover" style="background-image: url('https://img.poki-cdn.com/393273e9700b029ffae3a8e9e4368eb1.png');"></div>
+        <span class="gname">Ragdoll Hit</span>
+    </div>
+</div>
+
+<div id="gview">
+    <iframe id="gframe" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
+    <div id="gbar">
+        <div id="gbar-l">
+            <button id="ghome" onclick="closeGame()">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </button>
+            <span id="gtitle"></span>
+        </div>
+        <div id="gbar-r">
+            <button class="gctrl" onclick="document.getElementById('gframe').src = document.getElementById('gframe').src">
+                <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
+            <button class="gctrl" onclick="document.getElementById('gview').requestFullscreen()">
+                <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    function openGame(path, title) {
+        let frame = document.getElementById('gframe');
+        document.getElementById('gtitle').textContent = title;
+        frame.removeAttribute('srcdoc');
+        
+        if (path.includes('?')) {
+            frame.src = path;
+        } else {
+            frame.src = path + "?v=" + Date.now();
+        }
+        
+        document.getElementById('gview').classList.add('show');
+    }
+
+    function closeGame() {
+        let f = document.getElementById('gframe');
+        f.removeAttribute('srcdoc');
+        f.src = '';
+        document.getElementById('gview').classList.remove('show');
+    }
+
+    try {
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS("particles-js", {particles:{number:{value:80,density:{enable:true,value_area:800}},color:{value:"#ffffff"},shape:{type:"circle"},opacity:{value:0.4,random:true},size:{value:3,random:true},line_linked:{enable:true,distance:150,color:"#a050ff",opacity:0.2,width:1},move:{enable:true,speed:1.5,direction:"none",random:true,out_mode:"out"}},interactivity:{detect_on:"canvas",events:{onhover:{enable:true,mode:"repulse"},onclick:{enable:true,mode:"push"}},modes:{repulse:{distance:80},push:{particles_nb:4}}},retina_detect:true});
+        }
+    } catch(e) {
+        console.log("Particle rendering caught network exception. Interface maintained.");
+    }
+</script>
+</body>
+</html>
