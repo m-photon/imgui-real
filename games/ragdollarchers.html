@@ -1,123 +1,76 @@
-<!DOCTYPE html>
-<html lang="en-us">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Ragdoll Archers</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #231f20;
-        }
-        #unity-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #unity-canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        #loading-cover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #231f20;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99;
-        }
-        .spinner {
-            border: 5px solid rgba(255, 255, 255, 0.1);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border-left-color: #55ff55;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
+<!DOCTYPE html><html lang="en-us"><head>
+<script src="https://cdn.jsdelivr.net/gh/laparda14/Ragdoll-archers@62504c9570ea720c6367e7debe1e110c68f77c2d/vs/gameloader-helper.js"></script>
+<meta charset="utf-8">
+<script src=""></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Ragdoll Archers</title>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/styyyle.css">
 <body>
-
-<div id="unity-container">
-    <canvas id="unity-canvas"></canvas>
+  
 </div>
-
+<div id="unity-container" class="unity-desktop">
+<canvas id="unity-canvas"></canvas>
+</div>
 <div id="loading-cover">
-    <div class="spinner"></div>
+<div id="unity-loading-bar">
+<div id="unity-logo"><img src="logo.jpeg"></div>
+<div class="progress-spinner-container">
+<div class="spinner-left"><img src="spinner.png"></div>
+<div id="unity-progress-bar-empty">
+<div id="unity-progress-bar-full"></div>
 </div>
-
+<div class="spinner-right"><img src="spinner.png"></div>
+</div>
+</div>
+</div>
 <script>
-    // Direct alternate enterprise data server that passes MIME constraints
-    const cleanDataHost = "https://ubg44.github.io/ragdoll-archers/Build";
+    const buildUrl = "Build";
+    const loaderUrl = "https://cdn.jsdelivr.net/gh/bubbls/ruffle@7117cc5006472d782b65d96abd375597d6273242/v11121212.js";
+const config = {
+  dataUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
+  frameworkUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
+  codeUrl: "https://cdn.jsdelivr.net/gh/bubbls/ruffle@04dd5345a30d6ebf4b0e2cc385568750cd56ed5a/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
+  streamingAssetsUrl: "StreamingAssets",
+  companyName: "Ericetto",
+  productName: "Ragdoll Archers",
+  productVersion: "0.1",
+};
 
-    const config = {
-      dataUrl: cleanDataHost + "/6697b6deba8b617c67b69c55dcd07cb1.data.unityweb",
-      frameworkUrl: cleanDataHost + "/0be3c3ee7115b26e1ae28e643afdf1f2.js.unityweb",
-      codeUrl: cleanDataHost + "/b3397c29f6878557c1c614cbf9e196ea.wasm.unityweb",
-      streamingAssetsUrl: "StreamingAssets",
-      companyName: "Ericetto",
-      productName: "Ragdoll Archers",
-      productVersion: "0.1",
-    };
 
     const container = document.querySelector("#unity-container");
     const canvas = document.querySelector("#unity-canvas");
     const loadingCover = document.querySelector("#loading-cover");
+    const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
 
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      container.className = "unity-mobile";
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    
+    loadingCover.style.display = "";
 
-    // TRUE FIX: Pulling the script loader as standard data to bypass strict browser MIME filters entirely
-    fetch(cleanDataHost + "/v111.loader.js")
-        .then(response => response.text())
-        .then(scriptText => {
-            const rawScriptBlob = new Blob([scriptText], { type: 'application/javascript' });
-            const secureBlobUrl = URL.createObjectURL(rawScriptBlob);
-            
-            const engineBootstrapScript = document.createElement("script");
-            engineBootstrapScript.src = secureBlobUrl;
-            
-            engineBootstrapScript.onload = () => {
-                createUnityInstance(canvas, config, (progress) => {
-                    // Native instance compiling pipeline
-                }).then((unityInstance) => {
-                    window.unityInstance = unityInstance;
-                    loadingCover.style.display = "none";
-                    URL.revokeObjectURL(secureBlobUrl);
-                }).catch((err) => {
-                    console.error("Canvas Build Interrupted:", err);
-                });
-            };
-            document.body.appendChild(engineBootstrapScript);
-        })
-        .catch(err => {
-            console.error("Critical Asset Delivery Timeout:", err);
-        });
+    const unityLoader = document.createElement("script");
+    unityLoader.src = loaderUrl;
+    unityLoader.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        progressBarEmpty.style.display = "";
+        progressBarFull.style.width = `${100 * progress}%`;
+      }).then((unityInstance) => {
+        window.unityInstance = unityInstance;
+        loadingCover.style.display = "none";
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(unityLoader);
 
     document.addEventListener("pointerdown", () => {
       container.focus();
       window.focus();
       canvas.focus();
     });
-</script>
-</body>
-</html>
+
+  </script>
+</body></html>
