@@ -445,7 +445,7 @@
 </div>
 
 <div id="gview">
-    <iframe id="gframe" src="" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
+    <iframe id="gframe" src="" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
     <div id="gbar">
         <div id="gbar-l">
             <button id="ghome" onclick="closeGame()">
@@ -463,6 +463,8 @@
         </div>
     </div>
 </div>
+
+<audio id="ui-click-sound" src="ItemSelect.wav" preload="auto"></audio>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
@@ -486,15 +488,12 @@
         f.src = '';
         document.getElementById('gview').classList.remove('show');
     }
-
-    const clickSound = new Audio('ItemSelect.wav');
     
     document.addEventListener('click', function(event) {
         if (event.target.closest('.btn, .gcard, .slink, .sclose, button')) {
-            clickSound.currentTime = 0;
-            clickSound.play().catch(function(error) {
-                console.log("Audio playback was prevented. User needs to interact with the page first.");
-            });
+            let sound = document.getElementById('ui-click-sound');
+            sound.currentTime = 0;
+            sound.play().catch(e => console.log("Audio blocked:", e));
         }
     });
 
