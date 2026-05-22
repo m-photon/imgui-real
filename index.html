@@ -247,12 +247,11 @@
             grid-template-columns: repeat(3, 100px);
             gap: 32px 40px;
             justify-content: center;
-            max-height: 75vh;
             width: 440px;
-            overflow-y: auto;
-            background: rgba(40, 40, 40, 0.5);
+            overflow: hidden;
+            background: rgba(60, 60, 60, 0.25);
             border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
@@ -565,36 +564,6 @@
                 },
                 retina_detect: true
             });
-
-            const targetBox = document.getElementById('games-grid');
-            
-            function updateParticleColors() {
-                if (!window.pJSDom || !window.pJSDom[0]) return requestAnimationFrame(updateParticleColors);
-                
-                const pJS = window.pJSDom[0].pJS;
-                const canvas = pJS.canvas.el;
-                const rect = targetBox.getBoundingClientRect();
-                
-                const pad = 12;
-                const boxX1 = rect.left + pad;
-                const boxY1 = rect.top + pad;
-                const boxX2 = rect.right - pad;
-                const boxY2 = rect.bottom - pad;
-                
-                for (let i = 0; i < pJS.particles.array.length; i++) {
-                    let p = pJS.particles.array[i];
-                    
-                    if (p.x > boxX1 && p.x < boxX2 && p.y > boxY1 && p.y < boxY2) {
-                        p.color.rgb = { r: 255, g: 140, b: 0 };
-                    } else {
-                        p.color.rgb = { r: 255, g: 255, b: 255 };
-                    }
-                }
-                
-                requestAnimationFrame(updateParticleColors);
-            }
-            
-            setTimeout(updateParticleColors, 500);
         }
     } catch(err) {
         console.log("Particles load failed:", err);
