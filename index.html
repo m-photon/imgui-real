@@ -41,6 +41,8 @@
             border: 2px solid rgba(160, 80, 255, 0.3);
             box-shadow: 0 0 10px rgba(160, 80, 255, 0.2);
             transition: transform 0.2s, box-shadow 0.2s;
+            /* Added object-fit so it fits perfectly inside the circle */
+            object-fit: cover; 
         }
         
         #main-logo:hover {
@@ -353,7 +355,7 @@
 
 <div id="particles-js"></div>
 
-<img id="main-logo" src="image_1.png" alt="IMGUI Logo" onclick="nukeGame(); document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'))">
+<img id="main-logo" src="image.png" alt="IMGUI Logo" onclick="nukeGame(); document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'))">
 
 <div class="bar">
     <span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
