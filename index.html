@@ -517,8 +517,6 @@
     const clickSound = document.getElementById('sfx-click');
 
     window.addEventListener('DOMContentLoaded', async () => {
-        initParticles();
-
         let deviceId = localStorage.getItem('imgui_device_id');
         if (!deviceId) {
             deviceId = 'DEV-' + Math.random().toString(36).substring(2, 10).toUpperCase();
@@ -543,20 +541,26 @@
             } catch (err) {}
         }
 
-        const storedEmail = localStorage.getItem('imgui_user_email');
+        async function monitorSecurityPass() {
+            const storedEmail = localStorage.getItem('imgui_user_email');
+            try {
+                const response = await fetch('http://localhost:3000/ping', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ deviceId: deviceId, email: storedEmail })
+                });
+                const statusData = await response.json();
+                if (statusData.banned) {
+                    localStorage.removeItem('imgui_user_email');
+                    document.getElementById('global-ban-screen').style.display = 'flex';
+                } else {
+                    document.getElementById('global-ban-screen').style.display = 'none';
+                }
+            } catch (e) {}
+        }
 
-        try {
-            const response = await fetch('http://localhost:3000/ping', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ deviceId: deviceId, email: storedEmail })
-            });
-            const statusData = await response.json();
-            if (statusData.banned) {
-                localStorage.removeItem('imgui_user_email');
-                document.getElementById('global-ban-screen').style.display = 'flex';
-            }
-        } catch (e) {}
+        monitorSecurityPass();
+        setInterval(monitorSecurityPass, 3000);
     });
 
     document.addEventListener('click', (e) => {
