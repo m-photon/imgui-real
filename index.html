@@ -506,8 +506,12 @@
     </div>
 </div>
 
+<audio id="sfx-click" src="https://www.questfemboys.xyz/assets/ItemSelect.wav" preload="auto"></audio>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
+    const clickSound = document.getElementById('sfx-click');
+
     window.addEventListener('DOMContentLoaded', async () => {
         initParticles();
         
@@ -528,6 +532,13 @@
                     document.body.prepend(banOverlay);
                 }
             } catch (e) {}
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn, .game-card, .menu-row, .close-btn, button')) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(err => console.log("Audio blocked:", err));
         }
     });
 
