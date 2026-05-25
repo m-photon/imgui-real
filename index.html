@@ -372,7 +372,7 @@
 <body>
 
 <div id="global-ban-screen">
-    ACCESS DENIED<br><span style='font-size:16px;color:#aaa;margin-top:10px;'>Your email token has been permanently banned from this platform.</span>
+    ACCESS DENIED<br><span style='font-size:16px;color:#aaa;margin-top:10px;'>Your identity signature or network address has been permanently banned.</span>
 </div>
 
 <div id="particles-js"></div>
@@ -383,7 +383,7 @@
 
 <div class="bar">
     <span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06.-06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </span>
 
     <span class="btn" onclick="loadDisThing('games/pwrmessage.html', 'pwRMessage')">
@@ -519,6 +519,12 @@
     window.addEventListener('DOMContentLoaded', async () => {
         initParticles();
 
+        let deviceId = localStorage.getItem('imgui_device_id');
+        if (!deviceId) {
+            deviceId = 'DEV-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            localStorage.setItem('imgui_device_id', deviceId);
+        }
+
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
 
@@ -538,20 +544,19 @@
         }
 
         const storedEmail = localStorage.getItem('imgui_user_email');
-        if (storedEmail) {
-            try {
-                const response = await fetch('http://localhost:3000/check-status', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: storedEmail })
-                });
-                const statusData = await response.json();
-                if (statusData.banned) {
-                    localStorage.removeItem('imgui_user_email');
-                    document.getElementById('global-ban-screen').style.display = 'flex';
-                }
-            } catch (e) {}
-        }
+
+        try {
+            const response = await fetch('http://localhost:3000/ping', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ deviceId: deviceId, email: storedEmail })
+            });
+            const statusData = await response.json();
+            if (statusData.banned) {
+                localStorage.removeItem('imgui_user_email');
+                document.getElementById('global-ban-screen').style.display = 'flex';
+            }
+        } catch (e) {}
     });
 
     document.addEventListener('click', (e) => {
