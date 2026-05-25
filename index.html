@@ -1,9 +1,8 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>imgui</title>
     <style>
         * {
@@ -21,7 +20,6 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        /* Authentication Wall */
         #auth-screen {
             position: fixed;
             inset: 0;
@@ -103,18 +101,11 @@
             cursor: pointer;
             border-radius: 50%;
             border: 2px solid rgba(160, 80, 255, 0.45);
-            box-shadow: 0 0 14px rgba(160, 80, 255, 0.35);
-            transition: transform 0.2s, box-shadow 0.2s;
             overflow: hidden;
             background-color: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-        
-        #main-logo-container:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(160, 80, 255, 0.55);
         }
 
         #main-logo-container img {
@@ -139,9 +130,6 @@
             min-width: 360px;
             border-radius: 32px;
             border: 1px solid rgba(255, 255, 255, 0.08); 
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);   
-            backdrop-filter: blur(12px);        
-            -webkit-backdrop-filter: blur(12px);
         }
 
         .btn {
@@ -155,15 +143,7 @@
             justify-content: center;
             cursor: pointer;
             color: rgba(255, 255, 255, 0.85);
-            transition: background 0.2s, transform 0.2s;
-            user-select: none;
-            position: relative;
             z-index: 101;
-        }
-
-        .btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
         }
 
         .btn svg {
@@ -172,8 +152,6 @@
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
         }
 
         .overlay {
@@ -182,24 +160,16 @@
             inset: 0;
             z-index: 999;
             background: rgba(10, 0, 20, 0.6);
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
             align-items: center;
             justify-content: center;
         }
 
         .overlay.show {
             display: flex;
-            animation: pop 0.2s ease;
-        }
-
-        @keyframes pop {
-            from { opacity: 0; transform: scale(0.97); }
-            to { opacity: 1; transform: scale(1); }
         }
 
         .settings-box {
-            background: rgba(30, 0, 60, 0.8);
+            background: #1e003c;
             border: 1px solid rgba(180, 100, 255, 0.25);
             border-radius: 20px;
             padding: 48px 52px;
@@ -207,7 +177,6 @@
             max-width: 92vw;
             text-align: center;
             position: relative;
-            box-shadow: 0 0 60px rgba(130, 0, 255, 0.25);
         }
 
         .close-btn {
@@ -216,19 +185,14 @@
             right: 16px;
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.35);
+            color: #fff;
             font-size: 22px;
             cursor: pointer;
-            line-height: 1;
-            transition: color 0.2s;
         }
-
-        .close-btn:hover { color: #fff; }
 
         .panel-title {
             font: 700 22px/1 'Segoe UI', sans-serif;
             color: #fff;
-            letter-spacing: 0.5px;
             margin-bottom: 6px;
         }
 
@@ -255,14 +219,7 @@
             color: rgba(255, 255, 255, 0.85);
             font: 500 14px 'Segoe UI', sans-serif;
             cursor: pointer;
-            transition: background 0.2s, border-color 0.2s, transform 0.15s;
             position: relative;
-        }
-
-        .menu-row:hover {
-            background: rgba(160, 80, 255, 0.18);
-            border-color: rgba(160, 80, 255, 0.45);
-            transform: translateX(3px);
         }
 
         .menu-inner {
@@ -277,12 +234,7 @@
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            flex-shrink: 0;
         }
-
-        .arrow-icon { opacity: 0.4; font-size: 16px; }
 
         .about-text {
             color: rgba(255, 255, 255, 0.85);
@@ -293,7 +245,6 @@
             padding: 16px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            min-height: 150px;
         }
 
         #games-grid {
@@ -308,13 +259,9 @@
             gap: 32px 40px;
             justify-content: center;
             width: 440px;
-            overflow: hidden;
             background: rgba(60, 60, 60, 0.25);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
         .game-card {
@@ -323,19 +270,13 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
-            transition: transform 0.15s;
-            position: relative;
-            z-index: 51;
         }
-
-        .game-card:hover { transform: translateY(-4px); }
 
         .game-icon {
             width: 100px;
             height: 100px;
             border-radius: 16px;
             border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             background-color: #000;
             background-position: center;
             background-repeat: no-repeat;
@@ -345,14 +286,11 @@
         .game-icon.cover { background-size: cover; }
 
         .game-title {
-            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+            font-family: 'Comic Sans MS', cursive;
             font-size: 10px;
             font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
             color: rgba(255, 255, 255, 0.85);
             text-align: center;
-            max-width: 100px;
         }
 
         #game-player {
@@ -379,7 +317,6 @@
             justify-content: space-between;
             padding: 0 14px;
             height: 42px;
-            flex-shrink: 0;
         }
 
         #player-left, #player-right {
@@ -391,14 +328,11 @@
         .ctrl-btn {
             background: none;
             border: none;
-            color: rgba(255, 255, 255, 0.55);
+            color: #fff;
             cursor: pointer;
             padding: 4px;
-            transition: color 0.2s;
             display: flex;
         }
-
-        .ctrl-btn:hover { color: #fff; }
 
         .ctrl-btn svg {
             width: 16px;
@@ -406,15 +340,11 @@
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
         }
 
         #current-game-name {
             font: 600 12px/1 'Segoe UI', sans-serif;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.7);
+            color: #fff;
         }
     </style>
 </head>
@@ -471,14 +401,12 @@
                     Theme
                 </span>
                 <input type="color" id="theme-picker" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="document.body.style.background = this.value;">
-                <span class="arrow-icon">›</span>
             </div>
             <div class="menu-row" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
                 <span class="menu-inner">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 
                     About
                 </span>
-                <span class="arrow-icon">›</span>
             </div>
             <div class="menu-row" onclick="localStorage.removeItem('imgui_user_email'); window.location.reload();">
                 <span class="menu-inner" style="color:#ef4444;">
@@ -588,7 +516,6 @@
 <script>
     const SERVER_URL = "https://imgui-backend.onrender.com"; 
     const clickSound = document.getElementById('sfx-click');
-
     let isLoginMode = true;
 
     function toggleAuthMode() {
@@ -626,6 +553,7 @@
                 } else {
                     localStorage.setItem('imgui_user_email', data.email);
                     document.getElementById('auth-screen').style.display = 'none';
+                    monitorSecurityPass(); 
                 }
             } else {
                 errDiv.style.color = '#ef4444';
@@ -636,46 +564,54 @@
         }
     }
 
-    window.addEventListener('DOMContentLoaded', async () => {
-        const storedEmail = localStorage.getItem('imgui_user_email');
-        if (storedEmail) {
-            document.getElementById('auth-screen').style.display = 'none';
+    // Lighter, recursive ping system that won't crash older Chromebooks
+    async function monitorSecurityPass() {
+        const currentEmail = localStorage.getItem('imgui_user_email');
+        if (!currentEmail) {
+            document.getElementById('auth-screen').style.display = 'flex';
+            return;
         }
 
-        async function monitorSecurityPass() {
-            const currentEmail = localStorage.getItem('imgui_user_email');
-            if (!currentEmail) {
-                document.getElementById('auth-screen').style.display = 'flex';
-                return;
-            }
-
-            try {
-                const response = await fetch(`${SERVER_URL}/ping`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: currentEmail }),
-                    signal: AbortSignal.timeout(2000) 
-                });
+        try {
+            const response = await fetch(`${SERVER_URL}/ping`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: currentEmail })
+            });
+            
+            if (response.ok) {
                 const statusData = await response.json();
                 if (statusData.banned) {
                     localStorage.removeItem('imgui_user_email');
                     document.getElementById('auth-screen').style.display = 'none';
                     document.getElementById('global-ban-screen').style.display = 'flex';
+                    return; // Stop checking, they are banned
                 }
-            } catch (e) {
-                // Ignore network timeouts silently to prevent school filter crashes
             }
+        } catch (e) {
+            // Fails silently to prevent freezing on network drops
         }
 
-        monitorSecurityPass();
-        setInterval(monitorSecurityPass, 4000); 
+        // Wait 10 seconds before checking again (saves memory)
+        setTimeout(monitorSecurityPass, 10000);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const storedEmail = localStorage.getItem('imgui_user_email');
+        if (storedEmail) {
+            document.getElementById('auth-screen').style.display = 'none';
+            monitorSecurityPass();
+        }
     });
 
     document.addEventListener('click', (e) => {
         if (e.target.closest('.btn, .game-card, .menu-row, .close-btn, button')) {
             if (clickSound) {
                 clickSound.currentTime = 0;
-                clickSound.play().catch(() => {});
+                let playPromise = clickSound.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {});
+                }
             }
         }
     });
