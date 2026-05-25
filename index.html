@@ -21,29 +21,19 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        #lock-screen {
+        #global-ban-screen {
             position: fixed;
             inset: 0;
-            background: #0a0a0a;
-            z-index: 100000;
-            display: flex;
+            background: #000;
+            color: #ef4444;
+            z-index: 210000;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            font-size: 24px;
+            font-weight: bold;
         }
-        .lock-box {
-            background: #111;
-            border: 2px solid #333;
-            padding: 40px;
-            border-radius: 12px;
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
-            box-shadow: 0 0 30px rgba(160, 80, 255, 0.2);
-            box-sizing: border-box;
-        }
-        .lock-title { color: #a050ff; margin-top: 0; }
-        .status-msg { margin: 20px 0; color: #aaa; font-size: 14px; }
 
         #particles-js {
             position: absolute;
@@ -381,11 +371,8 @@
 </head>
 <body>
 
-<div id="lock-screen">
-    <div class="lock-box">
-        <h2 class="lock-title">Access Restricted</h2>
-        <div id="status-message" class="status-msg">Verifying 1-time authorization token...</div>
-    </div>
+<div id="global-ban-screen">
+    ACCESS DENIED<br><span style='font-size:16px;color:#aaa;margin-top:10px;'>Your email token has been permanently banned from this platform.</span>
 </div>
 
 <div id="particles-js"></div>
@@ -396,7 +383,7 @@
 
 <div class="bar">
     <span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06.-06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </span>
 
     <span class="btn" onclick="loadDisThing('games/pwrmessage.html', 'pwRMessage')">
@@ -530,6 +517,26 @@
     const clickSound = document.getElementById('sfx-click');
 
     window.addEventListener('DOMContentLoaded', async () => {
+        initParticles();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+
+        if (code) {
+            try {
+                const response = await fetch('http://localhost:3000/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code })
+                });
+                const data = await response.json();
+                if (response.ok && data.success) {
+                    localStorage.setItem('imgui_user_email', data.email);
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
+            } catch (err) {}
+        }
+
         const storedEmail = localStorage.getItem('imgui_user_email');
         if (storedEmail) {
             try {
@@ -541,47 +548,9 @@
                 const statusData = await response.json();
                 if (statusData.banned) {
                     localStorage.removeItem('imgui_user_email');
-                    document.getElementById('status-message').innerHTML = "<span style='color:#ef4444;'>ACCESS DENIED<br>Your authorization has been permanently banned.</span>";
-                    return;
+                    document.getElementById('global-ban-screen').style.display = 'flex';
                 }
-                document.getElementById('lock-screen').style.display = 'none';
-                initParticles();
-                return;
-            } catch (e) {
-                document.getElementById('lock-screen').style.display = 'none';
-                initParticles();
-                return;
-            }
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        const statusText = document.getElementById('status-message');
-
-        if (!code) {
-            statusText.innerHTML = "<span style='color:#ef4444;'>Error: Access Denied.<br>This site requires a valid single-use code link.</span>";
-            return;
-        }
-
-        try {
-            const response = await fetch('http://localhost:3000/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code })
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                statusText.innerHTML = `<span style='color:#22c55e;'>Access Granted!<br>Welcome, ${data.email}</span>`;
-                localStorage.setItem('imgui_user_email', data.email);
-                window.history.replaceState({}, document.title, window.location.pathname);
-                setTimeout(() => { document.getElementById('lock-screen').style.display = 'none'; initParticles(); }, 1200);
-            } else {
-                statusText.innerHTML = `<span style='color:#ef4444;'>Access Denied:<br>${data.error || 'Invalid Link Code'}</span>`;
-            }
-        } catch (err) {
-            statusText.innerHTML = "<span style='color:#ef4444;'>Error connecting to validation servers. Please try again later.</span>";
+            } catch (e) {}
         }
     });
 
