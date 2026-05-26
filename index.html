@@ -366,6 +366,14 @@
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.7);
         }
+
+        /* Styling rules for locking buttons */
+        button:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
     </style>
 </head>
 <body>
@@ -402,9 +410,13 @@
             <input type="password" id="auth-password" placeholder="Password" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
-                <button onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
+                <button id="login-btn" onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
+                <button id="register-btn" onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
             </div>
+
+            <p style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
+                ⚠️ Click your choice <b>only ONE time</b>. Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double-click.
+            </p>
         </div>
     </div>
 </div>
@@ -531,7 +543,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
-    // FIXED: Updated endpoint targeting to include the mandatory '-1' suffix
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
     if (localStorage.getItem('imgui_device_block') === 'true') {
@@ -548,7 +559,7 @@
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
         document.getElementById('login-overlay').classList.add('show');
-        document.getElementById('auth-status').textContent = "Broooo what are you even doing you chud. Get banned🥀";
+        document.getElementById('auth-status').textContent = "DEVICE LOCKDOWN: BANNED PERMANENTLY";
         document.getElementById('auth-status').style.color = "red";
         document.querySelectorAll('button').forEach(b => b.disabled = true);
     }
@@ -622,6 +633,16 @@
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
+        // Freeze buttons instantly to protect network thread pipeline
+        const logBtn = document.getElementById('login-btn');
+        const regBtn = document.getElementById('register-btn');
+        const statusTxt = document.getElementById('auth-status');
+
+        logBtn.disabled = true;
+        regBtn.disabled = true;
+        statusTxt.textContent = "Connecting to server... Please wait...";
+        statusTxt.style.color = "#a050ff";
+
         try {
             const response = await fetch(`${BACKEND_URL}/login`, {
                 method: 'POST',
@@ -641,9 +662,18 @@
                 showMainUI();
             } else {
                 alert(data.message);
+                // Release buttons if rejected
+                logBtn.disabled = false;
+                regBtn.disabled = false;
+                statusTxt.textContent = "Login failed. Try again.";
+                statusTxt.style.color = "red";
             }
         } catch(err) {
             alert("❌ Connection failed. Check if server is booting up.");
+            logBtn.disabled = false;
+            regBtn.disabled = false;
+            statusTxt.textContent = "Server offline or booting.";
+            statusTxt.style.color = "red";
         }
     }
 
@@ -658,6 +688,16 @@
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
+        // Freeze buttons instantly to prevent multi-registration submissions
+        const logBtn = document.getElementById('login-btn');
+        const regBtn = document.getElementById('register-btn');
+        const statusTxt = document.getElementById('auth-status');
+
+        logBtn.disabled = true;
+        regBtn.disabled = true;
+        statusTxt.textContent = "Registering account... Please wait...";
+        statusTxt.style.color = "#a050ff";
+
         try {
             const response = await fetch(`${BACKEND_URL}/register`, {
                 method: 'POST',
@@ -666,8 +706,18 @@
             });
             const data = await response.json();
             alert(data.message);
+
+            // Release buttons after alert closes
+            logBtn.disabled = false;
+            regBtn.disabled = false;
+            statusTxt.textContent = "Login or register to continue";
+            statusTxt.style.color = "rgba(255, 255, 255, 0.5)";
         } catch(err) {
             alert("❌ Connection failed. Check if server is booting up.");
+            logBtn.disabled = false;
+            regBtn.disabled = false;
+            statusTxt.textContent = "Server offline or booting.";
+            statusTxt.style.color = "red";
         }
     }
 
