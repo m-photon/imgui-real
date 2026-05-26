@@ -1,13 +1,15 @@
-<<!DOCTYPE html>
+@@ -1,604 +1,573 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>imgui</title>
     <style>
         * {
             margin: 0;
-            padding: 0;
+            padding: 3;
             box-sizing: border-box;
         }
 
@@ -17,78 +19,15 @@
             background: #000;
             overflow: hidden;
             transition: background 0.3s ease;
-            font-family: 'Segoe UI', sans-serif;
         }
 
-        #auth-screen {
-            position: fixed;
-            inset: 0;
-            background: #0a0a0a;
-            z-index: 200000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .auth-box {
-            background: #111;
-            border: 1px solid #333;
-            padding: 40px;
-            border-radius: 12px;
+        #particles-js {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .auth-title { color: #fff; margin-bottom: 20px; font-size: 22px; }
-        
-        .auth-input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            background: #222;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 6px;
-            outline: none;
-        }
-        .auth-input:focus { border-color: #a050ff; }
-
-        .auth-btn {
-            background: #a050ff;
-            color: #fff;
-            border: none;
-            padding: 12px;
-            width: 100%;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.2s;
-        }
-        .auth-btn:hover { background: #8b3ee6; }
-        
-        .auth-switch {
-            color: #aaa;
-            font-size: 13px;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-        .auth-switch span { color: #a050ff; text-decoration: underline; }
-
-        #global-ban-screen {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            color: #ef4444;
-            z-index: 210000;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-            font-weight: bold;
+            height: 100%;
+            z-index: 0;
         }
 
         #main-logo-container {
@@ -101,11 +40,18 @@
             cursor: pointer;
             border-radius: 50%;
             border: 2px solid rgba(160, 80, 255, 0.45);
+            box-shadow: 0 0 14px rgba(160, 80, 255, 0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
             overflow: hidden;
             background-color: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        #main-logo-container:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(160, 80, 255, 0.55);
         }
 
         #main-logo-container img {
@@ -122,7 +68,6 @@
             transform: translateX(-50%);
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 32px;
             z-index: 100;
             background: rgba(15, 15, 15, 0.85); 
@@ -130,6 +75,9 @@
             min-width: 360px;
             border-radius: 32px;
             border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);   
+            backdrop-filter: blur(12px);        
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .btn {
@@ -143,7 +91,15 @@
             justify-content: center;
             cursor: pointer;
             color: rgba(255, 255, 255, 0.85);
+            transition: background 0.2s, transform 0.2s;
+            user-select: none;
+            position: relative;
             z-index: 101;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
         }
 
         .btn svg {
@@ -152,6 +108,8 @@
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .overlay {
@@ -160,16 +118,24 @@
             inset: 0;
             z-index: 999;
             background: rgba(10, 0, 20, 0.6);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
             align-items: center;
             justify-content: center;
         }
 
         .overlay.show {
             display: flex;
+            animation: pop 0.2s ease;
+        }
+
+        @keyframes pop {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .settings-box {
-            background: #1e003c;
+            background: rgba(30, 0, 60, 0.8);
             border: 1px solid rgba(180, 100, 255, 0.25);
             border-radius: 20px;
             padding: 48px 52px;
@@ -177,6 +143,7 @@
             max-width: 92vw;
             text-align: center;
             position: relative;
+            box-shadow: 0 0 60px rgba(130, 0, 255, 0.25);
         }
 
         .close-btn {
@@ -185,14 +152,21 @@
             right: 16px;
             background: none;
             border: none;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.35);
             font-size: 22px;
             cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
         }
 
         .panel-title {
             font: 700 22px/1 'Segoe UI', sans-serif;
             color: #fff;
+            letter-spacing: 0.5px;
             margin-bottom: 6px;
         }
 
@@ -219,7 +193,14 @@
             color: rgba(255, 255, 255, 0.85);
             font: 500 14px 'Segoe UI', sans-serif;
             cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
             position: relative;
+        }
+
+        .menu-row:hover {
+            background: rgba(160, 80, 255, 0.18);
+            border-color: rgba(160, 80, 255, 0.45);
+            transform: translateX(3px);
         }
 
         .menu-inner {
@@ -234,6 +215,14 @@
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .arrow-icon {
+            opacity: 0.4;
+            font-size: 16px;
         }
 
         .about-text {
@@ -245,6 +234,7 @@
             padding: 16px;
             border-radius: 12px;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 150px;
         }
 
         #games-grid {
@@ -258,10 +248,18 @@
             grid-template-columns: repeat(3, 100px);
             gap: 32px 40px;
             justify-content: center;
+            max-height: 75vh;
             width: 440px;
+            overflow-y: auto;
+            background: rgba(40, 40, 40, 0.5);
+            overflow: hidden;
             background: rgba(60, 60, 60, 0.25);
             border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
         }
 
         .game-card {
@@ -270,6 +268,13 @@
             align-items: center;
             gap: 8px;
             cursor: pointer;
+            transition: transform 0.15s;
+            position: relative;
+            z-index: 51;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
         }
 
         .game-icon {
@@ -277,20 +282,26 @@
             height: 100px;
             border-radius: 16px;
             border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             background-color: #000;
             background-position: center;
             background-repeat: no-repeat;
             background-size: 70%;
         }
 
-        .game-icon.cover { background-size: cover; }
+        .game-icon.cover {
+            background-size: cover;
+        }
 
         .game-title {
-            font-family: 'Comic Sans MS', cursive;
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
             font-size: 10px;
             font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
             color: rgba(255, 255, 255, 0.85);
             text-align: center;
+            max-width: 100px;
         }
 
         #game-player {
@@ -301,7 +312,9 @@
             flex-direction: column;
         }
 
-        #game-player.show { display: flex; }
+        #game-player.show {
+            display: flex;
+        }
 
         #game-player iframe {
             width: 100%;
@@ -317,6 +330,7 @@
             justify-content: space-between;
             padding: 0 14px;
             height: 42px;
+            flex-shrink: 0;
         }
 
         #player-left, #player-right {
@@ -328,10 +342,15 @@
         .ctrl-btn {
             background: none;
             border: none;
-            color: #fff;
+            color: rgba(255, 255, 255, 0.55);
             cursor: pointer;
             padding: 4px;
+            transition: color 0.2s;
             display: flex;
+        }
+
+        .ctrl-btn:hover {
+            color: #fff;
         }
 
         .ctrl-btn svg {
@@ -340,42 +359,24 @@
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         #current-game-name {
             font: 600 12px/1 'Segoe UI', sans-serif;
-            color: #fff;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
         }
     </style>
 </head>
 <body>
 
-<div id="auth-screen">
-    <div class="auth-box" id="login-box">
-        <h2 class="auth-title">Log in to imgui</h2>
-        <input type="email" id="login-email" class="auth-input" placeholder="Account Email">
-        <input type="password" id="login-pass" class="auth-input" placeholder="Password">
-        <button class="auth-btn" onclick="submitAuth('login')">Sign In</button>
-        <div id="login-err" style="color:#ef4444; font-size:13px; margin-top:10px;"></div>
-        <div class="auth-switch" onclick="toggleAuthMode()">Need an account? <span>Register here</span></div>
-    </div>
-    
-    <div class="auth-box" id="register-box" style="display:none;">
-        <h2 class="auth-title">Create Account</h2>
-        <input type="email" id="reg-email" class="auth-input" placeholder="New Account Email">
-        <input type="password" id="reg-pass" class="auth-input" placeholder="New Password">
-        <button class="auth-btn" style="background:#3b82f6;" onclick="submitAuth('register')">Create Account</button>
-        <div id="reg-err" style="color:#ef4444; font-size:13px; margin-top:10px;"></div>
-        <div class="auth-switch" onclick="toggleAuthMode()">Already have an account? <span>Log in</span></div>
-    </div>
-</div>
-
-<div id="global-ban-screen">
-    ACCOUNT SUSPENDED<br><span style='font-size:16px;color:#aaa;margin-top:10px;'>This account has been permanently banned from the platform.</span>
-</div>
+<div id="particles-js"></div>
 
 <div id="main-logo-container" onclick="nukeGame(); document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'))">
-    <img src="https://media.discordapp.net/attachments/1463304807149473946/1507810543010975754/image.png?ex=6a1492ff&is=6a13417f&hm=f4a9b4310ce48c88fe8b0a727ee691107e857ddd02e743ded396e53e448b5e8c&=&format=webp&quality=lossless&width=362&height=242" alt="IMGUI Logo">
+    <img src="https://media.discordapp.net/attachments/1463304807149473946/1501364151019376720/Screenshot_2026-05-02_193140.png?ex=6a10e5d3&is=6a0f9453&hm=b8b5b0434870459592441f1a2a4325bcfdf510ddb0276ae71888a058bb3ab987&=&format=webp&quality=lossless&width=249&height=237" alt="IMGUI Logo">
 </div>
 
 <div class="bar">
@@ -386,7 +387,8 @@
     <span class="btn" onclick="loadDisThing('games/pwrmessage.html', 'pwRMessage')">
         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
     </span>
-    <span class="btn" onclick="nukeGame()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+    <span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+    <span class="btn"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
 </div>
 
 <div id="soverlay" class="overlay" onclick="if(event.target === this) this.classList.remove('show')">
@@ -401,18 +403,21 @@
                     Theme
                 </span>
                 <input type="color" id="theme-picker" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="document.body.style.background = this.value;">
+                <span class="arrow-icon">›</span>
             </div>
             <div class="menu-row" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
                 <span class="menu-inner">
                     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 
                     About
                 </span>
+                <span class="arrow-icon">›</span>
             </div>
-            <div class="menu-row" onclick="localStorage.removeItem('imgui_user_email'); window.location.reload();">
-                <span class="menu-inner" style="color:#ef4444;">
-                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> 
-                    Sign Out
+            <div class="menu-row">
+                <span class="menu-inner">
+                    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> 
+                    Links
                 </span>
+                <span class="arrow-icon">›</span>
             </div>
         </div>
     </div>
@@ -434,22 +439,22 @@
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
         <span class="game-title">Deltarune</span>
     </div>
-     
+
     <div class="game-card" onclick="loadDisThing('games/baldi.html', 'BALDIS BASICS PLUS')">
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
         <span class="game-title">Baldi's Basics Plus</span>
     </div>
-     
+
     <div class="game-card" onclick="loadDisThing('games/utyellow.html', 'UNDERTALE YELLOW')">
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
         <span class="game-title">Undertale Yellow</span>
     </div>
-     
+
     <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')">
         <div class="game-icon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div>
         <span class="game-title">Slope</span>
     </div>
-     
+
     <div class="game-card" onclick="loadDisThing('games/retrobowl.html', 'RETRO BOWL')">
         <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
         <span class="game-title">Retro Bowl</span>
@@ -513,118 +518,21 @@
 
 <audio id="sfx-click" src="https://www.questfemboys.xyz/assets/ItemSelect.wav" preload="auto"></audio>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
-    const SERVER_URL = "https://imgui-backend.onrender.com"; 
     const clickSound = document.getElementById('sfx-click');
-    let isLoginMode = true;
-
-    function toggleAuthMode() {
-        isLoginMode = !isLoginMode;
-        document.getElementById('login-box').style.display = isLoginMode ? 'block' : 'none';
-        document.getElementById('register-box').style.display = isLoginMode ? 'none' : 'block';
-        document.getElementById('login-err').innerText = "";
-        document.getElementById('reg-err').innerText = "";
-    }
-
-    async function submitAuth(mode) {
-        const email = document.getElementById(mode === 'login' ? 'login-email' : 'reg-email').value;
-        const password = document.getElementById(mode === 'login' ? 'login-pass' : 'reg-pass').value;
-        const errDiv = document.getElementById(mode === 'login' ? 'login-err' : 'reg-err');
-        
-        errDiv.innerText = "";
-        if(!email || !password) { errDiv.innerText = "Please fill in all fields."; return; }
-
-        try {
-            const endpoint = mode === 'login' ? '/user/login' : '/user/register';
-            const response = await fetch(`${SERVER_URL}${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-            const data = await response.json();
-            
-            if (response.ok && data.success) {
-                if (mode === 'register') {
-                    toggleAuthMode();
-                    document.getElementById('login-email').value = email;
-                    document.getElementById('login-pass').value = password;
-                    document.getElementById('login-err').style.color = '#22c55e';
-                    document.getElementById('login-err').innerText = "Account created! You can now sign in.";
-                } else {
-                    localStorage.setItem('imgui_user_email', data.email);
-                    document.getElementById('auth-screen').style.display = 'none';
-                    monitorSecurityPass(); 
-                }
-            } else {
-                errDiv.style.color = '#ef4444';
-                errDiv.innerText = data.error || "Authentication failed.";
-            }
-        } catch (e) {
-            errDiv.innerText = "Error connecting to server.";
-        }
-    }
-
-    // Lighter, recursive ping system that won't crash older Chromebooks
-    async function monitorSecurityPass() {
-        const currentEmail = localStorage.getItem('imgui_user_email');
-        if (!currentEmail) {
-            document.getElementById('auth-screen').style.display = 'flex';
-            return;
-        }
-
-        try {
-            const response = await fetch(`${SERVER_URL}/ping`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: currentEmail })
-            });
-            
-            if (response.ok) {
-                const statusData = await response.json();
-                if (statusData.banned) {
-                    localStorage.removeItem('imgui_user_email');
-                    document.getElementById('auth-screen').style.display = 'none';
-                    document.getElementById('global-ban-screen').style.display = 'flex';
-                    return; // Stop checking, they are banned
-                }
-            }
-        } catch (e) {
-            // Fails silently to prevent freezing on network drops
-        }
-
-        // Wait 10 seconds before checking again (saves memory)
-        setTimeout(monitorSecurityPass, 10000);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const storedEmail = localStorage.getItem('imgui_user_email');
-        if (storedEmail) {
-            document.getElementById('auth-screen').style.display = 'none';
-            monitorSecurityPass();
-        }
-    });
-
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('.btn, .game-card, .menu-row, .close-btn, button')) {
-            if (clickSound) {
-                clickSound.currentTime = 0;
-                let playPromise = clickSound.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {});
-                }
-            }
-        }
-    });
 
     function loadDisThing(url, name) {
         let theFrame = document.getElementById('iframe-canvas');
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
+
         if (url.includes('?')) {
             theFrame.src = url;
         } else {
             theFrame.src = url + "?v=" + Date.now();
         }
+
         document.getElementById('game-player').classList.add('show');
     }
 
@@ -633,6 +541,67 @@
         f.removeAttribute('srcdoc');
         f.src = '';
         document.getElementById('game-player').classList.remove('show');
+    }
+
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn, .game-card, .menu-row, .close-btn, button')) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(err => console.log("Audio blocked:", err));
+        }
+    });
+
+    try {
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS("particles-js", {
+                particles: {
+                    number: { value: 80, density: { enable: true, value_area: 800 } },
+                    color: { value: "#ffffff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.4, random: true },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: "#a050ff", opacity: 0.2, width: 1 },
+                    move: { enable: true, speed: 1.5, direction: "none", random: true, out_mode: "out" }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" } },
+                    modes: { repulse: { distance: 80 }, push: { particles_nb: 4 } }
+                },
+                retina_detect: true
+            });
+
+            const targetBox = document.getElementById('games-grid');
+            
+            function updateParticleColors() {
+                if (!window.pJSDom || !window.pJSDom[0]) return requestAnimationFrame(updateParticleColors);
+                
+                const pJS = window.pJSDom[0].pJS;
+                const canvas = pJS.canvas.el;
+                const rect = targetBox.getBoundingClientRect();
+                
+                const pad = 12;
+                const boxX1 = rect.left + pad;
+                const boxY1 = rect.top + pad;
+                const boxX2 = rect.right - pad;
+                const boxY2 = rect.bottom - pad;
+                
+                for (let i = 0; i < pJS.particles.array.length; i++) {
+                    let p = pJS.particles.array[i];
+                    
+                    if (p.x > boxX1 && p.x < boxX2 && p.y > boxY1 && p.y < boxY2) {
+                        p.color.rgb = { r: 255, g: 140, b: 0 };
+                    } else {
+                        p.color.rgb = { r: 255, g: 255, b: 255 };
+                    }
+                }
+                
+                requestAnimationFrame(updateParticleColors);
+            }
+            
+            setTimeout(updateParticleColors, 500);
+        }
+    } catch(err) {
+        console.log("Particles load failed:", err);
     }
 </script>
 </body>
