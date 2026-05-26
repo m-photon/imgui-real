@@ -6,27 +6,105 @@
 </head>
 <body style="background: #111; color: white; font-family: sans-serif; padding: 50px; text-align: center;">
     <h2>IMGUI Administration Panel</h2>
-    <div style="background: #222; padding: 30px; border-radius: 12px; display: inline-block; width: 300px;">
-        <p>Ban User Account</p>
+    
+    <div style="background: #222; padding: 30px; border-radius: 12px; display: inline-block; width: 350px; vertical-align: top; margin-right: 20px;">
+        <p>System Authentication</p>
+        <input type="password" id="admin-password" placeholder="Admin Secret Password" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none;"><br>
+        <button onclick="loadUserList()" style="width: 97%; padding: 10px; background: #a050ff; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 20px;">Load Registered Users</button>
+        
+        <p style="border-top: 1px solid #333; padding-top: 15px;">Manual Ban Tool</p>
         <input type="text" id="target-user" placeholder="Username to ban" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none;"><br>
-        <input type="password" id="admin-password" placeholder="Admin Key" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none;"><br>
-        <button onclick="banTarget()" style="width: 97%; padding: 10px; background: red; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Execute Ban</button>
+        <button onclick="banTarget(document.getElementById('target-user').value)" style="width: 97%; padding: 10px; background: red; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Execute Ban</button>
     </div>
+
+    <div style="background: #222; padding: 30px; border-radius: 12px; display: inline-block; width: 400px; text-align: left; vertical-align: top; min-height: 200px;">
+        <p style="font-weight: bold; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px;">Registered Users List</p>
+        <div id="user-list-container">
+            <p style="color: #666; font-style: italic;">Enter admin password and click "Load Registered Users".</p>
+        </div>
+    </div>
+
     <script>
-        async function banTarget() {
-            const target = document.getElementById('target-user').value;
+        async function loadUserList() {
+            const password = document.getElementById('admin-password').value;
+            const container = document.getElementById('user-list-container');
+            
+            const response = await fetch('https://imgui-backend.onrender.com/users', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ adminPassword: password })
+            });
+
+            if (!response.ok) {
+                alert("Error: Incorrect Admin Password!");
+                return;
+            }
+
+            const users = await response.json();
+            container.innerHTML = '';
+
+            if (users.length === 0) {
+                container.innerHTML = '<p style="color: #999;">No users registered yet.</p>';
+                return;
+            }
+
+            users.forEach(user => {
+                const row = document.createElement('div');
+                row.style.display = 'flex';
+                row.style.justifyContent = 'space-between';
+                row.style.alignItems = 'center';
+                row.style.padding = '10px 0';
+                row.style.borderBottom = '1px solid #333';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = user.username;
+
+                const statusGroup = document.createElement('div');
+                statusGroup.style.display = 'flex';
+                statusGroup.style.alignItems = 'center';
+                statusGroup.style.gap = '10px';
+
+                const badge = document.createElement('span');
+                badge.textContent = user.isBanned ? "BANNED" : "ACTIVE";
+                badge.style.fontSize = '11px';
+                badge.style.padding = '3px 8px';
+                badge.style.borderRadius = '4px';
+                badge.style.background = user.isBanned ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,0,0.2)';
+                badge.style.color = user.isBanned ? '#ff4d4d' : '#4dff4d';
+
+                statusGroup.appendChild(badge);
+
+                if (!user.isBanned) {
+                    const banBtn = document.createElement('button');
+                    banBtn.textContent = "Ban";
+                    banBtn.style.background = '#331111';
+                    banBtn.style.color = '#ff4d4d';
+                    banBtn.style.border = '1px solid #ff4d4d';
+                    banBtn.style.padding = '4px 10px';
+                    banBtn.style.borderRadius = '4px';
+                    banBtn.style.cursor = 'pointer';
+                    banBtn.onclick = () => banTarget(user.username);
+                    statusGroup.appendChild(banBtn);
+                }
+
+                row.appendChild(nameSpan);
+                row.appendChild(statusGroup);
+                container.appendChild(row);
+            });
+        }
+
+        async function banTarget(username) {
+            if (!username) return alert("Specify a username.");
             const password = document.getElementById('admin-password').value;
             
             const response = await fetch('https://imgui-backend.onrender.com/ban', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    usernameToBan: target,
-                    adminPassword: password
-                })
+                body: JSON.stringify({ usernameToBan: username, adminPassword: password })
             });
             const data = await response.json();
             alert(data.message);
+            loadUserList();
         }
     </script>
 </body>
