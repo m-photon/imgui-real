@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel(trusted user only)-no chuds</title>
+    <title>Admin Panel</title>
 </head>
 <body style="background: #111; color: white; font-family: sans-serif; padding: 50px; text-align: center;">
     <h2>IMGUI Administration Panel</h2>
@@ -25,6 +25,9 @@
     </div>
 
     <script>
+        // FIXED: Added the mandatory '-1' suffix to match the active Render deployment address
+        const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
+
         async function loadUserList() {
             const password = document.getElementById('admin-password').value;
             const container = document.getElementById('user-list-container');
@@ -37,7 +40,7 @@
             container.innerHTML = '<p style="color: #a050ff; font-style: italic;">Connecting to Render server...</p>';
 
             try {
-                const response = await fetch('https://imgui-backend.onrender.com/users', {
+                const response = await fetch(`${BACKEND_URL}/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ adminPassword: password })
@@ -107,7 +110,7 @@
                 });
 
             } catch (err) {
-                alert(" CONNECTION FAILED: Could not reach Render.");
+                alert("❌ CONNECTION FAILED: Could not reach Render.");
                 container.innerHTML = '<p style="color: red; font-style: italic;">Connection Failed.</p>';
             }
         }
@@ -117,7 +120,7 @@
             const password = document.getElementById('admin-password').value;
             
             try {
-                const response = await fetch('https://imgui-backend.onrender.com/ban', {
+                const response = await fetch(`${BACKEND_URL}/ban`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ usernameToBan: username, adminPassword: password })
@@ -132,7 +135,7 @@
                 alert(data.message);
                 loadUserList();
             } catch(e) {
-                alert("Connection error while trying to ban.");
+                alert("❌ Connection error while trying to ban.");
             }
         }
     </script>
