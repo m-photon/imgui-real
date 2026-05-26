@@ -531,7 +531,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
-    // Hardware block activation gate
+    // FIXED: Updated endpoint targeting to include the mandatory '-1' suffix
+    const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
+
     if (localStorage.getItem('imgui_device_block') === 'true') {
         evictBannedUser();
     }
@@ -551,13 +553,12 @@
         document.querySelectorAll('button').forEach(b => b.disabled = true);
     }
 
-    // Live background polling pulse gate
     async function checkLiveBanPulse() {
         const activeUser = localStorage.getItem('imgui_username');
         if (!activeUser && localStorage.getItem('imgui_logged_in') !== 'true') return;
 
         try {
-            const response = await fetch('https://imgui-backend.onrender.com/check-ban', {
+            const response = await fetch(`${BACKEND_URL}/check-ban`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: activeUser })
@@ -569,7 +570,6 @@
         } catch(e) {}
     }
 
-    // Auto check ban standing every 10 seconds in background
     setInterval(checkLiveBanPulse, 10000);
 
     if (localStorage.getItem('imgui_logged_in') === 'true') {
@@ -592,7 +592,6 @@
         }
     });
 
-    // Upgraded game launcher intercepts click instantly to evaluate ban status
     async function loadDisThing(url, name) {
         await checkLiveBanPulse();
         if (localStorage.getItem('imgui_device_block') === 'true') return;
@@ -623,24 +622,28 @@
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
-        const response = await fetch('https://imgui-backend.onrender.com/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await response.json();
-        
-        if (response.status === 403) {
-            evictBannedUser();
-            return;
-        }
+        try {
+            const response = await fetch(`${BACKEND_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            
+            if (response.status === 403) {
+                evictBannedUser();
+                return;
+            }
 
-        if (response.ok) {
-            localStorage.setItem('imgui_logged_in', 'true');
-            localStorage.setItem('imgui_username', username); // Track actively connected player
-            showMainUI();
-        } else {
-            alert(data.message);
+            if (response.ok) {
+                localStorage.setItem('imgui_logged_in', 'true');
+                localStorage.setItem('imgui_username', username);
+                showMainUI();
+            } else {
+                alert(data.message);
+            }
+        } catch(err) {
+            alert("❌ Connection failed. Check if server is booting up.");
         }
     }
 
@@ -655,13 +658,17 @@
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
-        const response = await fetch('https://imgui-backend.onrender.com/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-        const data = await response.json();
-        alert(data.message);
+        try {
+            const response = await fetch(`${BACKEND_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            alert(data.message);
+        } catch(err) {
+            alert("❌ Connection failed. Check if server is booting up.");
+        }
     }
 
     try {
