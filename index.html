@@ -367,7 +367,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Styling rules for locking buttons */
+        
         button:disabled {
             opacity: 0.5 !important;
             cursor: not-allowed !important;
@@ -415,7 +415,7 @@
             </div>
 
             <p style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
-                ⚠️ Click your choice <b>only ONE time</b>. Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double-click.
+                Click your choice <b>only ONE time</b>. Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double-click.
             </p>
         </div>
     </div>
@@ -559,7 +559,7 @@
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
         document.getElementById('login-overlay').classList.add('show');
-        document.getElementById('auth-status').textContent = "DEVICE LOCKDOWN: BANNED PERMANENTLY";
+        document.getElementById('auth-status').textContent = "bro got banned🥀 to be honest you aint ever geting back in";
         document.getElementById('auth-status').style.color = "red";
         document.querySelectorAll('button').forEach(b => b.disabled = true);
     }
@@ -633,7 +633,6 @@
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
-        // Freeze buttons instantly to protect network thread pipeline
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
         const statusTxt = document.getElementById('auth-status');
@@ -662,14 +661,14 @@
                 showMainUI();
             } else {
                 alert(data.message);
-                // Release buttons if rejected
+                
                 logBtn.disabled = false;
                 regBtn.disabled = false;
                 statusTxt.textContent = "Login failed. Try again.";
                 statusTxt.style.color = "red";
             }
         } catch(err) {
-            alert("❌ Connection failed. Check if server is booting up.");
+            alert("Connection failed. Check if server is booting up.");
             logBtn.disabled = false;
             regBtn.disabled = false;
             statusTxt.textContent = "Server offline or booting.";
@@ -688,7 +687,6 @@
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
-        // Freeze buttons instantly to prevent multi-registration submissions
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
         const statusTxt = document.getElementById('auth-status');
@@ -707,13 +705,13 @@
             const data = await response.json();
             alert(data.message);
 
-            // Release buttons after alert closes
+            
             logBtn.disabled = false;
             regBtn.disabled = false;
             statusTxt.textContent = "Login or register to continue";
             statusTxt.style.color = "rgba(255, 255, 255, 0.5)";
         } catch(err) {
-            alert("❌ Connection failed. Check if server is booting up.");
+            alert("Connection failed. Check if server is booting up.");
             logBtn.disabled = false;
             regBtn.disabled = false;
             statusTxt.textContent = "Server offline or booting.";
