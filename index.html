@@ -531,19 +531,51 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
-    // Hardware ban system check
+    // Hardware block activation gate
     if (localStorage.getItem('imgui_device_block') === 'true') {
-        document.getElementById('auth-status').textContent = "DEVICE BANNED PERMANENTLY";
+        evictBannedUser();
+    }
+
+    function evictBannedUser() {
+        localStorage.setItem('imgui_device_block', 'true');
+        localStorage.removeItem('imgui_logged_in');
+        localStorage.removeItem('imgui_username');
+        document.getElementById('game-player').classList.remove('show');
+        document.getElementById('iframe-canvas').src = '';
+        document.getElementById('main-logo-container').style.display = 'none';
+        document.querySelector('.bar').style.display = 'none';
+        document.getElementById('games-grid').style.display = 'none';
+        document.getElementById('login-overlay').classList.add('show');
+        document.getElementById('auth-status').textContent = "DEVICE LOCKDOWN: BANNED PERMANENTLY";
         document.getElementById('auth-status').style.color = "red";
         document.querySelectorAll('button').forEach(b => b.disabled = true);
     }
 
-    // NEW: Persistent Login Auto-Check on page load
+    // Live background polling pulse gate
+    async function checkLiveBanPulse() {
+        const activeUser = localStorage.getItem('imgui_username');
+        if (!activeUser && localStorage.getItem('imgui_logged_in') !== 'true') return;
+
+        try {
+            const response = await fetch('https://imgui-backend.onrender.com/check-ban', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: activeUser })
+            });
+            const data = await response.json();
+            if (data.isBanned) {
+                evictBannedUser();
+            }
+        } catch(e) {}
+    }
+
+    // Auto check ban standing every 10 seconds in background
+    setInterval(checkLiveBanPulse, 10000);
+
     if (localStorage.getItem('imgui_logged_in') === 'true') {
         showMainUI();
     }
 
-    // Audio Pipeline Logic
     const clickSound = document.getElementById('sfx-click');
     function playClickNoise() {
         try {
@@ -560,7 +592,11 @@
         }
     });
 
-    function loadDisThing(url, name) {
+    // Upgraded game launcher intercepts click instantly to evaluate ban status
+    async function loadDisThing(url, name) {
+        await checkLiveBanPulse();
+        if (localStorage.getItem('imgui_device_block') === 'true') return;
+
         let theFrame = document.getElementById('iframe-canvas');
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
@@ -575,7 +611,6 @@
         document.getElementById('game-player').classList.remove('show');
     }
 
-    // Clean UI revealing structure
     function showMainUI() {
         document.getElementById('login-overlay').classList.remove('show');
         document.getElementById('main-logo-container').style.display = 'flex';
@@ -596,24 +631,22 @@
         const data = await response.json();
         
         if (response.status === 403) {
-            localStorage.setItem('imgui_device_block', 'true');
-            alert("ACCESS DENIED: Your device has been permanently banned.");
-            location.reload();
+            evictBannedUser();
             return;
         }
 
         if (response.ok) {
-            // NEW: Remember login status in browser local memory
             localStorage.setItem('imgui_logged_in', 'true');
+            localStorage.setItem('imgui_username', username); // Track actively connected player
             showMainUI();
         } else {
             alert(data.message);
         }
     }
 
-    // NEW: Clean session breakout function when choosing to sign out
     function logoutUser() {
         localStorage.removeItem('imgui_logged_in');
+        localStorage.removeItem('imgui_username');
         location.reload();
     }
 
