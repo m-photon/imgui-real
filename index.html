@@ -38,8 +38,8 @@
             z-index: 105;
             cursor: pointer;
             border-radius: 50%;
-            border: 2px solid rgba(160, 80, 255, 0.45);
-            box-shadow: 0 0 14px rgba(160, 80, 255, 0.35);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
             transition: transform 0.2s, box-shadow 0.2s;
             overflow: hidden;
             background-color: transparent;
@@ -50,7 +50,7 @@
 
         #main-logo-container:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(160, 80, 255, 0.55);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
         }
 
         #main-logo-container img {
@@ -116,7 +116,7 @@
             position: fixed;
             inset: 0;
             z-index: 999;
-            background: rgba(10, 0, 20, 0.6);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(18px);
             -webkit-backdrop-filter: blur(18px);
             align-items: center;
@@ -134,15 +134,15 @@
         }
 
         .settings-box {
-            background: rgba(30, 0, 60, 0.8);
-            border: 1px solid rgba(180, 100, 255, 0.25);
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
             padding: 48px 52px;
             width: 420px;
             max-width: 92vw;
             text-align: center;
             position: relative;
-            box-shadow: 0 0 60px rgba(130, 0, 255, 0.25);
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.05);
         }
 
         .close-btn {
@@ -171,7 +171,7 @@
 
         .panel-sub {
             font: 13px 'Segoe UI', sans-serif;
-            color: rgba(200, 160, 255, 0.65);
+            color: rgba(255, 255, 255, 0.5);
             margin-bottom: 32px;
         }
 
@@ -197,8 +197,8 @@
         }
 
         .menu-row:hover {
-            background: rgba(160, 80, 255, 0.18);
-            border-color: rgba(160, 80, 255, 0.45);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
             transform: translateX(3px);
         }
 
@@ -385,7 +385,7 @@
         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
     </span>
 
-    <span class="btn" onclick="location.reload()" title="Logout">
+    <span class="btn" onclick="logoutUser()" title="Logout">
         <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
     </span>
     
@@ -402,7 +402,7 @@
             <input type="password" id="auth-password" placeholder="Password" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             
             <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(160, 80, 255, 0.45); border: 1px solid rgba(160, 80, 255, 0.8); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
+                <button onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
                 <button onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
             </div>
         </div>
@@ -531,12 +531,19 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
+    // Hardware ban system check
     if (localStorage.getItem('imgui_device_block') === 'true') {
         document.getElementById('auth-status').textContent = "DEVICE BANNED PERMANENTLY";
         document.getElementById('auth-status').style.color = "red";
         document.querySelectorAll('button').forEach(b => b.disabled = true);
     }
 
+    // NEW: Persistent Login Auto-Check on page load
+    if (localStorage.getItem('imgui_logged_in') === 'true') {
+        showMainUI();
+    }
+
+    // Audio Pipeline Logic
     const clickSound = document.getElementById('sfx-click');
     function playClickNoise() {
         try {
@@ -568,6 +575,14 @@
         document.getElementById('game-player').classList.remove('show');
     }
 
+    // Clean UI revealing structure
+    function showMainUI() {
+        document.getElementById('login-overlay').classList.remove('show');
+        document.getElementById('main-logo-container').style.display = 'flex';
+        document.querySelector('.bar').style.display = 'flex';
+        document.getElementById('games-grid').style.display = 'grid';
+    }
+
     async function loginUser() {
         if (localStorage.getItem('imgui_device_block') === 'true') return;
         const username = document.getElementById('auth-username').value;
@@ -588,13 +603,18 @@
         }
 
         if (response.ok) {
-            document.getElementById('login-overlay').classList.remove('show');
-            document.getElementById('main-logo-container').style.display = 'flex';
-            document.querySelector('.bar').style.display = 'flex';
-            document.getElementById('games-grid').style.display = 'grid';
+            // NEW: Remember login status in browser local memory
+            localStorage.setItem('imgui_logged_in', 'true');
+            showMainUI();
         } else {
             alert(data.message);
         }
+    }
+
+    // NEW: Clean session breakout function when choosing to sign out
+    function logoutUser() {
+        localStorage.removeItem('imgui_logged_in');
+        location.reload();
     }
 
     async function registerUser() {
@@ -620,7 +640,7 @@
                     shape: { type: "circle" },
                     opacity: { value: 0.4, random: true },
                     size: { value: 3, random: true },
-                    line_linked: { enable: true, distance: 150, color: "#a050ff", opacity: 0.2, width: 1 },
+                    line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
                     move: { enable: true, speed: 1.5, direction: "none", random: true, out_mode: "out" }
                 },
                 interactivity: {
@@ -630,38 +650,6 @@
                 },
                 retina_detect: true
             });
-
-            const targetBox = document.getElementById('games-grid');
-            
-            function updateParticleColors() {
-                if (!window.pJSDom || !window.pJSDom[0]) {
-                    setTimeout(updateParticleColors, 100);
-                    return;
-                }
-                
-                const pJS = window.pJSDom[0].pJS;
-                const rect = targetBox.getBoundingClientRect();
-                
-                const pad = 12;
-                const boxX1 = rect.left + pad;
-                const boxY1 = rect.top + pad;
-                const boxX2 = rect.right - pad;
-                const boxY2 = rect.bottom - pad;
-                
-                for (let i = 0; i < pJS.particles.array.length; i++) {
-                    let p = pJS.particles.array[i];
-                    
-                    if (p.x > boxX1 && p.x < boxX2 && p.y > boxY1 && p.y < boxY2) {
-                        p.color.rgb = { r: 255, g: 140, b: 0 };
-                    } else {
-                        p.color.rgb = { r: 255, g: 255, b: 255 };
-                    }
-                }
-                
-                requestAnimationFrame(updateParticleColors);
-            }
-            
-            setTimeout(updateParticleColors, 500);
         }
     } catch(err) {
         console.log("Particles skipped:", err);
