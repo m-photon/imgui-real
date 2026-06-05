@@ -3,29 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Panel</title>
-</head>
-<body style="background: #111; color: white; font-family: sans-serif; padding: 50px; text-align: center;">
-    <h2>IMGUI Administration Panel</h2>
-    
-    <div style="background: #222; padding: 30px; border-radius: 12px; display: inline-block; width: 350px; vertical-align: top; margin-right: 20px;">
-        <p>System Authentication</p>
-        <input type="password" id="admin-password" placeholder="Admin Secret Password" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none;"><br>
-        <button onclick="loadUserList()" style="width: 97%; padding: 10px; background: #a050ff; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 20px;">Load Registered Users</button>
-        
-        <p style="border-top: 1px solid #333; padding-top: 15px;">Manual Ban Tool</p>
-        <input type="text" id="target-user" placeholder="Username to ban" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none;"><br>
-        <button onclick="banTarget(document.getElementById('target-user').value)" style="width: 97%; padding: 10px; background: red; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Execute Ban</button>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: white;
+            font-family: sans-serif;
+            text-align: center;
+            overflow-x: hidden;
+        }
 
-    <div style="background: #222; padding: 30px; border-radius: 12px; display: inline-block; width: 400px; text-align: left; vertical-align: top; min-height: 200px;">
-        <p style="font-weight: bold; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px;">Registered Users List</p>
-        <div id="user-list-container">
-            <p style="color: #666; font-style: italic;">Enter your admin password and click "Load Registered Users".</p>
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1; 
+        }
+
+        .ui-container {
+            position: relative;
+            z-index: 1;
+            padding: 50px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .panel-header {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="ui-container">
+        <div class="panel-header">
+            <h2>IMGUI Administration Panel</h2>
+        </div>
+
+        <div style="background: #222; padding: 30px; border-radius: 12px; width: 300px; text-align: left; vertical-align: top; box-sizing: border-box;">
+            <p style="font-weight: bold; font-size: 18px; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px; text-align: center;">Staff Rule Book</p>
+            <p style="line-height: 1.5; font-size: 15px;">Hello fellow staff member in order to do your job you must follow these rules:</p>
+            <div style="margin-left: 15px; font-size: 14px; line-height: 1.6; color: #ddd;">
+                <p>1. Make sure to collect enough info to ban the person because there is only a <strong>permanent</strong> ban.</p>
+                <p>2. Dont ban because you have beef or personal conflict with a user.</p>
+                <p>3. If you want to make a personal ban with a reason please send a google slide or doc to <strong>s163750@student.roundrockisd.org</strong>.</p>
+            </div>
+            <p style="margin-top: 25px; font-style: italic; color: #bbb;">sincerely M.m</p>
+        </div>
+        
+        <div style="background: #222; padding: 30px; border-radius: 12px; width: 350px; text-align: center; vertical-align: top; box-sizing: border-box;">
+            <p>System Authentication</p>
+            <input type="password" id="admin-password" placeholder="Admin Secret Password" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none; box-sizing: border-box;"><br>
+            <button onclick="loadUserList()" style="width: 90%; padding: 10px; background: #a050ff; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 20px;">Load Registered Users</button>
+            
+            <p style="border-top: 1px solid #333; padding-top: 15px;">Manual Ban Tool</p>
+            <input type="text" id="target-user" placeholder="Username to ban" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none; box-sizing: border-box;"><br>
+            <button onclick="banTarget(document.getElementById('target-user').value)" style="width: 90%; padding: 10px; background: red; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Execute Ban</button>
+        </div>
+
+        <div style="background: #222; padding: 30px; border-radius: 12px; width: 400px; text-align: left; vertical-align: top; min-height: 200px; box-sizing: border-box;">
+            <p style="font-weight: bold; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 10px;">Registered Users List</p>
+            <div id="user-list-container">
+                <p style="color: #666; font-style: italic;">Enter your admin password and click "Load Registered Users".</p>
+            </div>
         </div>
     </div>
 
     <script>
-        // FIXED: Added the mandatory '-1' suffix to match the active Render deployment address
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#ffffff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": { "enable": true, "mode": "grab" },
+                    "onclick": { "enable": true, "mode": "push" },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+                    "push": { "particles_nb": 4 }
+                }
+            },
+            "retina_detect": true
+        });
+
         const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
         async function loadUserList() {
@@ -132,7 +210,6 @@
                 }
                 
                 const data = await response.json();
-                alert(data.message);
                 loadUserList();
             } catch(e) {
                 alert("❌ Connection error while trying to ban.");
