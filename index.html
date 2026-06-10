@@ -33,13 +33,13 @@
             position: fixed;
             top: 14px;
             left: 14px;
-            padding: 10px 16px;
+            padding: 10px 40px; /* Increased side padding to make it longer */
+            min-width: 140px; /* Ensures it stays wide */
             z-index: 105;
             cursor: pointer;
             border-radius: 6px;
-            border: 2px solid #ffffff;
-            box-shadow: 0 0 14px rgba(255, 255, 255, 0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border: none; /* Removed white outline */
+            transition: transform 0.2s; /* Removed box-shadow transition */
             background-color: #666666;
             display: flex;
             align-items: center;
@@ -48,7 +48,7 @@
 
         #main-logo-container:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            /* Removed glow/blur effect on hover */
         }
 
         .logo-text {
