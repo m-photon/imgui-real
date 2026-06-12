@@ -65,9 +65,13 @@
             <input type="password" id="admin-password" placeholder="Admin Secret Password" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none; box-sizing: border-box;"><br>
             <button onclick="loadUserList()" style="width: 90%; padding: 10px; background: #a050ff; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 20px;">Load Registered Users</button>
             
-            <p style="border-top: 1px solid #333; padding-top: 15px;">Manual Ban Tool</p>
-            <input type="text" id="target-user" placeholder="Username to ban" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none; box-sizing: border-box;"><br>
-            <button onclick="banTarget(document.getElementById('target-user').value)" style="width: 90%; padding: 10px; background: red; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Execute Ban</button>
+            <p style="border-top: 1px solid #333; padding-top: 15px;">Manual Ban/Unban Tool</p>
+            <input type="text" id="target-user" placeholder="Username to target" style="width: 90%; padding: 10px; margin-bottom: 15px; border-radius: 6px; border: none; box-sizing: border-box;"><br>
+            
+            <div style="display: flex; gap: 10px; width: 90%; margin: 0 auto;">
+                <button onclick="banTarget(document.getElementById('target-user').value)" style="flex: 1; padding: 10px; background: red; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Execute Ban</button>
+                <button onclick="unbanTarget(document.getElementById('target-user').value)" style="flex: 1; padding: 10px; background: #00aa00; color: white; border: none; font-weight: bold; border-radius: 6px; cursor: pointer;">Execute Unban</button>
+            </div>
         </div>
 
         <div style="background: #222; padding: 30px; border-radius: 12px; width: 400px; text-align: left; vertical-align: top; min-height: 200px; box-sizing: border-box;">
@@ -180,6 +184,18 @@
                         banBtn.style.cursor = 'pointer';
                         banBtn.onclick = () => banTarget(user.username);
                         statusGroup.appendChild(banBtn);
+                    } else {
+                        // NEW: Show Unban button if they are already banned
+                        const unbanBtn = document.createElement('button');
+                        unbanBtn.textContent = "Unban";
+                        unbanBtn.style.background = '#113311';
+                        unbanBtn.style.color = '#4dff4d';
+                        unbanBtn.style.border = '1px solid #4dff4d';
+                        unbanBtn.style.padding = '4px 10px';
+                        unbanBtn.style.borderRadius = '4px';
+                        unbanBtn.style.cursor = 'pointer';
+                        unbanBtn.onclick = () => unbanTarget(user.username);
+                        statusGroup.appendChild(unbanBtn);
                     }
 
                     row.appendChild(nameSpan);
@@ -210,9 +226,35 @@
                 }
                 
                 const data = await response.json();
-                loadUserList();
+                alert(data.message);
+                loadUserList(); // Refresh the list
             } catch(e) {
                 alert("❌ Connection error while trying to ban.");
+            }
+        }
+
+        
+        async function unbanTarget(username) {
+            if (!username) return alert("Please specify a username.");
+            const password = document.getElementById('admin-password').value;
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/unban`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usernameToUnban: username, adminPassword: password })
+                });
+                
+                if (response.status === 401) {
+                    alert("❌ Access Denied: Incorrect Password.");
+                    return;
+                }
+                
+                const data = await response.json();
+                alert(data.message);
+                loadUserList(); // Refresh the list
+            } catch(e) {
+                alert("❌ Connection error while trying to unban.");
             }
         }
     </script>
