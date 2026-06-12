@@ -8,15 +8,23 @@
     <style>
         * { margin: 0; padding: 3; box-sizing: border-box; }
         body, html { width: 100%; height: 100%; background: #000; overflow: hidden; transition: background 0.3s ease; }
+        
+        /* The Background Canvas */
         #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        
+        /* Logo placed at 100px from the top (Under the widget bar) */
         #main-logo-container { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); padding: 10px 40px; min-width: 140px; z-index: 105; cursor: pointer; border-radius: 6px; border: none; transition: transform 0.2s; background-color: #666666; display: flex; align-items: center; justify-content: center; }
         #main-logo-container:hover { transform: translateX(-50%) scale(1.05); }
         .logo-text { font-family: 'Comic Sans MS', 'Comic Sans', cursive; font-size: 20px; font-weight: bold; color: #ffffff; user-select: none; }
         .blue-exclamation { color: #77bbff; }
+        
+        /* Widget Bar placed at 16px from the top */
         .bar { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 32px; z-index: 100; background: rgba(15, 15, 15, 0.85); padding: 10px 40px; min-width: 360px; border-radius: 32px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .btn { width: 48px; height: 48px; background: transparent; border: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255, 255, 255, 0.85); transition: background 0.2s, transform 0.2s; user-select: none; position: relative; z-index: 101; }
         .btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
         .btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        
+        /* Modals and Overlays */
         .overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); align-items: center; justify-content: center; }
         .overlay.show { display: flex; animation: pop 0.2s ease; }
         @keyframes pop { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
@@ -25,19 +33,16 @@
         .close-btn:hover { color: #fff; }
         .panel-title { font: 700 22px/1 'Segoe UI', sans-serif; color: #fff; letter-spacing: 0.5px; margin-bottom: 6px; }
         .panel-sub { font: 13px 'Segoe UI', sans-serif; color: rgba(255, 255, 255, 0.5); margin-bottom: 32px; }
-        .menu-links { display: flex; flex-direction: column; gap: 12px; }
-        .menu-row { display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px; color: rgba(255, 255, 255, 0.85); font: 500 14px 'Segoe UI', sans-serif; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.15s; position: relative; }
-        .menu-row:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); transform: translateX(3px); }
-        .menu-inner { display: flex; align-items: center; gap: 10px; }
-        .menu-inner svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
-        .arrow-icon { opacity: 0.4; font-size: 16px; }
-        .about-text { color: rgba(255, 255, 255, 0.85); font: 14px/1.6 'Segoe UI', sans-serif; text-align: left; margin-top: 20px; background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); min-height: 150px; }
+        
+        /* Game Grid */
         #games-grid { position: fixed; top: 60%; left: 50%; transform: translate(-50%, -50%); z-index: 50; padding: 30px; display: grid; grid-template-columns: repeat(auto-fit, 100px); gap: 32px 40px; justify-content: center; max-height: 85vh; width: 90vw; max-width: 1200px; overflow-y: auto; overflow-x: hidden; background: rgba(60, 60, 60, 0.25); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); }
         .game-card { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.15s; position: relative; z-index: 51; }
         .game-card:hover { transform: translateY(-4px); }
         .game-icon { width: 100px; height: 100px; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); background-color: #000; background-position: center; background-repeat: no-repeat; background-size: 70%; }
         .game-icon.cover { background-size: cover; }
         .game-title { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); text-align: center; max-width: 100px; }
+        
+        /* Game Player */
         #game-player { display: none; position: fixed; inset: 0; z-index: 998; flex-direction: column; }
         #game-player.show { display: flex; }
         #game-player iframe { width: 100%; flex: 1; border: none; background: #000; }
@@ -47,6 +52,7 @@
         .ctrl-btn:hover { color: #fff; }
         .ctrl-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         #current-game-name { font: 600 12px/1 'Segoe UI', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
+        
         button:disabled { opacity: 0.5 !important; cursor: not-allowed !important; background: rgba(255, 255, 255, 0.02) !important; border-color: rgba(255, 255, 255, 0.1) !important; }
     </style>
 </head>
@@ -78,7 +84,7 @@
         
         <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
             <input type="text" id="auth-email" name="no-autofill-email" placeholder="Email (Required for Registration)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            <input type="text" id="auth-username" name="no-autofill-user" placeholder="Username (Max 20 chars)" maxlength="20" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="text" id="auth-username" name="no-autofill-user" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             <input type="password" id="auth-password" placeholder="Password" autocomplete="new-password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             
             <div id="auth-buttons-container" style="display: flex; gap: 10px; margin-top: 10px;">
@@ -86,7 +92,7 @@
                 <button id="register-btn" onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
             </div>
             <p id="auth-warning-text" style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
-                Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
+                Click your choice <b>only ONE time</b>. Because the database handles heavy routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
             </p>
         </div>
     </div>
@@ -97,19 +103,19 @@
         <button class="close-btn" onclick="document.getElementById('soverlay').classList.remove('show')">✕</button>
         <div class="panel-title">Settings</div>
         <div class="panel-sub">Customize your experience</div>
-        <div class="menu-links">
-            <div class="menu-row" onclick="document.getElementById('theme-picker').click()">
-                <span class="menu-inner">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> Theme
-                </span>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px; color: rgba(255, 255, 255, 0.85); font: 500 14px 'Segoe UI', sans-serif; cursor: pointer;" onclick="document.getElementById('theme-picker').click()">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <svg style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> Theme
+                </div>
                 <input type="color" id="theme-picker" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="document.body.style.background = this.value;">
-                <span class="arrow-icon">›</span>
+                <span style="opacity: 0.4; font-size: 16px;">›</span>
             </div>
-            <div class="menu-row" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
-                <span class="menu-inner">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About
-                </span>
-                <span class="arrow-icon">›</span>
+            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px; color: rgba(255, 255, 255, 0.85); font: 500 14px 'Segoe UI', sans-serif; cursor: pointer;" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <svg style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About
+                </div>
+                <span style="opacity: 0.4; font-size: 16px;">›</span>
             </div>
         </div>
     </div>
@@ -120,7 +126,7 @@
         <button class="close-btn" onclick="document.getElementById('aoverlay').classList.remove('show')">✕</button>
         <div class="panel-title">About</div>
         <div class="panel-sub" style="margin-bottom: 0;">Information & Credits</div>
-        <div class="about-text">
+        <div style="color: rgba(255, 255, 255, 0.85); font: 14px/1.6 'Segoe UI', sans-serif; text-align: left; margin-top: 20px; background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); min-height: 150px;">
             <p>This is imgui, project that was made after the hit game site ''pIZZA menu''. This site will have more better higher quality updates and games; in the future we plan to add more universal tools to make your gaming experience better-M.m</p>
         </div>
     </div>
@@ -160,107 +166,53 @@
 <script>
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
-    // --- ADVANCED DEVICE FINGERPRINTING ---
-    function generateHWID() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.textBaseline = "top"; ctx.font = "14px 'Arial'"; ctx.textBaseline = "alphabetic";
-        ctx.fillStyle = "#f60"; ctx.fillRect(125,1,62,20);
-        ctx.fillStyle = "#069"; ctx.fillText("Tepl!x_Secret_Hash_99", 2, 15);
-        ctx.fillStyle = "rgba(102, 204, 0, 0.7)"; ctx.fillText("Tepl!x_Secret_Hash_99", 4, 17);
-
-        const str = canvas.toDataURL() + 
-                    screen.width + "x" + screen.height + "-" + screen.colorDepth + "-" + 
-                    navigator.hardwareConcurrency + "-" + navigator.deviceMemory + "-" + 
-                    navigator.language + "-" + Intl.DateTimeFormat().resolvedOptions().timeZone;
-        
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; 
-        }
-        return Math.abs(hash).toString(16);
-    }
-
-    const currentHWID = generateHWID();
-
     function evictBannedUser() {
-        localStorage.setItem('imgui_banned', 'true'); 
-        localStorage.removeItem('imgui_token');
+        localStorage.removeItem('imgui_logged_in');
+        localStorage.removeItem('imgui_username');
         document.getElementById('game-player').classList.remove('show');
         document.getElementById('iframe-canvas').src = '';
         document.getElementById('main-logo-container').style.display = 'none';
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
-        
         document.getElementById('login-overlay').classList.add('show');
-        document.getElementById('auth-status').textContent = "This device/account is permanently banned.";
+        document.getElementById('auth-status').textContent = "This account has been permanently banned.";
         document.getElementById('auth-status').style.color = "red";
-        
-        document.getElementById('auth-email').style.display = 'none';
-        document.getElementById('auth-username').style.display = 'none';
-        document.getElementById('auth-password').style.display = 'none';
-        document.getElementById('auth-buttons-container').style.display = 'none';
-        document.getElementById('auth-warning-text').style.display = 'none';
     }
 
-    // FIXED UNBAN BUG: Now listens continuously to see if the server unbanned them
     async function checkLiveBanPulse() {
+        const activeUser = localStorage.getItem('imgui_username');
+        if (!activeUser) return;
+        
         try {
-            const activeUser = localStorage.getItem('imgui_username');
             const response = await fetch(`${BACKEND_URL}/check-ban`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ hwid: currentHWID, username: activeUser }) 
+                body: JSON.stringify({ username: activeUser }) 
             });
             const data = await response.json();
-            
             if (data.isBanned) {
                 evictBannedUser();
-            } else {
-                // If the server says they are NOT banned, but the browser is locked, unlock it!
-                if (localStorage.getItem('imgui_banned') === 'true') {
-                    localStorage.removeItem('imgui_banned');
-                    location.reload(); 
-                }
             }
         } catch(e) {}
     }
 
-    // Start checking immediately and every 10 seconds
     checkLiveBanPulse();
     setInterval(checkLiveBanPulse, 10000);
 
-    // Only load the game screen if they aren't banned locally
-    if (localStorage.getItem('imgui_banned') !== 'true') {
-        verifySession();
-        setInterval(verifySession, 15000); 
+    if (localStorage.getItem('imgui_logged_in') === 'true') {
+        showMainUI();
     }
 
-    async function verifySession() {
-        const token = localStorage.getItem('imgui_token');
-        if (!token) return;
-        try {
-            const response = await fetch(`${BACKEND_URL}/verify-session`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-            });
-            const data = await response.json();
-            
-            if (data.valid) { showMainUI(); } 
-            else if (data.isBanned) { evictBannedUser(); } 
-            else { logoutUser(); }
-        } catch(e) {}
-    }
+    const clickSound = document.getElementById('sfx-click');
+    document.addEventListener('mousedown', (e) => {
+        if (e.target.closest('button, .game-card, .btn, .close-btn, img, svg, span')) { try { clickSound.currentTime = 0; clickSound.play().catch(err => {}); } catch(err) {} }
+    });
 
     function loadDisThing(url, name) {
         let theFrame = document.getElementById('iframe-canvas');
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
-        
-        const token = localStorage.getItem('imgui_token');
-        theFrame.src = url + "?auth=" + token + "&v=" + Date.now();
+        theFrame.src = url + "?v=" + Date.now();
         document.getElementById('game-player').classList.add('show');
     }
 
@@ -283,27 +235,33 @@
         if (!username || !password) return alert("Fill out Username and Password to log in.");
 
         const statusTxt = document.getElementById('auth-status');
+        const logBtn = document.getElementById('login-btn');
+        const regBtn = document.getElementById('register-btn');
+
+        logBtn.disabled = true; regBtn.disabled = true;
         statusTxt.textContent = "Connecting to server..."; statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/login`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ username, password, hwid: currentHWID })
+                body: JSON.stringify({ username, password })
             });
             const data = await response.json();
             
             if (response.status === 403) return evictBannedUser();
             if (response.ok) { 
-                localStorage.setItem('imgui_token', data.token); 
+                localStorage.setItem('imgui_logged_in', 'true'); 
                 localStorage.setItem('imgui_username', username);
                 showMainUI(); 
             } 
             else { alert(data.message); statusTxt.textContent = data.message; statusTxt.style.color = "red"; }
         } catch(err) { statusTxt.textContent = "Server offline."; statusTxt.style.color = "red"; }
+        
+        logBtn.disabled = false; regBtn.disabled = false;
     }
 
     function logoutUser() { 
-        localStorage.removeItem('imgui_token'); 
+        localStorage.removeItem('imgui_logged_in'); 
         localStorage.removeItem('imgui_username'); 
         location.reload(); 
     }
@@ -316,41 +274,78 @@
         if (!email || !username || !password) return alert("Fill out Email, Username, and Password to register.");
 
         const statusTxt = document.getElementById('auth-status');
+        const logBtn = document.getElementById('login-btn');
+        const regBtn = document.getElementById('register-btn');
+
+        logBtn.disabled = true; regBtn.disabled = true;
         statusTxt.textContent = "Registering account..."; statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/register`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ email, username, password, hwid: currentHWID }) 
+                body: JSON.stringify({ email, username, password }) 
             });
             const data = await response.json();
 
             if (response.status === 403) return evictBannedUser();
-            if (response.ok) { alert(data.message); statusTxt.textContent = "Login to continue"; statusTxt.style.color = "rgba(255, 255, 255, 0.5)"; } 
-            else { alert(data.message); statusTxt.textContent = data.message; statusTxt.style.color = "red"; }
-        } catch(err) { statusTxt.textContent = "Server offline."; statusTxt.style.color = "red"; }
+            if (response.ok) { 
+                alert(data.message); 
+                statusTxt.textContent = "Login to continue"; 
+                statusTxt.style.color = "rgba(255, 255, 255, 0.5)"; 
+            } 
+            else { 
+                alert(data.message); 
+                statusTxt.textContent = data.message; 
+                statusTxt.style.color = "red"; 
+            }
+        } catch(err) { 
+            statusTxt.textContent = "Server offline."; 
+            statusTxt.style.color = "red"; 
+        }
+
+        logBtn.disabled = false; regBtn.disabled = false;
     }
 
-    const clickSound = document.getElementById('sfx-click');
-    document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('button, .game-card, .btn, .menu-row, .close-btn, img, svg, span')) { try { clickSound.currentTime = 0; clickSound.play().catch(err => {}); } catch(err) {} }
-    });
-
+    // THE MATRIX "T" TYPING ANIMATION (With the 20% Blue Chance)
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
     function resizeCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
+    
     const tObjects = [];
-    for (let i = 0; i < 60; i++) { tObjects.push({ x: Math.random() * width, y: Math.random() * height, state: Math.floor(Math.random() * 6), timer: 0, delay: Math.floor(Math.random() * 15) + 10, fontSize: Math.floor(Math.random() * 20) + 14, opacity: Math.random() * 0.4 + 0.1, colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" }); }
+    for (let i = 0; i < 60; i++) { 
+        tObjects.push({ 
+            x: Math.random() * width, y: Math.random() * height, 
+            state: Math.floor(Math.random() * 6), timer: 0, 
+            delay: Math.floor(Math.random() * 15) + 10, fontSize: Math.floor(Math.random() * 20) + 14, 
+            opacity: Math.random() * 0.4 + 0.1, 
+            colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" 
+        }); 
+    }
+    
     function drawBackground() {
         ctx.clearRect(0, 0, width, height);
         for (let t of tObjects) {
             t.timer++;
-            if (t.timer > t.delay) { t.timer = 0; t.state++; if (t.state > 6) { t.state = 0; t.x = Math.random() * width; t.y = Math.random() * height; t.delay = Math.floor(Math.random() * 15) + 10; t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255"; } }
-            ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`; ctx.font = `${t.fontSize}px 'Courier New', monospace`;
-            let textToDraw = ""; if (t.state === 1) textToDraw = "_"; else if (t.state === 2 || t.state === 5) textToDraw = "T_"; else if (t.state === 3 || t.state === 4) textToDraw = "T"; else if (t.state === 6) textToDraw = "_";
+            if (t.timer > t.delay) { 
+                t.timer = 0; t.state++; 
+                if (t.state > 6) { 
+                    t.state = 0; t.x = Math.random() * width; t.y = Math.random() * height; 
+                    t.delay = Math.floor(Math.random() * 15) + 10; 
+                    t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255"; 
+                } 
+            }
+            ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`; 
+            ctx.font = `${t.fontSize}px 'Courier New', monospace`;
+            
+            let textToDraw = ""; 
+            if (t.state === 1) textToDraw = "_"; 
+            else if (t.state === 2 || t.state === 5) textToDraw = "T_"; 
+            else if (t.state === 3 || t.state === 4) textToDraw = "T"; 
+            else if (t.state === 6) textToDraw = "_";
+            
             if (textToDraw !== "") ctx.fillText(textToDraw, t.x, t.y);
         }
         requestAnimationFrame(drawBackground);
