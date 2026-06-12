@@ -185,7 +185,6 @@
                         banBtn.onclick = () => banTarget(user.username);
                         statusGroup.appendChild(banBtn);
                     } else {
-                        // NEW: Show Unban button if they are already banned
                         const unbanBtn = document.createElement('button');
                         unbanBtn.textContent = "Unban";
                         unbanBtn.style.background = '#113311';
@@ -227,13 +226,12 @@
                 
                 const data = await response.json();
                 alert(data.message);
-                loadUserList(); // Refresh the list
+                loadUserList(); 
             } catch(e) {
                 alert("❌ Connection error while trying to ban.");
             }
         }
 
-        
         async function unbanTarget(username) {
             if (!username) return alert("Please specify a username.");
             const password = document.getElementById('admin-password').value;
@@ -252,7 +250,7 @@
                 
                 const data = await response.json();
                 alert(data.message);
-                loadUserList(); // Refresh the list
+                loadUserList(); 
             } catch(e) {
                 alert("❌ Connection error while trying to unban.");
             }
