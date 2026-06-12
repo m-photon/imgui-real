@@ -410,8 +410,10 @@
         <div id="auth-status" class="panel-sub">Login or register to continue</div>
         
         <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
-            <input type="text" id="auth-username" placeholder="Username" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            <input type="password" id="auth-password" placeholder="Password" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <!-- Using type="text" and autocomplete="off" to disable browser autofill popups -->
+            <input type="text" id="auth-email" placeholder="Email (Required for Registration)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="text" id="auth-username" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="password" id="auth-password" placeholder="Password" autocomplete="new-password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button id="login-btn" onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
@@ -687,8 +689,15 @@
 
     async function registerUser() {
         if (localStorage.getItem('imgui_device_block') === 'true') return;
+        
+        const email = document.getElementById('auth-email').value; 
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
+
+        if (!email || !username || !password) {
+            alert("Please fill out Email, Username, and Password to register.");
+            return;
+        }
 
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
@@ -703,15 +712,28 @@
             const response = await fetch(`${BACKEND_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ email, username, password }) 
             });
             const data = await response.json();
-            alert(data.message);
+            
+            if (response.status === 403) {
+                evictBannedUser();
+                return;
+            }
 
-            logBtn.disabled = false;
-            regBtn.disabled = false;
-            statusTxt.textContent = "Login or register to continue";
-            statusTxt.style.color = "rgba(255, 255, 255, 0.5)";
+            if (response.ok) {
+                alert(data.message);
+                logBtn.disabled = false;
+                regBtn.disabled = false;
+                statusTxt.textContent = "Login or register to continue";
+                statusTxt.style.color = "rgba(255, 255, 255, 0.5)";
+            } else {
+                alert(data.message);
+                logBtn.disabled = false;
+                regBtn.disabled = false;
+                statusTxt.textContent = data.message;
+                statusTxt.style.color = "red";
+            }
         } catch(err) {
             alert("Connection failed. Check if server is booting up.");
             logBtn.disabled = false;
