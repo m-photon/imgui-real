@@ -5,39 +5,10 @@
     <title>Tuff boiiiii</title>
     <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            color: white;
-            font-family: sans-serif;
-            text-align: center;
-            overflow-x: hidden;
-        }
-
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1; 
-        }
-
-        .ui-container {
-            position: relative;
-            z-index: 1;
-            padding: 50px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .panel-header {
-            width: 100%;
-            margin-bottom: 20px;
-        }
+        body { margin: 0; padding: 0; background: #000; color: white; font-family: sans-serif; text-align: center; overflow-x: hidden; }
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+        .ui-container { position: relative; z-index: 1; padding: 50px; display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
+        .panel-header { width: 100%; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -84,28 +55,8 @@
 
     <script>
         particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#ffffff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.5, "random": false },
-                "size": { "value": 3, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": { "enable": true, "mode": "grab" },
-                    "onclick": { "enable": true, "mode": "push" },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
-                    "push": { "particles_nb": 4 }
-                }
-            },
-            "retina_detect": true
+            "particles": { "number": { "value": 80 }, "color": { "value": "#ffffff" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5 }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 2 } },
+            "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }, "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 1 } }, "push": { "particles_nb": 4 } } }
         });
 
         const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
@@ -113,12 +64,7 @@
         async function loadUserList() {
             const password = document.getElementById('admin-password').value;
             const container = document.getElementById('user-list-container');
-            
-            if (!password) {
-                alert("Please enter a password first!");
-                return;
-            }
-
+            if (!password) return alert("Please enter a password first!");
             container.innerHTML = '<p style="color: #a050ff; font-style: italic;">Connecting to Render server...</p>';
 
             try {
@@ -129,131 +75,72 @@
                 });
 
                 if (response.status === 401) {
-                    alert("❌ Access Denied: Incorrect Password!");
                     container.innerHTML = '<p style="color: red; font-style: italic;">Access Denied: Wrong Password.</p>';
-                    return;
+                    return alert("❌ Access Denied: Incorrect Password!");
                 }
 
-                if (!response.ok) {
-                    alert("❌ SERVER ERROR: Code " + response.status);
-                    return;
-                }
+                if (!response.ok) return alert("❌ SERVER ERROR: Code " + response.status);
 
                 const users = await response.json();
                 container.innerHTML = '';
 
-                if (users.length === 0) {
-                    container.innerHTML = '<p style="color: #999;">No users registered yet.</p>';
-                    return;
-                }
+                if (users.length === 0) return container.innerHTML = '<p style="color: #999;">No users registered yet.</p>';
 
                 users.forEach(user => {
                     const row = document.createElement('div');
-                    row.style.display = 'flex';
-                    row.style.justifyContent = 'space-between';
-                    row.style.alignItems = 'center';
-                    row.style.padding = '10px 0';
-                    row.style.borderBottom = '1px solid #333';
-
+                    row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.alignItems = 'center'; row.style.padding = '10px 0'; row.style.borderBottom = '1px solid #333';
+                    
                     const nameSpan = document.createElement('span');
                     nameSpan.textContent = user.username;
 
                     const statusGroup = document.createElement('div');
-                    statusGroup.style.display = 'flex';
-                    statusGroup.style.alignItems = 'center';
-                    statusGroup.style.gap = '10px';
+                    statusGroup.style.display = 'flex'; statusGroup.style.alignItems = 'center'; statusGroup.style.gap = '10px';
 
                     const badge = document.createElement('span');
                     badge.textContent = user.isBanned ? "BANNED" : "ACTIVE";
-                    badge.style.fontSize = '11px';
-                    badge.style.padding = '3px 8px';
-                    badge.style.borderRadius = '4px';
+                    badge.style.fontSize = '11px'; badge.style.padding = '3px 8px'; badge.style.borderRadius = '4px';
                     badge.style.background = user.isBanned ? 'rgba(255,0,0,0.2)' : 'rgba(0,255,0,0.2)';
                     badge.style.color = user.isBanned ? '#ff4d4d' : '#4dff4d';
-
                     statusGroup.appendChild(badge);
 
-                    if (!user.isBanned) {
-                        const banBtn = document.createElement('button');
-                        banBtn.textContent = "Ban";
-                        banBtn.style.background = '#331111';
-                        banBtn.style.color = '#ff4d4d';
-                        banBtn.style.border = '1px solid #ff4d4d';
-                        banBtn.style.padding = '4px 10px';
-                        banBtn.style.borderRadius = '4px';
-                        banBtn.style.cursor = 'pointer';
-                        banBtn.onclick = () => banTarget(user.username);
-                        statusGroup.appendChild(banBtn);
-                    } else {
-                        const unbanBtn = document.createElement('button');
-                        unbanBtn.textContent = "Unban";
-                        unbanBtn.style.background = '#113311';
-                        unbanBtn.style.color = '#4dff4d';
-                        unbanBtn.style.border = '1px solid #4dff4d';
-                        unbanBtn.style.padding = '4px 10px';
-                        unbanBtn.style.borderRadius = '4px';
-                        unbanBtn.style.cursor = 'pointer';
-                        unbanBtn.onclick = () => unbanTarget(user.username);
-                        statusGroup.appendChild(unbanBtn);
-                    }
+                    const btn = document.createElement('button');
+                    btn.textContent = user.isBanned ? "Unban" : "Ban";
+                    btn.style.background = user.isBanned ? '#113311' : '#331111';
+                    btn.style.color = user.isBanned ? '#4dff4d' : '#ff4d4d';
+                    btn.style.border = `1px solid ${user.isBanned ? '#4dff4d' : '#ff4d4d'}`;
+                    btn.style.padding = '4px 10px'; btn.style.borderRadius = '4px'; btn.style.cursor = 'pointer';
+                    btn.onclick = () => user.isBanned ? unbanTarget(user.username) : banTarget(user.username);
+                    statusGroup.appendChild(btn);
 
-                    row.appendChild(nameSpan);
-                    row.appendChild(statusGroup);
-                    container.appendChild(row);
+                    row.appendChild(nameSpan); row.appendChild(statusGroup); container.appendChild(row);
                 });
-
             } catch (err) {
-                alert("❌ CONNECTION FAILED: Could not reach Render.");
                 container.innerHTML = '<p style="color: red; font-style: italic;">Connection Failed.</p>';
             }
         }
 
         async function banTarget(username) {
             if (!username) return alert("Please specify a username.");
-            const password = document.getElementById('admin-password').value;
-            
             try {
                 const response = await fetch(`${BACKEND_URL}/ban`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ usernameToBan: username, adminPassword: password })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usernameToBan: username, adminPassword: document.getElementById('admin-password').value })
                 });
-                
-                if (response.status === 401) {
-                    alert("❌ Access Denied: Incorrect Password.");
-                    return;
-                }
-                
-                const data = await response.json();
-                alert(data.message);
-                loadUserList(); 
-            } catch(e) {
-                alert("❌ Connection error while trying to ban.");
-            }
+                if (response.status === 401) return alert("❌ Access Denied: Incorrect Password.");
+                const data = await response.json(); alert(data.message); loadUserList(); 
+            } catch(e) { alert("❌ Connection error."); }
         }
 
         async function unbanTarget(username) {
             if (!username) return alert("Please specify a username.");
-            const password = document.getElementById('admin-password').value;
-            
             try {
                 const response = await fetch(`${BACKEND_URL}/unban`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ usernameToUnban: username, adminPassword: password })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usernameToUnban: username, adminPassword: document.getElementById('admin-password').value })
                 });
-                
-                if (response.status === 401) {
-                    alert("❌ Access Denied: Incorrect Password.");
-                    return;
-                }
-                
-                const data = await response.json();
-                alert(data.message);
-                loadUserList(); 
-            } catch(e) {
-                alert("❌ Connection error while trying to unban.");
-            }
+                if (response.status === 401) return alert("❌ Access Denied: Incorrect Password.");
+                const data = await response.json(); alert(data.message); loadUserList(); 
+            } catch(e) { alert("❌ Connection error."); }
         }
     </script>
 </body>
