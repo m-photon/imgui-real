@@ -735,7 +735,6 @@
         }
     }
 
-    // --- Typing 'T' Background Effect ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -748,17 +747,17 @@
     resizeCanvas();
 
     const tObjects = [];
-    const maxTs = 60; // How many 'T's are on screen at once
+    const maxTs = 60;
 
     for (let i = 0; i < maxTs; i++) {
         tObjects.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            state: Math.floor(Math.random() * 6), // 0: invisible, 1: _, 2: T_, 3: T, 4: T_, 5: _
+            state: Math.floor(Math.random() * 6), 
             timer: 0,
-            delay: Math.floor(Math.random() * 15) + 10, // Speed of typing
+            delay: Math.floor(Math.random() * 15) + 10, 
             fontSize: Math.floor(Math.random() * 20) + 14,
-            opacity: Math.random() * 0.4 + 0.1 // Keeps it subtle in the background
+            opacity: Math.random() * 0.4 + 0.1 
         });
     }
 
@@ -771,7 +770,7 @@
                 t.timer = 0;
                 t.state++;
                 
-                if (t.state > 6) { // Reset and move to a new spot
+                if (t.state > 6) {
                     t.state = 0;
                     t.x = Math.random() * width;
                     t.y = Math.random() * height;
@@ -785,7 +784,7 @@
             let textToDraw = "";
             if (t.state === 1) textToDraw = "_";
             else if (t.state === 2) textToDraw = "T_";
-            else if (t.state === 3 || t.state === 4) textToDraw = "T"; // Pause slightly on the typed T
+            else if (t.state === 3 || t.state === 4) textToDraw = "T";
             else if (t.state === 5) textToDraw = "T_";
             else if (t.state === 6) textToDraw = "_";
 
