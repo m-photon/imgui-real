@@ -30,23 +30,11 @@
             pointer-events: none;
         }
 
-        #center-icon {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 350px;
-            z-index: 1; 
-            pointer-events: none; 
-            user-select: none;
-            filter: grayscale(100%) brightness(15%); 
-            opacity: 0.8;
-        }
-
         #main-logo-container {
             position: fixed;
-            top: 14px;
-            left: 14px;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
             padding: 10px 40px; 
             min-width: 140px; 
             z-index: 105;
@@ -61,7 +49,7 @@
         }
 
         #main-logo-container:hover {
-            transform: scale(1.05);
+            transform: translateX(-50%) scale(1.05);
         }
 
         .logo-text {
@@ -254,7 +242,7 @@
 
         #games-grid {
             position: fixed;
-            top: 55%;
+            top: 60%; 
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 50;
@@ -263,9 +251,9 @@
             grid-template-columns: repeat(auto-fit, 100px);
             gap: 32px 40px;
             justify-content: center;
-            max-height: 75vh;
-            width: 80vw;
-            max-width: 900px;
+            max-height: 85vh; 
+            width: 90vw; 
+            max-width: 1200px; 
             overflow-y: auto;
             overflow-x: hidden;
             background: rgba(60, 60, 60, 0.25);
@@ -395,8 +383,6 @@
 <body>
 
 <canvas id="bg-canvas"></canvas>
-
-<div id="center-icon">🕊</div>
 
 <div id="main-logo-container" style="display: none;" onclick="nukeGame(); document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'))">
     <span class="logo-text">Tepl<span class="blue-exclamation">!</span>x</span>
@@ -735,6 +721,7 @@
         }
     }
 
+    // --- Typing 'T' Background Effect ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
@@ -747,7 +734,7 @@
     resizeCanvas();
 
     const tObjects = [];
-    const maxTs = 60;
+    const maxTs = 60; 
 
     for (let i = 0; i < maxTs; i++) {
         tObjects.push({
@@ -757,7 +744,8 @@
             timer: 0,
             delay: Math.floor(Math.random() * 15) + 10, 
             fontSize: Math.floor(Math.random() * 20) + 14,
-            opacity: Math.random() * 0.4 + 0.1 
+            opacity: Math.random() * 0.4 + 0.1, 
+            colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" 
         });
     }
 
@@ -770,21 +758,22 @@
                 t.timer = 0;
                 t.state++;
                 
-                if (t.state > 6) {
+                if (t.state > 6) { 
                     t.state = 0;
                     t.x = Math.random() * width;
                     t.y = Math.random() * height;
                     t.delay = Math.floor(Math.random() * 15) + 10;
+                    t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255";
                 }
             }
 
-            ctx.fillStyle = `rgba(255, 255, 255, ${t.opacity})`;
+            ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`;
             ctx.font = `${t.fontSize}px 'Courier New', monospace`;
 
             let textToDraw = "";
             if (t.state === 1) textToDraw = "_";
             else if (t.state === 2) textToDraw = "T_";
-            else if (t.state === 3 || t.state === 4) textToDraw = "T";
+            else if (t.state === 3 || t.state === 4) textToDraw = "T"; 
             else if (t.state === 5) textToDraw = "T_";
             else if (t.state === 6) textToDraw = "_";
 
