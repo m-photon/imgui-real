@@ -410,18 +410,14 @@
         <div id="auth-status" class="panel-sub">Login or register to continue</div>
         
         <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
-            <input type="text" id="auth-email" placeholder="Email (Required for Registration)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             <input type="text" id="auth-username" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             <input type="password" id="auth-password" placeholder="Password" autocomplete="new-password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            
+            <input type="text" id="auth-invite" placeholder="Invite Code (Required for Registering)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #77bbff; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button id="login-btn" onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
                 <button id="register-btn" onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
             </div>
-
-            <p style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
-                Click your choice <b>only ONE time</b>. Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
-            </p>
         </div>
     </div>
 </div>
@@ -463,65 +459,18 @@
 </div>
 
 <div id="games-grid" style="display: none;">
-    <div class="game-card" onclick="loadDisThing('games/deltarune.html', 'DELTARUNE')">
-        <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
-        <span class="game-title">Deltarune</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/baldi.html', 'BALDIS BASICS PLUS')">
-        <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
-        <span class="game-title">Baldi's Basics Plus</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/utyellow.html', 'UNDERTALE YELLOW')">
-        <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
-        <span class="game-title">Undertale Yellow</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')">
-        <div class="game-icon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div>
-        <span class="game-title">Slope</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/retrobowl.html', 'RETRO BOWL')">
-        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="game-title">Retro Bowl</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/gobble.html', 'GOBBLE')">
-        <div class="game-icon cover" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/fancade@main/gobble/webapp/cover.jpg');"></div>
-        <span class="game-title">Gobble</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/hardestgame.html', 'WORLDS HARDEST GAME')">
-        <div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.jt-JIRVjML9A_aLx5PO-UAHaEJ?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="game-title">World's Hardest Game</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/sansfight.html', 'BAD TIME SIMULATOR')">
-        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.5tR11T_i4_Pc50PzDD1v7gAAAA?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="game-title">Sans Fight</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/geodash.html', 'GEOMETRY DASH')">
-        <div class="game-icon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
-        <span class="game-title">Geometry Dash</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/ragdollhit.html', 'RAGDOLL HIT')">
-        <div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.V1bvMxTr_yNWr1_KR4EuAAHaD3?r=0&cb=thfc1falcon&w=1408&h=736&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="game-title">Ragdoll Hit</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/ragdollarchers.html', 'RAGDOLL ARCHERS')">
-        <div class="game-icon cover" style="background-image: url('https://geodashlite.io/data/image/game/ragdoll-archers.jpg');"></div>
-        <span class="game-title">Ragdoll Archers</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/peopleplayground.html', 'PEOPLE PLAYGROUND')">
-        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.U3BFNh2bFQniD1_ykAp0hQHaFF?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="game-title">People Playground</span>
-    </div>
+    <div class="game-card" onclick="loadDisThing('games/deltarune.html', 'DELTARUNE')"><div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div><span class="game-title">Deltarune</span></div>
+    <div class="game-card" onclick="loadDisThing('games/baldi.html', 'BALDIS BASICS PLUS')"><div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div><span class="game-title">Baldi's Basics Plus</span></div>
+    <div class="game-card" onclick="loadDisThing('games/utyellow.html', 'UNDERTALE YELLOW')"><div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div><span class="game-title">Undertale Yellow</span></div>
+    <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')"><div class="game-icon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div><span class="game-title">Slope</span></div>
+    <div class="game-card" onclick="loadDisThing('games/retrobowl.html', 'RETRO BOWL')"><div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">Retro Bowl</span></div>
+    <div class="game-card" onclick="loadDisThing('games/gobble.html', 'GOBBLE')"><div class="game-icon cover" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/fancade@main/gobble/webapp/cover.jpg');"></div><span class="game-title">Gobble</span></div>
+    <div class="game-card" onclick="loadDisThing('games/hardestgame.html', 'WORLDS HARDEST GAME')"><div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.jt-JIRVjML9A_aLx5PO-UAHaEJ?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">World's Hardest Game</span></div>
+    <div class="game-card" onclick="loadDisThing('games/sansfight.html', 'BAD TIME SIMULATOR')"><div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.5tR11T_i4_Pc50PzDD1v7gAAAA?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">Sans Fight</span></div>
+    <div class="game-card" onclick="loadDisThing('games/geodash.html', 'GEOMETRY DASH')"><div class="game-icon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div><span class="game-title">Geometry Dash</span></div>
+    <div class="game-card" onclick="loadDisThing('games/ragdollhit.html', 'RAGDOLL HIT')"><div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.V1bvMxTr_yNWr1_KR4EuAAHaD3?r=0&cb=thfc1falcon&w=1408&h=736&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">Ragdoll Hit</span></div>
+    <div class="game-card" onclick="loadDisThing('games/ragdollarchers.html', 'RAGDOLL ARCHERS')"><div class="game-icon cover" style="background-image: url('https://geodashlite.io/data/image/game/ragdoll-archers.jpg');"></div><span class="game-title">Ragdoll Archers</span></div>
+    <div class="game-card" onclick="loadDisThing('games/peopleplayground.html', 'PEOPLE PLAYGROUND')"><div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.U3BFNh2bFQniD1_ykAp0hQHaFF?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">People Playground</span></div>
 </div>
 
 <div id="game-player">
@@ -549,71 +498,43 @@
 <script>
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
-    // --- HARDWARE FINGERPRINTING ---
-    // Generates a unique string based on screen, timezone, and how the canvas renders invisible pixels
-    function generateHWID() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        ctx.textBaseline = "top";
-        ctx.font = "14px 'Arial'";
-        ctx.textBaseline = "alphabetic";
-        ctx.fillStyle = "#f60";
-        ctx.fillRect(125,1,62,20);
-        ctx.fillStyle = "#069";
-        ctx.fillText("Tepl!x_Secret_Hash_99", 2, 15);
-        ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
-        ctx.fillText("Tepl!x_Secret_Hash_99", 4, 17);
+    // NEW: Real session verification instead of faking it
+    async function verifySession() {
+        const token = localStorage.getItem('imgui_token');
+        if (!token) return;
 
-        const str = canvas.toDataURL() + screen.width + screen.height + screen.colorDepth + Intl.DateTimeFormat().resolvedOptions().timeZone;
-        
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; 
-        }
-        return Math.abs(hash).toString(16);
+        try {
+            const response = await fetch(`${BACKEND_URL}/verify-session`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+            const data = await response.json();
+            
+            if (data.valid) {
+                showMainUI();
+            } else if (data.isBanned) {
+                evictBannedUser();
+            } else {
+                logoutUser();
+            }
+        } catch(e) {}
     }
 
-    const currentHWID = generateHWID();
+    // Run verification immediately
+    verifySession();
+    setInterval(verifySession, 15000); // Check every 15 seconds to see if they got banned
 
     function evictBannedUser() {
-        localStorage.removeItem('imgui_logged_in');
-        localStorage.removeItem('imgui_username');
+        localStorage.removeItem('imgui_token');
         document.getElementById('game-player').classList.remove('show');
         document.getElementById('iframe-canvas').src = '';
         document.getElementById('main-logo-container').style.display = 'none';
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
         document.getElementById('login-overlay').classList.add('show');
-        document.getElementById('auth-status').textContent = "This User is banned.";
+        document.getElementById('auth-status').textContent = "This account is permanently banned.";
         document.getElementById('auth-status').style.color = "red";
-        document.querySelectorAll('button').forEach(b => b.disabled = true);
-    }
-
-    async function checkLiveBanPulse() {
-        const activeUser = localStorage.getItem('imgui_username');
-        
-        try {
-            const response = await fetch(`${BACKEND_URL}/check-ban`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: activeUser, hwid: currentHWID }) // Send HWID check
-            });
-            const data = await response.json();
-            if (data.isBanned) {
-                evictBannedUser();
-            }
-        } catch(e) {}
-    }
-
-    // Run a pulse check immediately on load
-    checkLiveBanPulse();
-    setInterval(checkLiveBanPulse, 10000);
-
-    if (localStorage.getItem('imgui_logged_in') === 'true') {
-        showMainUI();
     }
 
     const clickSound = document.getElementById('sfx-click');
@@ -621,15 +542,11 @@
         try {
             clickSound.currentTime = 0;
             clickSound.play().catch(e => console.log("Audio blocked:", e));
-        } catch(e) {
-            console.log("Audio skipped:", e);
-        }
+        } catch(e) { }
     }
 
     document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('button, .game-card, .btn, .menu-row, .close-btn, img, svg, span')) {
-            playClickNoise();
-        }
+        if (e.target.closest('button, .game-card, .btn, .menu-row, .close-btn, img, svg, span')) playClickNoise();
     });
 
     async function loadDisThing(url, name) {
@@ -660,111 +577,82 @@
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
-        if (!username || !password) {
-            alert("Please fill out Username and Password to log in.");
-            return;
-        }
+        if (!username || !password) return alert("Please fill out Username and Password.");
 
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
         const statusTxt = document.getElementById('auth-status');
 
-        logBtn.disabled = true;
-        regBtn.disabled = true;
-        statusTxt.textContent = "Connecting to server... Please wait...";
+        logBtn.disabled = true; regBtn.disabled = true;
+        statusTxt.textContent = "Connecting to server...";
         statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password, hwid: currentHWID }) // Send HWID
+                body: JSON.stringify({ username, password })
             });
             const data = await response.json();
             
-            if (response.status === 403) {
-                evictBannedUser();
-                return;
-            }
-
             if (response.ok) {
-                localStorage.setItem('imgui_logged_in', 'true');
-                localStorage.setItem('imgui_username', username);
+                // Save the secure token
+                localStorage.setItem('imgui_token', data.token);
                 showMainUI();
             } else {
                 alert(data.message);
-                logBtn.disabled = false;
-                regBtn.disabled = false;
-                statusTxt.textContent = data.message || "Login failed.";
+                statusTxt.textContent = data.message;
                 statusTxt.style.color = "red";
             }
         } catch(err) {
-            alert("Connection failed. Check if server is booting up.");
-            logBtn.disabled = false;
-            regBtn.disabled = false;
-            statusTxt.textContent = "Server offline or booting.";
+            statusTxt.textContent = "Server offline.";
             statusTxt.style.color = "red";
         }
+        logBtn.disabled = false; regBtn.disabled = false;
     }
 
     function logoutUser() {
-        localStorage.removeItem('imgui_logged_in');
-        localStorage.removeItem('imgui_username');
+        localStorage.removeItem('imgui_token');
         location.reload();
     }
 
     async function registerUser() {
-        const email = document.getElementById('auth-email').value; 
+        const inviteCode = document.getElementById('auth-invite').value; 
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
-        if (!email || !username || !password) {
-            alert("Please fill out Email, Username, and Password to register.");
-            return;
-        }
+        if (!inviteCode || !username || !password) return alert("Please fill out all fields.");
 
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
         const statusTxt = document.getElementById('auth-status');
 
-        logBtn.disabled = true;
-        regBtn.disabled = true;
-        statusTxt.textContent = "Registering account... Please wait...";
+        logBtn.disabled = true; regBtn.disabled = true;
+        statusTxt.textContent = "Registering account...";
         statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, username, password, hwid: currentHWID }) // Send HWID
+                body: JSON.stringify({ inviteCode, username, password }) 
             });
             const data = await response.json();
-            
-            if (response.status === 403) {
-                evictBannedUser();
-                return;
-            }
 
             if (response.ok) {
                 alert(data.message);
-                logBtn.disabled = false;
-                regBtn.disabled = false;
-                statusTxt.textContent = "Login or register to continue";
+                statusTxt.textContent = "Login to continue";
                 statusTxt.style.color = "rgba(255, 255, 255, 0.5)";
             } else {
                 alert(data.message);
-                logBtn.disabled = false;
-                regBtn.disabled = false;
                 statusTxt.textContent = data.message;
                 statusTxt.style.color = "red";
             }
         } catch(err) {
-            alert("Connection failed. Check if server is booting up.");
-            logBtn.disabled = false;
-            regBtn.disabled = false;
-            statusTxt.textContent = "Server offline or booting.";
+            statusTxt.textContent = "Server offline.";
             statusTxt.style.color = "red";
         }
+        logBtn.disabled = false; regBtn.disabled = false;
     }
 
     // --- Typing 'T' Background Effect ---
@@ -780,14 +668,10 @@
     resizeCanvas();
 
     const tObjects = [];
-    const maxTs = 60; 
-
-    for (let i = 0; i < maxTs; i++) {
+    for (let i = 0; i < 60; i++) {
         tObjects.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            state: Math.floor(Math.random() * 6), 
-            timer: 0,
+            x: Math.random() * width, y: Math.random() * height,
+            state: Math.floor(Math.random() * 6), timer: 0,
             delay: Math.floor(Math.random() * 15) + 10, 
             fontSize: Math.floor(Math.random() * 20) + 14,
             opacity: Math.random() * 0.4 + 0.1, 
@@ -797,37 +681,27 @@
 
     function drawBackground() {
         ctx.clearRect(0, 0, width, height);
-        
         for (let t of tObjects) {
             t.timer++;
             if (t.timer > t.delay) {
-                t.timer = 0;
-                t.state++;
-                
+                t.timer = 0; t.state++;
                 if (t.state > 6) { 
-                    t.state = 0;
-                    t.x = Math.random() * width;
-                    t.y = Math.random() * height;
+                    t.state = 0; t.x = Math.random() * width; t.y = Math.random() * height;
                     t.delay = Math.floor(Math.random() * 15) + 10;
                     t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255";
                 }
             }
-
             ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`;
             ctx.font = `${t.fontSize}px 'Courier New', monospace`;
 
             let textToDraw = "";
             if (t.state === 1) textToDraw = "_";
-            else if (t.state === 2) textToDraw = "T_";
+            else if (t.state === 2 || t.state === 5) textToDraw = "T_";
             else if (t.state === 3 || t.state === 4) textToDraw = "T"; 
-            else if (t.state === 5) textToDraw = "T_";
             else if (t.state === 6) textToDraw = "_";
 
-            if (textToDraw !== "") {
-                ctx.fillText(textToDraw, t.x, t.y);
-            }
+            if (textToDraw !== "") ctx.fillText(textToDraw, t.x, t.y);
         }
-        
         requestAnimationFrame(drawBackground);
     }
     drawBackground();
