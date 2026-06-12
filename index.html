@@ -410,7 +410,6 @@
         <div id="auth-status" class="panel-sub">Login or register to continue</div>
         
         <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
-            <!-- Using type="text" and autocomplete="off" to disable browser autofill popups -->
             <input type="text" id="auth-email" placeholder="Email (Required for Registration)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             <input type="text" id="auth-username" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             <input type="password" id="auth-password" placeholder="Password" autocomplete="new-password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
@@ -550,12 +549,36 @@
 <script>
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
-    if (localStorage.getItem('imgui_device_block') === 'true') {
-        evictBannedUser();
+    // --- HARDWARE FINGERPRINTING ---
+    // Generates a unique string based on screen, timezone, and how the canvas renders invisible pixels
+    function generateHWID() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        ctx.textBaseline = "top";
+        ctx.font = "14px 'Arial'";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = "#f60";
+        ctx.fillRect(125,1,62,20);
+        ctx.fillStyle = "#069";
+        ctx.fillText("Tepl!x_Secret_Hash_99", 2, 15);
+        ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
+        ctx.fillText("Tepl!x_Secret_Hash_99", 4, 17);
+
+        const str = canvas.toDataURL() + screen.width + screen.height + screen.colorDepth + Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; 
+        }
+        return Math.abs(hash).toString(16);
     }
 
+    const currentHWID = generateHWID();
+
     function evictBannedUser() {
-        localStorage.setItem('imgui_device_block', 'true');
         localStorage.removeItem('imgui_logged_in');
         localStorage.removeItem('imgui_username');
         document.getElementById('game-player').classList.remove('show');
@@ -564,20 +587,19 @@
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
         document.getElementById('login-overlay').classList.add('show');
-        document.getElementById('auth-status').textContent = "bro got banned🥀 to be honest you aint ever geting back in";
+        document.getElementById('auth-status').textContent = "This device has been permanently banned.";
         document.getElementById('auth-status').style.color = "red";
         document.querySelectorAll('button').forEach(b => b.disabled = true);
     }
 
     async function checkLiveBanPulse() {
         const activeUser = localStorage.getItem('imgui_username');
-        if (!activeUser && localStorage.getItem('imgui_logged_in') !== 'true') return;
-
+        
         try {
             const response = await fetch(`${BACKEND_URL}/check-ban`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: activeUser })
+                body: JSON.stringify({ username: activeUser, hwid: currentHWID }) // Send HWID check
             });
             const data = await response.json();
             if (data.isBanned) {
@@ -586,6 +608,8 @@
         } catch(e) {}
     }
 
+    // Run a pulse check immediately on load
+    checkLiveBanPulse();
     setInterval(checkLiveBanPulse, 10000);
 
     if (localStorage.getItem('imgui_logged_in') === 'true') {
@@ -609,9 +633,6 @@
     });
 
     async function loadDisThing(url, name) {
-        await checkLiveBanPulse();
-        if (localStorage.getItem('imgui_device_block') === 'true') return;
-
         let theFrame = document.getElementById('iframe-canvas');
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
@@ -631,12 +652,18 @@
         document.getElementById('main-logo-container').style.display = 'flex';
         document.querySelector('.bar').style.display = 'flex';
         document.getElementById('games-grid').style.display = 'grid';
+        document.getElementById('auth-status').textContent = "Login or register to continue";
+        document.getElementById('auth-status').style.color = "rgba(255, 255, 255, 0.5)";
     }
 
     async function loginUser() {
-        if (localStorage.getItem('imgui_device_block') === 'true') return;
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
+
+        if (!username || !password) {
+            alert("Please fill out Username and Password to log in.");
+            return;
+        }
 
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
@@ -651,7 +678,7 @@
             const response = await fetch(`${BACKEND_URL}/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username, password, hwid: currentHWID }) // Send HWID
             });
             const data = await response.json();
             
@@ -666,10 +693,9 @@
                 showMainUI();
             } else {
                 alert(data.message);
-                
                 logBtn.disabled = false;
                 regBtn.disabled = false;
-                statusTxt.textContent = "Login failed. Try again.";
+                statusTxt.textContent = data.message || "Login failed.";
                 statusTxt.style.color = "red";
             }
         } catch(err) {
@@ -688,8 +714,6 @@
     }
 
     async function registerUser() {
-        if (localStorage.getItem('imgui_device_block') === 'true') return;
-        
         const email = document.getElementById('auth-email').value; 
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
@@ -712,7 +736,7 @@
             const response = await fetch(`${BACKEND_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, username, password }) 
+                body: JSON.stringify({ email, username, password, hwid: currentHWID }) // Send HWID
             });
             const data = await response.json();
             
