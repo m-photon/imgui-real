@@ -242,7 +242,7 @@
 
         #games-grid {
             position: fixed;
-            top: 55%;
+            top: 60%; 
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 50;
@@ -251,9 +251,9 @@
             grid-template-columns: repeat(auto-fit, 100px);
             gap: 32px 40px;
             justify-content: center;
-            max-height: 75vh;
-            width: 80vw;
-            max-width: 900px;
+            max-height: 85vh; 
+            width: 90vw; 
+            max-width: 1200px; 
             overflow-y: auto;
             overflow-x: hidden;
             background: rgba(60, 60, 60, 0.25);
@@ -734,18 +734,18 @@
     resizeCanvas();
 
     const tObjects = [];
-    const maxTs = 60; // How many 'T's are on screen at once
+    const maxTs = 60; 
 
     for (let i = 0; i < maxTs; i++) {
         tObjects.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            state: Math.floor(Math.random() * 6), // 0: invisible, 1: _, 2: T_, 3: T, 4: T_, 5: _
+            state: Math.floor(Math.random() * 6), 
             timer: 0,
-            delay: Math.floor(Math.random() * 15) + 10, // Speed of typing
+            delay: Math.floor(Math.random() * 15) + 10, 
             fontSize: Math.floor(Math.random() * 20) + 14,
-            opacity: Math.random() * 0.4 + 0.1, // Keeps it subtle in the background
-            colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" // 20% chance to match the blue exclamation
+            opacity: Math.random() * 0.4 + 0.1, 
+            colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" 
         });
     }
 
@@ -758,7 +758,7 @@
                 t.timer = 0;
                 t.state++;
                 
-                if (t.state > 6) { // Reset and move to a new spot
+                if (t.state > 6) { 
                     t.state = 0;
                     t.x = Math.random() * width;
                     t.y = Math.random() * height;
@@ -773,7 +773,7 @@
             let textToDraw = "";
             if (t.state === 1) textToDraw = "_";
             else if (t.state === 2) textToDraw = "T_";
-            else if (t.state === 3 || t.state === 4) textToDraw = "T"; // Pause slightly on the typed T
+            else if (t.state === 3 || t.state === 4) textToDraw = "T"; 
             else if (t.state === 5) textToDraw = "T_";
             else if (t.state === 6) textToDraw = "_";
 
