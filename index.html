@@ -6,54 +6,378 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Tepl!x</title>
     <style>
-        * { margin: 0; padding: 3; box-sizing: border-box; }
-        body, html { width: 100%; height: 100%; background: #000; overflow: hidden; transition: background 0.3s ease; }
-        
-        /* The Background Canvas */
-        #bg-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
-        
-        /* Logo placed at 100px from the top (Under the widget bar) */
-        #main-logo-container { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); padding: 10px 40px; min-width: 140px; z-index: 105; cursor: pointer; border-radius: 6px; border: none; transition: transform 0.2s; background-color: #666666; display: flex; align-items: center; justify-content: center; }
-        #main-logo-container:hover { transform: translateX(-50%) scale(1.05); }
-        .logo-text { font-family: 'Comic Sans MS', 'Comic Sans', cursive; font-size: 20px; font-weight: bold; color: #ffffff; user-select: none; }
-        .blue-exclamation { color: #77bbff; }
-        
-        /* Widget Bar placed at 16px from the top */
-        .bar { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 32px; z-index: 100; background: rgba(15, 15, 15, 0.85); padding: 10px 40px; min-width: 360px; border-radius: 32px; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-        .btn { width: 48px; height: 48px; background: transparent; border: none; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: rgba(255, 255, 255, 0.85); transition: background 0.2s, transform 0.2s; user-select: none; position: relative; z-index: 101; }
-        .btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); }
-        .btn svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        
-        /* Modals and Overlays */
-        .overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); align-items: center; justify-content: center; }
-        .overlay.show { display: flex; animation: pop 0.2s ease; }
-        @keyframes pop { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
-        .settings-box { background: rgba(20, 20, 20, 0.9); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 48px 52px; width: 420px; max-width: 92vw; text-align: center; position: relative; box-shadow: 0 0 60px rgba(255, 255, 255, 0.05); }
-        .close-btn { position: absolute; top: 14px; right: 16px; background: none; border: none; color: rgba(255, 255, 255, 0.35); font-size: 22px; cursor: pointer; line-height: 1; transition: color 0.2s; }
-        .close-btn:hover { color: #fff; }
-        .panel-title { font: 700 22px/1 'Segoe UI', sans-serif; color: #fff; letter-spacing: 0.5px; margin-bottom: 6px; }
-        .panel-sub { font: 13px 'Segoe UI', sans-serif; color: rgba(255, 255, 255, 0.5); margin-bottom: 32px; }
-        
-        /* Game Grid */
-        #games-grid { position: fixed; top: 60%; left: 50%; transform: translate(-50%, -50%); z-index: 50; padding: 30px; display: grid; grid-template-columns: repeat(auto-fit, 100px); gap: 32px 40px; justify-content: center; max-height: 85vh; width: 90vw; max-width: 1200px; overflow-y: auto; overflow-x: hidden; background: rgba(60, 60, 60, 0.25); border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); }
-        .game-card { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.15s; position: relative; z-index: 51; }
-        .game-card:hover { transform: translateY(-4px); }
-        .game-icon { width: 100px; height: 100px; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); background-color: #000; background-position: center; background-repeat: no-repeat; background-size: 70%; }
-        .game-icon.cover { background-size: cover; }
-        .game-title { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(255, 255, 255, 0.85); text-align: center; max-width: 100px; }
-        
-        /* Game Player */
-        #game-player { display: none; position: fixed; inset: 0; z-index: 998; flex-direction: column; }
-        #game-player.show { display: flex; }
-        #game-player iframe { width: 100%; flex: 1; border: none; background: #000; }
-        #player-bar { background: #1a1a1a; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; height: 42px; flex-shrink: 0; }
-        #player-left, #player-right { display: flex; align-items: center; gap: 10px; }
-        .ctrl-btn { background: none; border: none; color: rgba(255, 255, 255, 0.55); cursor: pointer; padding: 4px; transition: color 0.2s; display: flex; }
-        .ctrl-btn:hover { color: #fff; }
-        .ctrl-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-        #current-game-name { font: 600 12px/1 'Segoe UI', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
-        
-        button:disabled { opacity: 0.5 !important; cursor: not-allowed !important; background: rgba(255, 255, 255, 0.02) !important; border-color: rgba(255, 255, 255, 0.1) !important; }
+        * {
+            margin: 0;
+            padding: 3;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            transition: background 0.3s ease;
+        }
+
+        #bg-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #main-logo-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 40px; 
+            min-width: 140px; 
+            z-index: 105;
+            cursor: pointer;
+            border-radius: 6px;
+            border: none; 
+            transition: transform 0.2s; 
+            background-color: #666666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #main-logo-container:hover {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .logo-text {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        .blue-exclamation {
+            color: #77bbff;
+        }
+
+        .bar {
+            position: fixed;
+            top: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            z-index: 100;
+            background: rgba(15, 15, 15, 0.85); 
+            padding: 10px 40px;
+            min-width: 360px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);   
+            backdrop-filter: blur(12px);        
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .btn {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.85);
+            transition: background 0.2s, transform 0.2s;
+            user-select: none;
+            position: relative;
+            z-index: 101;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay.show {
+            display: flex;
+            animation: pop 0.2s ease;
+        }
+
+        @keyframes pop {
+            from { opacity: 0; transform: scale(0.97); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .settings-box {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 48px 52px;
+            width: 420px;
+            max-width: 92vw;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.05);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 22px;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #fff;
+        }
+
+        .panel-title {
+            font: 700 22px/1 'Segoe UI', sans-serif;
+            color: #fff;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .panel-sub {
+            font: 13px 'Segoe UI', sans-serif;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 32px;
+        }
+
+        .menu-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: rgba(255, 255, 255, 0.85);
+            font: 500 14px 'Segoe UI', sans-serif;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+            position: relative;
+        }
+
+        .menu-row:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateX(3px);
+        }
+
+        .menu-inner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-inner svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .arrow-icon {
+            opacity: 0.4;
+            font-size: 16px;
+        }
+
+        .about-text {
+            color: rgba(255, 255, 255, 0.85);
+            font: 14px/1.6 'Segoe UI', sans-serif;
+            text-align: left;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 150px;
+        }
+
+        #games-grid {
+            position: fixed;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 50;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 100px);
+            gap: 32px 40px;
+            justify-content: center;
+            max-height: 75vh;
+            width: 80vw;
+            max-width: 900px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            background: rgba(60, 60, 60, 0.25);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .game-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.15s;
+            position: relative;
+            z-index: 51;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .game-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background-color: #000;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 70%;
+        }
+
+        .game-icon.cover {
+            background-size: cover;
+        }
+
+        .game-title {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            max-width: 100px;
+        }
+
+        #game-player {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 998;
+            flex-direction: column;
+        }
+
+        #game-player.show {
+            display: flex;
+        }
+
+        #game-player iframe {
+            width: 100%;
+            flex: 1;
+            border: none;
+            background: #000;
+        }
+
+        #player-bar {
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 14px;
+            height: 42px;
+            flex-shrink: 0;
+        }
+
+        #player-left, #player-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ctrl-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.55);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s;
+            display: flex;
+        }
+
+        .ctrl-btn:hover {
+            color: #fff;
+        }
+
+        .ctrl-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        #current-game-name {
+            font: 600 12px/1 'Segoe UI', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        button:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
     </style>
 </head>
 <body>
@@ -68,12 +392,15 @@
     <span class="btn" onclick="document.getElementById('soverlay').classList.add('show')">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </span>
+
     <span class="btn" onclick="loadDisThing('games/pwrmessage.html', 'pwRMessage')">
         <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
     </span>
+
     <span class="btn" onclick="logoutUser()" title="Logout">
         <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
     </span>
+    
     <span class="btn" onclick="nukeGame()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
 </div>
 
@@ -83,16 +410,16 @@
         <div id="auth-status" class="panel-sub">Login or register to continue</div>
         
         <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
-            <input type="text" id="auth-email" name="no-autofill-email" placeholder="Email (Required for Registration)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            <input type="text" id="auth-username" name="no-autofill-user" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            <input type="password" id="auth-password" placeholder="Password" autocomplete="new-password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="text" id="auth-username" placeholder="Username" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="password" id="auth-password" placeholder="Password" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             
-            <div id="auth-buttons-container" style="display: flex; gap: 10px; margin-top: 10px;">
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button id="login-btn" onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
                 <button id="register-btn" onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
             </div>
-            <p id="auth-warning-text" style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
-                Click your choice <b>only ONE time</b>. Because the database handles heavy routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
+
+            <p style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
+                Click your choice <b>only ONE time</b>. Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
             </p>
         </div>
     </div>
@@ -103,19 +430,21 @@
         <button class="close-btn" onclick="document.getElementById('soverlay').classList.remove('show')">✕</button>
         <div class="panel-title">Settings</div>
         <div class="panel-sub">Customize your experience</div>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px; color: rgba(255, 255, 255, 0.85); font: 500 14px 'Segoe UI', sans-serif; cursor: pointer;" onclick="document.getElementById('theme-picker').click()">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <svg style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> Theme
-                </div>
+        <div class="menu-links">
+            <div class="menu-row" onclick="document.getElementById('theme-picker').click()">
+                <span class="menu-inner">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 12h1m16 0h1M12 3v1m0 16v1m-6.36-15.36.71.71m11.31 11.31.71.71M5.64 18.36l.71-.71m11.31-11.31.71-.71"/></svg> 
+                    Theme
+                </span>
                 <input type="color" id="theme-picker" style="position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;" onchange="document.body.style.background = this.value;">
-                <span style="opacity: 0.4; font-size: 16px;">›</span>
+                <span class="arrow-icon">›</span>
             </div>
-            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 14px 18px; color: rgba(255, 255, 255, 0.85); font: 500 14px 'Segoe UI', sans-serif; cursor: pointer;" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <svg style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> About
-                </div>
-                <span style="opacity: 0.4; font-size: 16px;">›</span>
+            <div class="menu-row" onclick="document.getElementById('soverlay').classList.remove('show'); document.getElementById('aoverlay').classList.add('show');">
+                <span class="menu-inner">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 
+                    About
+                </span>
+                <span class="arrow-icon">›</span>
             </div>
         </div>
     </div>
@@ -126,37 +455,90 @@
         <button class="close-btn" onclick="document.getElementById('aoverlay').classList.remove('show')">✕</button>
         <div class="panel-title">About</div>
         <div class="panel-sub" style="margin-bottom: 0;">Information & Credits</div>
-        <div style="color: rgba(255, 255, 255, 0.85); font: 14px/1.6 'Segoe UI', sans-serif; text-align: left; margin-top: 20px; background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.05); min-height: 150px;">
+        <div class="about-text">
             <p>This is imgui, project that was made after the hit game site ''pIZZA menu''. This site will have more better higher quality updates and games; in the future we plan to add more universal tools to make your gaming experience better-M.m</p>
         </div>
     </div>
 </div>
 
 <div id="games-grid" style="display: none;">
-    <div class="game-card" onclick="loadDisThing('games/deltarune.html', 'DELTARUNE')"><div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div><span class="game-title">Deltarune</span></div>
-    <div class="game-card" onclick="loadDisThing('games/baldi.html', 'BALDIS BASICS PLUS')"><div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div><span class="game-title">Baldi's Basics Plus</span></div>
-    <div class="game-card" onclick="loadDisThing('games/utyellow.html', 'UNDERTALE YELLOW')"><div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div><span class="game-title">Undertale Yellow</span></div>
-    <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')"><div class="game-icon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div><span class="game-title">Slope</span></div>
-    <div class="game-card" onclick="loadDisThing('games/retrobowl.html', 'RETRO BOWL')"><div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">Retro Bowl</span></div>
-    <div class="game-card" onclick="loadDisThing('games/gobble.html', 'GOBBLE')"><div class="game-icon cover" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/fancade@main/gobble/webapp/cover.jpg');"></div><span class="game-title">Gobble</span></div>
-    <div class="game-card" onclick="loadDisThing('games/hardestgame.html', 'WORLDS HARDEST GAME')"><div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.jt-JIRVjML9A_aLx5PO-UAHaEJ?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">World's Hardest Game</span></div>
-    <div class="game-card" onclick="loadDisThing('games/sansfight.html', 'BAD TIME SIMULATOR')"><div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.5tR11T_i4_Pc50PzDD1v7gAAAA?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">Sans Fight</span></div>
-    <div class="game-card" onclick="loadDisThing('games/geodash.html', 'GEOMETRY DASH')"><div class="game-icon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div><span class="game-title">Geometry Dash</span></div>
-    <div class="game-card" onclick="loadDisThing('games/ragdollhit.html', 'RAGDOLL HIT')"><div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.V1bvMxTr_yNWr1_KR4EuAAHaD3?r=0&cb=thfc1falcon&w=1408&h=736&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">Ragdoll Hit</span></div>
-    <div class="game-card" onclick="loadDisThing('games/ragdollarchers.html', 'RAGDOLL ARCHERS')"><div class="game-icon cover" style="background-image: url('https://geodashlite.io/data/image/game/ragdoll-archers.jpg');"></div><span class="game-title">Ragdoll Archers</span></div>
-    <div class="game-card" onclick="loadDisThing('games/peopleplayground.html', 'PEOPLE PLAYGROUND')"><div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.U3BFNh2bFQniD1_ykAp0hQHaFF?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div><span class="game-title">People Playground</span></div>
+    <div class="game-card" onclick="loadDisThing('games/deltarune.html', 'DELTARUNE')">
+        <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
+        <span class="game-title">Deltarune</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/baldi.html', 'BALDIS BASICS PLUS')">
+        <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
+        <span class="game-title">Baldi's Basics Plus</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/utyellow.html', 'UNDERTALE YELLOW')">
+        <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
+        <span class="game-title">Undertale Yellow</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')">
+        <div class="game-icon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div>
+        <span class="game-title">Slope</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/retrobowl.html', 'RETRO BOWL')">
+        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+        <span class="game-title">Retro Bowl</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/gobble.html', 'GOBBLE')">
+        <div class="game-icon cover" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/fancade@main/gobble/webapp/cover.jpg');"></div>
+        <span class="game-title">Gobble</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/hardestgame.html', 'WORLDS HARDEST GAME')">
+        <div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.jt-JIRVjML9A_aLx5PO-UAHaEJ?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+        <span class="game-title">World's Hardest Game</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/sansfight.html', 'BAD TIME SIMULATOR')">
+        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.5tR11T_i4_Pc50PzDD1v7gAAAA?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+        <span class="game-title">Sans Fight</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/geodash.html', 'GEOMETRY DASH')">
+        <div class="game-icon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
+        <span class="game-title">Geometry Dash</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/ragdollhit.html', 'RAGDOLL HIT')">
+        <div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.V1bvMxTr_yNWr1_KR4EuAAHaD3?r=0&cb=thfc1falcon&w=1408&h=736&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+        <span class="game-title">Ragdoll Hit</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/ragdollarchers.html', 'RAGDOLL ARCHERS')">
+        <div class="game-icon cover" style="background-image: url('https://geodashlite.io/data/image/game/ragdoll-archers.jpg');"></div>
+        <span class="game-title">Ragdoll Archers</span>
+    </div>
+
+    <div class="game-card" onclick="loadDisThing('games/peopleplayground.html', 'PEOPLE PLAYGROUND')">
+        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.U3BFNh2bFQniD1_ykAp0hQHaFF?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+        <span class="game-title">People Playground</span>
+    </div>
 </div>
 
 <div id="game-player">
     <iframe id="iframe-canvas" src="" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
     <div id="player-bar">
         <div id="player-left">
-            <button class="ctrl-btn" onclick="nukeGame()"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
+            <button class="ctrl-btn" onclick="nukeGame()">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </button>
             <span id="current-game-name"></span>
         </div>
         <div id="player-right">
-            <button class="ctrl-btn" onclick="document.getElementById('iframe-canvas').src = document.getElementById('iframe-canvas').src"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
-            <button class="ctrl-btn" onclick="document.getElementById('game-player').requestFullscreen()"><svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+            <button class="ctrl-btn" onclick="document.getElementById('iframe-canvas').src = document.getElementById('iframe-canvas').src">
+                <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
+            <button class="ctrl-btn" onclick="document.getElementById('game-player').requestFullscreen()">
+                <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            </button>
         </div>
     </div>
 </div>
@@ -166,7 +548,12 @@
 <script>
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
+    if (localStorage.getItem('imgui_device_block') === 'true') {
+        evictBannedUser();
+    }
+
     function evictBannedUser() {
+        localStorage.setItem('imgui_device_block', 'true');
         localStorage.removeItem('imgui_logged_in');
         localStorage.removeItem('imgui_username');
         document.getElementById('game-player').classList.remove('show');
@@ -175,19 +562,20 @@
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
         document.getElementById('login-overlay').classList.add('show');
-        document.getElementById('auth-status').textContent = "This account has been permanently banned.";
+        document.getElementById('auth-status').textContent = "bro got banned🥀 to be honest you aint ever geting back in";
         document.getElementById('auth-status').style.color = "red";
+        document.querySelectorAll('button').forEach(b => b.disabled = true);
     }
 
     async function checkLiveBanPulse() {
         const activeUser = localStorage.getItem('imgui_username');
-        if (!activeUser) return;
-        
+        if (!activeUser && localStorage.getItem('imgui_logged_in') !== 'true') return;
+
         try {
             const response = await fetch(`${BACKEND_URL}/check-ban`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: activeUser }) 
+                body: JSON.stringify({ username: activeUser })
             });
             const data = await response.json();
             if (data.isBanned) {
@@ -196,7 +584,6 @@
         } catch(e) {}
     }
 
-    checkLiveBanPulse();
     setInterval(checkLiveBanPulse, 10000);
 
     if (localStorage.getItem('imgui_logged_in') === 'true') {
@@ -204,11 +591,25 @@
     }
 
     const clickSound = document.getElementById('sfx-click');
+    function playClickNoise() {
+        try {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => console.log("Audio blocked:", e));
+        } catch(e) {
+            console.log("Audio skipped:", e);
+        }
+    }
+
     document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('button, .game-card, .btn, .close-btn, img, svg, span')) { try { clickSound.currentTime = 0; clickSound.play().catch(err => {}); } catch(err) {} }
+        if (e.target.closest('button, .game-card, .btn, .menu-row, .close-btn, img, svg, span')) {
+            playClickNoise();
+        }
     });
 
-    function loadDisThing(url, name) {
+    async function loadDisThing(url, name) {
+        await checkLiveBanPulse();
+        if (localStorage.getItem('imgui_device_block') === 'true') return;
+
         let theFrame = document.getElementById('iframe-canvas');
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
@@ -218,7 +619,8 @@
 
     function nukeGame() {
         let f = document.getElementById('iframe-canvas');
-        f.removeAttribute('srcdoc'); f.src = '';
+        f.removeAttribute('srcdoc');
+        f.src = '';
         document.getElementById('game-player').classList.remove('show');
     }
 
@@ -230,124 +632,156 @@
     }
 
     async function loginUser() {
+        if (localStorage.getItem('imgui_device_block') === 'true') return;
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
-        if (!username || !password) return alert("Fill out Username and Password to log in.");
 
-        const statusTxt = document.getElementById('auth-status');
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
+        const statusTxt = document.getElementById('auth-status');
 
-        logBtn.disabled = true; regBtn.disabled = true;
-        statusTxt.textContent = "Connecting to server..."; statusTxt.style.color = "#a050ff";
+        logBtn.disabled = true;
+        regBtn.disabled = true;
+        statusTxt.textContent = "Connecting to server... Please wait...";
+        statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/login`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
             const data = await response.json();
             
-            if (response.status === 403) return evictBannedUser();
-            if (response.ok) { 
-                localStorage.setItem('imgui_logged_in', 'true'); 
+            if (response.status === 403) {
+                evictBannedUser();
+                return;
+            }
+
+            if (response.ok) {
+                localStorage.setItem('imgui_logged_in', 'true');
                 localStorage.setItem('imgui_username', username);
-                showMainUI(); 
-            } 
-            else { alert(data.message); statusTxt.textContent = data.message; statusTxt.style.color = "red"; }
-        } catch(err) { statusTxt.textContent = "Server offline."; statusTxt.style.color = "red"; }
-        
-        logBtn.disabled = false; regBtn.disabled = false;
+                showMainUI();
+            } else {
+                alert(data.message);
+                
+                logBtn.disabled = false;
+                regBtn.disabled = false;
+                statusTxt.textContent = "Login failed. Try again.";
+                statusTxt.style.color = "red";
+            }
+        } catch(err) {
+            alert("Connection failed. Check if server is booting up.");
+            logBtn.disabled = false;
+            regBtn.disabled = false;
+            statusTxt.textContent = "Server offline or booting.";
+            statusTxt.style.color = "red";
+        }
     }
 
-    function logoutUser() { 
-        localStorage.removeItem('imgui_logged_in'); 
-        localStorage.removeItem('imgui_username'); 
-        location.reload(); 
+    function logoutUser() {
+        localStorage.removeItem('imgui_logged_in');
+        localStorage.removeItem('imgui_username');
+        location.reload();
     }
 
     async function registerUser() {
-        const email = document.getElementById('auth-email').value;
+        if (localStorage.getItem('imgui_device_block') === 'true') return;
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
 
-        if (!email || !username || !password) return alert("Fill out Email, Username, and Password to register.");
-
-        const statusTxt = document.getElementById('auth-status');
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
+        const statusTxt = document.getElementById('auth-status');
 
-        logBtn.disabled = true; regBtn.disabled = true;
-        statusTxt.textContent = "Registering account..."; statusTxt.style.color = "#a050ff";
+        logBtn.disabled = true;
+        regBtn.disabled = true;
+        statusTxt.textContent = "Registering account... Please wait...";
+        statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/register`, {
-                method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-                body: JSON.stringify({ email, username, password }) 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
             });
             const data = await response.json();
+            alert(data.message);
 
-            if (response.status === 403) return evictBannedUser();
-            if (response.ok) { 
-                alert(data.message); 
-                statusTxt.textContent = "Login to continue"; 
-                statusTxt.style.color = "rgba(255, 255, 255, 0.5)"; 
-            } 
-            else { 
-                alert(data.message); 
-                statusTxt.textContent = data.message; 
-                statusTxt.style.color = "red"; 
-            }
-        } catch(err) { 
-            statusTxt.textContent = "Server offline."; 
-            statusTxt.style.color = "red"; 
+            logBtn.disabled = false;
+            regBtn.disabled = false;
+            statusTxt.textContent = "Login or register to continue";
+            statusTxt.style.color = "rgba(255, 255, 255, 0.5)";
+        } catch(err) {
+            alert("Connection failed. Check if server is booting up.");
+            logBtn.disabled = false;
+            regBtn.disabled = false;
+            statusTxt.textContent = "Server offline or booting.";
+            statusTxt.style.color = "red";
         }
-
-        logBtn.disabled = false; regBtn.disabled = false;
     }
 
-    // THE MATRIX "T" TYPING ANIMATION (With the 20% Blue Chance)
+    // --- Typing 'T' Background Effect ---
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
     let width, height;
-    function resizeCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+
+    function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-    
+
     const tObjects = [];
-    for (let i = 0; i < 60; i++) { 
-        tObjects.push({ 
-            x: Math.random() * width, y: Math.random() * height, 
-            state: Math.floor(Math.random() * 6), timer: 0, 
-            delay: Math.floor(Math.random() * 15) + 10, fontSize: Math.floor(Math.random() * 20) + 14, 
-            opacity: Math.random() * 0.4 + 0.1, 
-            colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" 
-        }); 
+    const maxTs = 60; // How many 'T's are on screen at once
+
+    for (let i = 0; i < maxTs; i++) {
+        tObjects.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            state: Math.floor(Math.random() * 6), // 0: invisible, 1: _, 2: T_, 3: T, 4: T_, 5: _
+            timer: 0,
+            delay: Math.floor(Math.random() * 15) + 10, // Speed of typing
+            fontSize: Math.floor(Math.random() * 20) + 14,
+            opacity: Math.random() * 0.4 + 0.1, // Keeps it subtle in the background
+            colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" // 20% chance to match the blue exclamation
+        });
     }
-    
+
     function drawBackground() {
         ctx.clearRect(0, 0, width, height);
+        
         for (let t of tObjects) {
             t.timer++;
-            if (t.timer > t.delay) { 
-                t.timer = 0; t.state++; 
-                if (t.state > 6) { 
-                    t.state = 0; t.x = Math.random() * width; t.y = Math.random() * height; 
-                    t.delay = Math.floor(Math.random() * 15) + 10; 
-                    t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255"; 
-                } 
+            if (t.timer > t.delay) {
+                t.timer = 0;
+                t.state++;
+                
+                if (t.state > 6) { // Reset and move to a new spot
+                    t.state = 0;
+                    t.x = Math.random() * width;
+                    t.y = Math.random() * height;
+                    t.delay = Math.floor(Math.random() * 15) + 10;
+                    t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255";
+                }
             }
-            ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`; 
+
+            ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`;
             ctx.font = `${t.fontSize}px 'Courier New', monospace`;
-            
-            let textToDraw = ""; 
-            if (t.state === 1) textToDraw = "_"; 
-            else if (t.state === 2 || t.state === 5) textToDraw = "T_"; 
-            else if (t.state === 3 || t.state === 4) textToDraw = "T"; 
+
+            let textToDraw = "";
+            if (t.state === 1) textToDraw = "_";
+            else if (t.state === 2) textToDraw = "T_";
+            else if (t.state === 3 || t.state === 4) textToDraw = "T"; // Pause slightly on the typed T
+            else if (t.state === 5) textToDraw = "T_";
             else if (t.state === 6) textToDraw = "_";
-            
-            if (textToDraw !== "") ctx.fillText(textToDraw, t.x, t.y);
+
+            if (textToDraw !== "") {
+                ctx.fillText(textToDraw, t.x, t.y);
+            }
         }
+        
         requestAnimationFrame(drawBackground);
     }
     drawBackground();
