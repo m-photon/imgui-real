@@ -20,13 +20,27 @@
             transition: background 0.3s ease;
         }
 
-        #particles-js {
+        #bg-canvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
+            pointer-events: none;
+        }
+
+        #center-icon {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 350px;
+            z-index: 1; 
+            pointer-events: none; 
+            user-select: none;
+            filter: grayscale(100%) brightness(15%); 
+            opacity: 0.8;
         }
 
         #main-logo-container {
@@ -48,7 +62,6 @@
 
         #main-logo-container:hover {
             transform: scale(1.05);
-            
         }
 
         .logo-text {
@@ -247,11 +260,12 @@
             z-index: 50;
             padding: 30px;
             display: grid;
-            grid-template-columns: repeat(3, 100px);
+            grid-template-columns: repeat(auto-fit, 100px);
             gap: 32px 40px;
             justify-content: center;
             max-height: 75vh;
-            width: 480px;
+            width: 80vw;
+            max-width: 900px;
             overflow-y: auto;
             overflow-x: hidden;
             background: rgba(60, 60, 60, 0.25);
@@ -380,7 +394,9 @@
 </head>
 <body>
 
-<div id="particles-js"></div>
+<canvas id="bg-canvas"></canvas>
+
+<div id="center-icon">🕊</div>
 
 <div id="main-logo-container" style="display: none;" onclick="nukeGame(); document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'))">
     <span class="logo-text">Tepl<span class="blue-exclamation">!</span>x</span>
@@ -543,7 +559,6 @@
 
 <audio id="sfx-click" src="https://www.questfemboys.xyz/assets/ItemSelect.wav" preload="auto"></audio>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 <script>
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
@@ -707,7 +722,6 @@
             const data = await response.json();
             alert(data.message);
 
-            
             logBtn.disabled = false;
             regBtn.disabled = false;
             statusTxt.textContent = "Login or register to continue";
@@ -721,29 +735,68 @@
         }
     }
 
-    try {
-        if (typeof particlesJS !== 'undefined') {
-            particlesJS("particles-js", {
-                particles: {
-                    number: { value: 80, density: { enable: true, value_area: 800 } },
-                    color: { value: "#ffffff" },
-                    shape: { type: "circle" },
-                    opacity: { value: 0.4, random: true },
-                    size: { value: 3, random: true },
-                    line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
-                    move: { enable: true, speed: 1.5, direction: "none", random: true, out_mode: "out" }
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" } },
-                    modes: { repulse: { distance: 80 }, push: { particles_nb: 4 } }
-                },
-                retina_detect: true
-            });
-        }
-    } catch(err) {
-        console.log("Particles skipped:", err);
+    // --- Typing 'T' Background Effect ---
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resizeCanvas() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
     }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    const tObjects = [];
+    const maxTs = 60; // How many 'T's are on screen at once
+
+    for (let i = 0; i < maxTs; i++) {
+        tObjects.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            state: Math.floor(Math.random() * 6), // 0: invisible, 1: _, 2: T_, 3: T, 4: T_, 5: _
+            timer: 0,
+            delay: Math.floor(Math.random() * 15) + 10, // Speed of typing
+            fontSize: Math.floor(Math.random() * 20) + 14,
+            opacity: Math.random() * 0.4 + 0.1 // Keeps it subtle in the background
+        });
+    }
+
+    function drawBackground() {
+        ctx.clearRect(0, 0, width, height);
+        
+        for (let t of tObjects) {
+            t.timer++;
+            if (t.timer > t.delay) {
+                t.timer = 0;
+                t.state++;
+                
+                if (t.state > 6) { // Reset and move to a new spot
+                    t.state = 0;
+                    t.x = Math.random() * width;
+                    t.y = Math.random() * height;
+                    t.delay = Math.floor(Math.random() * 15) + 10;
+                }
+            }
+
+            ctx.fillStyle = `rgba(255, 255, 255, ${t.opacity})`;
+            ctx.font = `${t.fontSize}px 'Courier New', monospace`;
+
+            let textToDraw = "";
+            if (t.state === 1) textToDraw = "_";
+            else if (t.state === 2) textToDraw = "T_";
+            else if (t.state === 3 || t.state === 4) textToDraw = "T"; // Pause slightly on the typed T
+            else if (t.state === 5) textToDraw = "T_";
+            else if (t.state === 6) textToDraw = "_";
+
+            if (textToDraw !== "") {
+                ctx.fillText(textToDraw, t.x, t.y);
+            }
+        }
+        
+        requestAnimationFrame(drawBackground);
+    }
+    drawBackground();
 </script>
 </body>
 </html>
