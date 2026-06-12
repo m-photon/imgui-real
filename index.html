@@ -78,16 +78,14 @@
         
         <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
             <input type="text" id="auth-email" name="no-autofill-email" placeholder="Email (Required for Registration)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="text" id="auth-username" name="no-autofill-user" placeholder="Username (Max 20 chars)" maxlength="20" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="password" id="auth-password" placeholder="Password" autocomplete="new-password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             
-            <input type="text" id="auth-username" name="no-autofill-user" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            
-            <input type="password" id="auth-password" autocomplete="new-password" placeholder="Password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <div id="auth-buttons-container" style="display: flex; gap: 10px; margin-top: 10px;">
                 <button id="login-btn" onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
                 <button id="register-btn" onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
             </div>
-            <p style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
+            <p id="auth-warning-text" style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
                 Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
             </p>
         </div>
@@ -147,18 +145,12 @@
     <iframe id="iframe-canvas" src="" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
     <div id="player-bar">
         <div id="player-left">
-            <button class="ctrl-btn" onclick="nukeGame()">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            </button>
+            <button class="ctrl-btn" onclick="nukeGame()"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></button>
             <span id="current-game-name"></span>
         </div>
         <div id="player-right">
-            <button class="ctrl-btn" onclick="document.getElementById('iframe-canvas').src = document.getElementById('iframe-canvas').src">
-                <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            </button>
-            <button class="ctrl-btn" onclick="document.getElementById('game-player').requestFullscreen()">
-                <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-            </button>
+            <button class="ctrl-btn" onclick="document.getElementById('iframe-canvas').src = document.getElementById('iframe-canvas').src"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+            <button class="ctrl-btn" onclick="document.getElementById('game-player').requestFullscreen()"><svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
         </div>
     </div>
 </div>
@@ -168,49 +160,90 @@
 <script>
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
 
-    async function verifySession() {
-        const token = localStorage.getItem('imgui_token');
-        if (!token) return;
-        try {
-            const response = await fetch(`${BACKEND_URL}/verify-session`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token })
-            });
-            const data = await response.json();
-            
-            if (data.valid) {
-                showMainUI();
-            } else if (data.isBanned) {
-                evictBannedUser();
-            } else {
-                logoutUser();
-            }
-        } catch(e) {}
+    // --- ADVANCED DEVICE FINGERPRINTING ---
+    // Gathers screen, CPU, RAM, OS Language, and Canvas drawing to create a unique device ID
+    function generateHWID() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = "top"; ctx.font = "14px 'Arial'"; ctx.textBaseline = "alphabetic";
+        ctx.fillStyle = "#f60"; ctx.fillRect(125,1,62,20);
+        ctx.fillStyle = "#069"; ctx.fillText("Tepl!x_Secret_Hash_99", 2, 15);
+        ctx.fillStyle = "rgba(102, 204, 0, 0.7)"; ctx.fillText("Tepl!x_Secret_Hash_99", 4, 17);
+
+        const str = canvas.toDataURL() + 
+                    screen.width + "x" + screen.height + "-" + screen.colorDepth + "-" + 
+                    navigator.hardwareConcurrency + "-" + navigator.deviceMemory + "-" + 
+                    navigator.language + "-" + Intl.DateTimeFormat().resolvedOptions().timeZone;
+        
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            const char = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; 
+        }
+        return Math.abs(hash).toString(16);
     }
 
-    verifySession();
-    setInterval(verifySession, 15000); 
+    const currentHWID = generateHWID();
 
     function evictBannedUser() {
+        localStorage.setItem('imgui_banned', 'true'); 
         localStorage.removeItem('imgui_token');
         document.getElementById('game-player').classList.remove('show');
         document.getElementById('iframe-canvas').src = '';
         document.getElementById('main-logo-container').style.display = 'none';
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
+        
         document.getElementById('login-overlay').classList.add('show');
-        document.getElementById('auth-status').textContent = "This account is permanently banned.";
+        document.getElementById('auth-status').textContent = "This device/account is permanently banned.";
         document.getElementById('auth-status').style.color = "red";
+        
+        document.getElementById('auth-email').style.display = 'none';
+        document.getElementById('auth-username').style.display = 'none';
+        document.getElementById('auth-password').style.display = 'none';
+        document.getElementById('auth-buttons-container').style.display = 'none';
+        document.getElementById('auth-warning-text').style.display = 'none';
     }
 
-    const clickSound = document.getElementById('sfx-click');
-    function playClickNoise() {
-        try { clickSound.currentTime = 0; clickSound.play().catch(e => {}); } catch(e) {}
+    // Ping the server to see if this specific device HWID is blacklisted
+    async function checkLiveBanPulse() {
+        try {
+            const response = await fetch(`${BACKEND_URL}/check-ban`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ hwid: currentHWID }) 
+            });
+            const data = await response.json();
+            if (data.isBanned) evictBannedUser();
+        } catch(e) {}
     }
-    document.addEventListener('mousedown', (e) => {
-        if (e.target.closest('button, .game-card, .btn, .menu-row, .close-btn, img, svg, span')) playClickNoise();
-    });
+
+    checkLiveBanPulse();
+    setInterval(checkLiveBanPulse, 10000);
+
+    if (localStorage.getItem('imgui_banned') === 'true') {
+        evictBannedUser();
+    } else {
+        verifySession();
+        setInterval(verifySession, 15000); 
+    }
+
+    async function verifySession() {
+        const token = localStorage.getItem('imgui_token');
+        if (!token) return;
+        try {
+            const response = await fetch(`${BACKEND_URL}/verify-session`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+            const data = await response.json();
+            
+            if (data.valid) { showMainUI(); } 
+            else if (data.isBanned) { evictBannedUser(); } 
+            else { logoutUser(); }
+        } catch(e) {}
+    }
 
     function loadDisThing(url, name) {
         let theFrame = document.getElementById('iframe-canvas');
@@ -222,8 +255,7 @@
 
     function nukeGame() {
         let f = document.getElementById('iframe-canvas');
-        f.removeAttribute('srcdoc');
-        f.src = '';
+        f.removeAttribute('srcdoc'); f.src = '';
         document.getElementById('game-player').classList.remove('show');
     }
 
@@ -232,81 +264,58 @@
         document.getElementById('main-logo-container').style.display = 'flex';
         document.querySelector('.bar').style.display = 'flex';
         document.getElementById('games-grid').style.display = 'grid';
-        document.getElementById('auth-status').textContent = "Login or register to continue";
-        document.getElementById('auth-status').style.color = "rgba(255, 255, 255, 0.5)";
     }
 
     async function loginUser() {
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
-        if (!username || !password) return alert("Please fill out Username and Password to log in.");
+        if (!username || !password) return alert("Fill out Username and Password to log in.");
 
-        const logBtn = document.getElementById('login-btn');
-        const regBtn = document.getElementById('register-btn');
         const statusTxt = document.getElementById('auth-status');
-
-        logBtn.disabled = true; regBtn.disabled = true;
         statusTxt.textContent = "Connecting to server..."; statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ username, password, hwid: currentHWID })
             });
             const data = await response.json();
             
-            if (response.ok) {
-                localStorage.setItem('imgui_token', data.token);
-                showMainUI();
-            } else {
-                alert(data.message);
-                statusTxt.textContent = data.message; statusTxt.style.color = "red";
-            }
-        } catch(err) {
-            statusTxt.textContent = "Server offline."; statusTxt.style.color = "red";
-        }
-        logBtn.disabled = false; regBtn.disabled = false;
+            if (response.status === 403) return evictBannedUser();
+            if (response.ok) { localStorage.setItem('imgui_token', data.token); showMainUI(); } 
+            else { alert(data.message); statusTxt.textContent = data.message; statusTxt.style.color = "red"; }
+        } catch(err) { statusTxt.textContent = "Server offline."; statusTxt.style.color = "red"; }
     }
 
-    function logoutUser() {
-        localStorage.removeItem('imgui_token');
-        location.reload();
-    }
+    function logoutUser() { localStorage.removeItem('imgui_token'); location.reload(); }
 
     async function registerUser() {
         const email = document.getElementById('auth-email').value;
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
-        if (!email || !username || !password) return alert("Please fill out Email, Username, and Password to register.");
 
-        const logBtn = document.getElementById('login-btn');
-        const regBtn = document.getElementById('register-btn');
+        if (!email || !username || !password) return alert("Fill out Email, Username, and Password to register.");
+
         const statusTxt = document.getElementById('auth-status');
-
-        logBtn.disabled = true; regBtn.disabled = true;
         statusTxt.textContent = "Registering account..."; statusTxt.style.color = "#a050ff";
 
         try {
             const response = await fetch(`${BACKEND_URL}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, username, password }) 
+                method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify({ email, username, password, hwid: currentHWID }) 
             });
             const data = await response.json();
 
-            if (response.ok) {
-                alert(data.message);
-                statusTxt.textContent = "Login to continue"; statusTxt.style.color = "rgba(255, 255, 255, 0.5)";
-            } else {
-                alert(data.message);
-                statusTxt.textContent = data.message; statusTxt.style.color = "red";
-            }
-        } catch(err) {
-            statusTxt.textContent = "Server offline."; statusTxt.style.color = "red";
-        }
-        logBtn.disabled = false; regBtn.disabled = false;
+            if (response.status === 403) return evictBannedUser();
+            if (response.ok) { alert(data.message); statusTxt.textContent = "Login to continue"; statusTxt.style.color = "rgba(255, 255, 255, 0.5)"; } 
+            else { alert(data.message); statusTxt.textContent = data.message; statusTxt.style.color = "red"; }
+        } catch(err) { statusTxt.textContent = "Server offline."; statusTxt.style.color = "red"; }
     }
+
+    const clickSound = document.getElementById('sfx-click');
+    document.addEventListener('mousedown', (e) => {
+        if (e.target.closest('button, .game-card, .btn, .menu-row, .close-btn, img, svg, span')) { try { clickSound.currentTime = 0; clickSound.play().catch(err => {}); } catch(err) {} }
+    });
 
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
@@ -314,38 +323,15 @@
     function resizeCanvas() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
-
     const tObjects = [];
-    for (let i = 0; i < 60; i++) {
-        tObjects.push({
-            x: Math.random() * width, y: Math.random() * height,
-            state: Math.floor(Math.random() * 6), timer: 0,
-            delay: Math.floor(Math.random() * 15) + 10, fontSize: Math.floor(Math.random() * 20) + 14,
-            opacity: Math.random() * 0.4 + 0.1, colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" 
-        });
-    }
-
+    for (let i = 0; i < 60; i++) { tObjects.push({ x: Math.random() * width, y: Math.random() * height, state: Math.floor(Math.random() * 6), timer: 0, delay: Math.floor(Math.random() * 15) + 10, fontSize: Math.floor(Math.random() * 20) + 14, opacity: Math.random() * 0.4 + 0.1, colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" }); }
     function drawBackground() {
         ctx.clearRect(0, 0, width, height);
         for (let t of tObjects) {
             t.timer++;
-            if (t.timer > t.delay) {
-                t.timer = 0; t.state++;
-                if (t.state > 6) { 
-                    t.state = 0; t.x = Math.random() * width; t.y = Math.random() * height;
-                    t.delay = Math.floor(Math.random() * 15) + 10;
-                    t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255";
-                }
-            }
-            ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`;
-            ctx.font = `${t.fontSize}px 'Courier New', monospace`;
-
-            let textToDraw = "";
-            if (t.state === 1) textToDraw = "_";
-            else if (t.state === 2 || t.state === 5) textToDraw = "T_";
-            else if (t.state === 3 || t.state === 4) textToDraw = "T"; 
-            else if (t.state === 6) textToDraw = "_";
-
+            if (t.timer > t.delay) { t.timer = 0; t.state++; if (t.state > 6) { t.state = 0; t.x = Math.random() * width; t.y = Math.random() * height; t.delay = Math.floor(Math.random() * 15) + 10; t.colorRGB = Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255"; } }
+            ctx.fillStyle = `rgba(${t.colorRGB}, ${t.opacity})`; ctx.font = `${t.fontSize}px 'Courier New', monospace`;
+            let textToDraw = ""; if (t.state === 1) textToDraw = "_"; else if (t.state === 2 || t.state === 5) textToDraw = "T_"; else if (t.state === 3 || t.state === 4) textToDraw = "T"; else if (t.state === 6) textToDraw = "_";
             if (textToDraw !== "") ctx.fillText(textToDraw, t.x, t.y);
         }
         requestAnimationFrame(drawBackground);
