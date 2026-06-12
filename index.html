@@ -77,15 +77,18 @@
         <div id="auth-status" class="panel-sub">Login or register to continue</div>
         
         <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 20px;">
-            <input type="text" id="auth-username" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
-            <input type="password" id="auth-password" placeholder="Password" autocomplete="new-password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            <input type="text" id="auth-email" name="no-autofill-email" placeholder="Email (Required for Registration)" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            
+            <input type="text" id="auth-username" name="no-autofill-user" placeholder="Username" autocomplete="off" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
+            
+            <input type="password" id="auth-password" autocomplete="new-password" placeholder="Password" spellcheck="false" style="width: 100%; padding: 14px 18px; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 500 14px 'Segoe UI', sans-serif; outline: none;">
             
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 <button id="login-btn" onclick="loginUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Login</button>
                 <button id="register-btn" onclick="registerUser()" style="flex: 1; padding: 14px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: white; font: 600 14px 'Segoe UI', sans-serif; cursor: pointer;">Register</button>
             </div>
             <p style="margin-top: 10px; font-size: 11px; color: rgba(255, 255, 255, 0.45); font-family: 'Segoe UI', sans-serif; line-height: 1.4; text-align: center;">
-                Click your choice <b>only ONE time</b>. Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
+                Because the database handles heavy secure routing, it can take up to 40-60 seconds to launch your session. Please do not close or double click.
             </p>
         </div>
     </div>
@@ -272,9 +275,10 @@
     }
 
     async function registerUser() {
+        const email = document.getElementById('auth-email').value;
         const username = document.getElementById('auth-username').value;
         const password = document.getElementById('auth-password').value;
-        if (!username || !password) return alert("Please fill out both fields.");
+        if (!email || !username || !password) return alert("Please fill out Email, Username, and Password to register.");
 
         const logBtn = document.getElementById('login-btn');
         const regBtn = document.getElementById('register-btn');
@@ -287,7 +291,7 @@
             const response = await fetch(`${BACKEND_URL}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }) 
+                body: JSON.stringify({ email, username, password }) 
             });
             const data = await response.json();
 
