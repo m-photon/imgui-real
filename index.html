@@ -372,6 +372,26 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        /* --- NEW: error banner shown when a game fails/times out --- */
+        #game-error-banner {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            z-index: 999;
+            background: #3a0d0d;
+            color: #ffb3b3;
+            font: 600 13px/1.5 'Segoe UI', sans-serif;
+            padding: 14px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+        #game-error-banner.show { display: block; }
+        #game-error-banner code {
+            background: rgba(0,0,0,0.35);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
         button:disabled {
             opacity: 0.5 !important;
             cursor: not-allowed !important;
@@ -462,74 +482,74 @@
 </div>
 
 <div id="games-grid" style="display: none;">
-    <div class="game-card" onclick="loadDisThing('deltarune.html', 'DELTARUNE')">
+    <div class="game-card" onclick="loadDisThing('games/deltarune.html', 'DELTARUNE')">
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
         <span class="game-title">Deltarune</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('baldi.html', 'BALDIS BASICS PLUS')">
+    <div class="game-card" onclick="loadDisThing('games/baldi.html', 'BALDIS BASICS PLUS')">
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@latest/baldi-plus/TemplateData/favicon.ico');"></div>
         <span class="game-title">Baldi's Basics Plus</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('utyellow.html', 'UNDERTALE YELLOW')">
+    <div class="game-card" onclick="loadDisThing('games/utyellow.html', 'UNDERTALE YELLOW')">
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
         <span class="game-title">Undertale Yellow</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('slope.html', 'SLOPE')">
+    <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')">
         <div class="game-icon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div>
         <span class="game-title">Slope</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('retrobowl.html', 'RETRO BOWL')">
+    <div class="game-card" onclick="loadDisThing('games/retrobowl.html', 'RETRO BOWL')">
         <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
         <span class="game-title">Retro Bowl</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('gobble.html', 'GOBBLE')">
+    <div class="game-card" onclick="loadDisThing('games/gobble.html', 'GOBBLE')">
         <div class="game-icon cover" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/fancade@main/gobble/webapp/cover.jpg');"></div>
         <span class="game-title">Gobble</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('hardestgame.html', 'WORLDS HARDEST GAME')">
+    <div class="game-card" onclick="loadDisThing('games/hardestgame.html', 'WORLDS HARDEST GAME')">
         <div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.jt-JIRVjML9A_aLx5PO-UAHaEJ?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
         <span class="game-title">World's Hardest Game</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('sansfight.html', 'BAD TIME SIMULATOR')">
+    <div class="game-card" onclick="loadDisThing('games/sansfight.html', 'BAD TIME SIMULATOR')">
         <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.5tR11T_i4_Pc50PzDD1v7gAAAA?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
         <span class="game-title">Sans Fight</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('geodash.html', 'GEOMETRY DASH')">
+    <div class="game-card" onclick="loadDisThing('games/geodash.html', 'GEOMETRY DASH')">
         <div class="game-icon cover" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
         <span class="game-title">Geometry Dash</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('ragdollhit.html', 'RAGDOLL HIT')">
+    <div class="game-card" onclick="loadDisThing('games/ragdollhit.html', 'RAGDOLL HIT')">
         <div class="game-icon cover" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.V1bvMxTr_yNWr1_KR4EuAAHaD3?r=0&cb=thfc1falcon&w=1408&h=736&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
         <span class="game-title">Ragdoll Hit</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('ragdollarchers.html', 'RAGDOLL ARCHERS')">
+    <div class="game-card" onclick="loadDisThing('games/ragdollarchers.html', 'RAGDOLL ARCHERS')">
         <div class="game-icon cover" style="background-image: url('https://geodashlite.io/data/image/game/ragdoll-archers.jpg');"></div>
         <span class="game-title">Ragdoll Archers</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('peopleplayground.html', 'PEOPLE PLAYGROUND')">
+    <div class="game-card" onclick="loadDisThing('games/peopleplayground.html', 'PEOPLE PLAYGROUND')">
         <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.U3BFNh2bFQniD1_ykAp0hQHaFF?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
         <span class="game-title">People Playground</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('cookieclicker.html', 'COOKIE CLICKER')">
-        <div class="game-icon cover" style="background-image: url('https://orteil.dashnet.org/cookieclicker/favicon.ico');"></div>
-        <span class="game-title">Cookie Clicker</span>
     </div>
 </div>
 
 <div id="game-player">
-    <iframe id="iframe-canvas" src="" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-downloads allow-modals allow-top-navigation-by-user-activation"></iframe>
+    <div id="game-error-banner"></div>
+    <iframe id="iframe-canvas" src=""
+        allow="autoplay; fullscreen; gamepad; cross-origin-isolated; encrypted-media"
+        allowfullscreen
+        sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-downloads allow-modals allow-orientation-lock allow-popups-to-escape-sandbox">
+    </iframe>
     <div id="player-bar">
         <div id="player-left">
             <button class="ctrl-btn" onclick="nukeGame()">
@@ -538,7 +558,7 @@
             <span id="current-game-name"></span>
         </div>
         <div id="player-right">
-            <button class="ctrl-btn" onclick="reloadGame()">
+            <button class="ctrl-btn" onclick="document.getElementById('iframe-canvas').src = document.getElementById('iframe-canvas').src">
                 <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
             </button>
             <button class="ctrl-btn" onclick="document.getElementById('game-player').requestFullscreen()">
@@ -552,7 +572,6 @@
 
 <script>
     const BACKEND_URL = 'https://imgui-backend-1.onrender.com';
-    let currentGameBaseUrl = '';
 
     if (localStorage.getItem('imgui_device_block') === 'true') {
         evictBannedUser();
@@ -612,30 +631,70 @@
         }
     });
 
+    // --- NEW: track load state + timeout watcher per game ---
+    let gameLoadTimer = null;
+    let gameLoadWatchdog = null;
+
+    function showGameError(name, message) {
+        const banner = document.getElementById('game-error-banner');
+        banner.innerHTML = `<b>${name}</b> failed to load — ${message}. Open DevTools (F12) → Console/Network tab on this iframe for the real error.`;
+        banner.classList.add('show');
+    }
+
+    function hideGameError() {
+        const banner = document.getElementById('game-error-banner');
+        banner.classList.remove('show');
+        banner.innerHTML = '';
+    }
+
     async function loadDisThing(url, name) {
         await checkLiveBanPulse();
         if (localStorage.getItem('imgui_device_block') === 'true') return;
 
-        currentGameBaseUrl = url;
         let theFrame = document.getElementById('iframe-canvas');
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
-        theFrame.src = url + (url.includes('?') ? '&' : '?') + "v=" + Date.now();
-        document.getElementById('game-player').classList.add('show');
-    }
+        hideGameError();
 
-    function reloadGame() {
-        if (!currentGameBaseUrl) return;
-        const theFrame = document.getElementById('iframe-canvas');
-        theFrame.removeAttribute('srcdoc');
-        theFrame.src = currentGameBaseUrl + (currentGameBaseUrl.includes('?') ? '&' : '?') + "v=" + Date.now();
+        // clear any watchers left over from the previous game
+        if (gameLoadWatchdog) clearTimeout(gameLoadWatchdog);
+        theFrame.onload = null;
+        theFrame.onerror = null;
+
+        let loaded = false;
+
+        theFrame.onload = () => {
+            loaded = true;
+            if (gameLoadWatchdog) clearTimeout(gameLoadWatchdog);
+            console.log(`[imgui] ${name} fired load event OK`);
+        };
+
+        theFrame.onerror = (e) => {
+            console.error(`[imgui] ${name} iframe error:`, e);
+            showGameError(name, 'the iframe threw an error');
+        };
+
+        theFrame.src = url + "?v=" + Date.now();
+        document.getElementById('game-player').classList.add('show');
+
+        // If nothing fires within 10s, the file likely 404'd, is blocked by
+        // CSP/X-Frame-Options, or the game's own JS is crashing before render.
+        gameLoadWatchdog = setTimeout(() => {
+            if (!loaded) {
+                console.warn(`[imgui] ${name} did not load within 10s. Check: (1) does ${url} actually exist / is the path case-correct, (2) Network tab for 404s on the game's own assets, (3) Console tab inside the iframe for JS errors like 'SharedArrayBuffer is not defined' (common for threaded Unity WebGL builds — needs COOP/COEP headers from your host).`);
+                showGameError(name, 'no response after 10 seconds (see console for likely causes)');
+            }
+        }, 10000);
     }
 
     function nukeGame() {
         let f = document.getElementById('iframe-canvas');
+        if (gameLoadWatchdog) clearTimeout(gameLoadWatchdog);
+        f.onload = null;
+        f.onerror = null;
         f.removeAttribute('srcdoc');
         f.src = '';
-        currentGameBaseUrl = '';
+        hideGameError();
         document.getElementById('game-player').classList.remove('show');
     }
 
