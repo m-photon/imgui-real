@@ -472,9 +472,9 @@
         <span class="game-title">Baldi's Basics Plus</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('games/utyellow.html', 'UNDERTALE YELLOW')">
+    <div class="game-card" onclick="loadDisThing('games/fm.html', '(FAKE MINECRAFT)')">
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale-yellow/favicon.png');"></div>
-        <span class="game-title">Undertale Yellow</span>
+        <span class="game-title">(Fake Minecraft)</span>
     </div>
 
     <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')">
