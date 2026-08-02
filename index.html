@@ -30,6 +30,25 @@
             pointer-events: none;
         }
 
+        #status-indicator {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            color: rgba(255, 255, 255, 0.85);
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            background: rgba(15, 15, 15, 0.85);
+            padding: 10px 20px;
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            user-select: none;
+        }
+
         #main-logo-container {
             position: fixed;
             top: 100px;
@@ -382,6 +401,8 @@
 </head>
 <body>
 
+<div id="status-indicator" style="display: none;">Tepl!x Status: 🟡</div>
+
 <canvas id="bg-canvas"></canvas>
 
 <div id="main-logo-container" style="display: none;" onclick="nukeGame(); document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'))">
@@ -561,6 +582,7 @@
         document.getElementById('main-logo-container').style.display = 'none';
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
+        document.getElementById('status-indicator').style.display = 'none';
         document.getElementById('login-overlay').classList.add('show');
         document.getElementById('auth-status').textContent = "bro got banned🥀 to be honest you aint ever geting back in";
         document.getElementById('auth-status').style.color = "red";
@@ -629,6 +651,7 @@
         document.getElementById('main-logo-container').style.display = 'flex';
         document.querySelector('.bar').style.display = 'flex';
         document.getElementById('games-grid').style.display = 'grid';
+        document.getElementById('status-indicator').style.display = 'block';
     }
 
     async function loginUser() {
