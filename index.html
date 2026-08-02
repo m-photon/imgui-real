@@ -242,7 +242,7 @@
 
         #games-grid {
             position: fixed;
-            top: 60%; 
+            top: 55%;
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 50;
@@ -251,9 +251,9 @@
             grid-template-columns: repeat(auto-fit, 100px);
             gap: 32px 40px;
             justify-content: center;
-            max-height: 85vh; 
-            width: 90vw; 
-            max-width: 1200px; 
+            max-height: 75vh;
+            width: 80vw;
+            max-width: 900px;
             overflow-y: auto;
             overflow-x: hidden;
             background: rgba(60, 60, 60, 0.25);
@@ -370,26 +370,6 @@
             letter-spacing: 1px;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.7);
-        }
-
-        /* --- NEW: error banner shown when a game fails/times out --- */
-        #game-error-banner {
-            display: none;
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            z-index: 999;
-            background: #3a0d0d;
-            color: #ffb3b3;
-            font: 600 13px/1.5 'Segoe UI', sans-serif;
-            padding: 14px 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-        }
-        #game-error-banner.show { display: block; }
-        #game-error-banner code {
-            background: rgba(0,0,0,0.35);
-            padding: 2px 6px;
-            border-radius: 4px;
         }
 
         button:disabled {
@@ -544,12 +524,7 @@
 </div>
 
 <div id="game-player">
-    <div id="game-error-banner"></div>
-    <iframe id="iframe-canvas" src=""
-        allow="autoplay; fullscreen; gamepad; cross-origin-isolated; encrypted-media"
-        allowfullscreen
-        sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups allow-downloads allow-modals allow-orientation-lock allow-popups-to-escape-sandbox">
-    </iframe>
+    <iframe id="iframe-canvas" src="" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
     <div id="player-bar">
         <div id="player-left">
             <button class="ctrl-btn" onclick="nukeGame()">
@@ -631,22 +606,6 @@
         }
     });
 
-    // --- NEW: track load state + timeout watcher per game ---
-    let gameLoadTimer = null;
-    let gameLoadWatchdog = null;
-
-    function showGameError(name, message) {
-        const banner = document.getElementById('game-error-banner');
-        banner.innerHTML = `<b>${name}</b> failed to load — ${message}. Open DevTools (F12) → Console/Network tab on this iframe for the real error.`;
-        banner.classList.add('show');
-    }
-
-    function hideGameError() {
-        const banner = document.getElementById('game-error-banner');
-        banner.classList.remove('show');
-        banner.innerHTML = '';
-    }
-
     async function loadDisThing(url, name) {
         await checkLiveBanPulse();
         if (localStorage.getItem('imgui_device_block') === 'true') return;
@@ -654,47 +613,14 @@
         let theFrame = document.getElementById('iframe-canvas');
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
-        hideGameError();
-
-        // clear any watchers left over from the previous game
-        if (gameLoadWatchdog) clearTimeout(gameLoadWatchdog);
-        theFrame.onload = null;
-        theFrame.onerror = null;
-
-        let loaded = false;
-
-        theFrame.onload = () => {
-            loaded = true;
-            if (gameLoadWatchdog) clearTimeout(gameLoadWatchdog);
-            console.log(`[imgui] ${name} fired load event OK`);
-        };
-
-        theFrame.onerror = (e) => {
-            console.error(`[imgui] ${name} iframe error:`, e);
-            showGameError(name, 'the iframe threw an error');
-        };
-
         theFrame.src = url + "?v=" + Date.now();
         document.getElementById('game-player').classList.add('show');
-
-        // If nothing fires within 10s, the file likely 404'd, is blocked by
-        // CSP/X-Frame-Options, or the game's own JS is crashing before render.
-        gameLoadWatchdog = setTimeout(() => {
-            if (!loaded) {
-                console.warn(`[imgui] ${name} did not load within 10s. Check: (1) does ${url} actually exist / is the path case-correct, (2) Network tab for 404s on the game's own assets, (3) Console tab inside the iframe for JS errors like 'SharedArrayBuffer is not defined' (common for threaded Unity WebGL builds — needs COOP/COEP headers from your host).`);
-                showGameError(name, 'no response after 10 seconds (see console for likely causes)');
-            }
-        }, 10000);
     }
 
     function nukeGame() {
         let f = document.getElementById('iframe-canvas');
-        if (gameLoadWatchdog) clearTimeout(gameLoadWatchdog);
-        f.onload = null;
-        f.onerror = null;
         f.removeAttribute('srcdoc');
         f.src = '';
-        hideGameError();
         document.getElementById('game-player').classList.remove('show');
     }
 
@@ -816,7 +742,7 @@
             y: Math.random() * height,
             state: Math.floor(Math.random() * 6), 
             timer: 0,
-            delay: Math.floor(Math.random() * 15) + 10, 
+            delay: Math.floor(Math.random() * 15) + 10,
             fontSize: Math.floor(Math.random() * 20) + 14,
             opacity: Math.random() * 0.4 + 0.1, 
             colorRGB: Math.random() < 0.2 ? "119, 187, 255" : "255, 255, 255" 
@@ -832,7 +758,7 @@
                 t.timer = 0;
                 t.state++;
                 
-                if (t.state > 6) { 
+                if (t.state > 6) {
                     t.state = 0;
                     t.x = Math.random() * width;
                     t.y = Math.random() * height;
