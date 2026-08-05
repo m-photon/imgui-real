@@ -49,6 +49,34 @@
             user-select: none;
         }
 
+        #status-legend {
+            position: fixed;
+            top: 64px;
+            left: 16px;
+            z-index: 110;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12px;
+            background: rgba(15, 15, 15, 0.85);
+            padding: 12px 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .legend-title {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+
         #main-logo-container {
             position: fixed;
             top: 100px;
@@ -403,6 +431,15 @@
 
 <div id="status-indicator" style="display: none;">Tepl!x Status: 🟡</div>
 
+<div id="status-legend" style="display: none;">
+    <div class="legend-title">Status:</div>
+    <div>🟢 All up to date/No bugs</div>
+    <div>🟠 Lots of bugs/detected</div>
+    <div>🟣 Down temp/Patched</div>
+    <div>🔵 Some/ All games down</div>
+    <div>🟡 Small bugs that need fixes</div>
+</div>
+
 <canvas id="bg-canvas"></canvas>
 
 <div id="main-logo-container" style="display: none;" onclick="nukeGame(); document.querySelectorAll('.overlay').forEach(o => o.classList.remove('show'))">
@@ -539,7 +576,7 @@
     </div>
 
     <div class="game-card" onclick="loadDisThing('games/peopleplayground.html', 'PEOPLE PLAYGROUND')">
-        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.U3BFNh2bFQniD1_ykAp0hQHaFF?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+        <div class="game-icon cover"></div>
         <span class="game-title">DOOM( old ass one )</span>
     </div>
 </div>
@@ -583,6 +620,7 @@
         document.querySelector('.bar').style.display = 'none';
         document.getElementById('games-grid').style.display = 'none';
         document.getElementById('status-indicator').style.display = 'none';
+        document.getElementById('status-legend').style.display = 'none';
         document.getElementById('login-overlay').classList.add('show');
         document.getElementById('auth-status').textContent = "bro got banned🥀 to be honest you aint ever geting back in";
         document.getElementById('auth-status').style.color = "red";
@@ -652,6 +690,7 @@
         document.querySelector('.bar').style.display = 'flex';
         document.getElementById('games-grid').style.display = 'grid';
         document.getElementById('status-indicator').style.display = 'block';
+        document.getElementById('status-legend').style.display = 'flex';
     }
 
     async function loginUser() {
