@@ -535,16 +535,6 @@
         <span class="game-title">(Fake Minecraft)</span>
     </div>
 
-    <div class="game-card" onclick="loadDisThing('games/slope.html', 'SLOPE')">
-        <div class="game-icon cover" style="background-image: url('https://slopeio.org/data/image/options/slopeio-banner.jpg');"></div>
-        <span class="game-title">Slope</span>
-    </div>
-
-    <div class="game-card" onclick="loadDisThing('games/retrobowl.html', 'RETRO BOWL')">
-        <div class="game-icon cover" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.rjS4TxunapYU3ao85kSa9gHaD4?r=0&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
-        <span class="game-title">Retro Bowl</span>
-    </div>
-
     <div class="game-card" onclick="loadDisThing('games/escaperoad.html', 'DINO GAME')">
         <div class="game-icon cover"></div>
         <span class="game-title">Dino</span>
@@ -833,19 +823,18 @@
             ctx.font = `${t.fontSize}px 'Courier New', monospace`;
 
             let textToDraw = "";
-            if (t.state === 1) textToDraw = "_";
-            else if (t.state === 2) textToDraw = "T_";
-            else if (t.state === 3 || t.state === 4) textToDraw = "T"; 
-            else if (t.state === 5) textToDraw = "T_";
-            else if (t.state === 6) textToDraw = "_";
+            if (t.state === 1) textToDraw = "T";
+            else if (t.state === 2) textToDraw = "Te";
+            else if (t.state === 3) textToDraw = "Tep";
+            else if (t.state === 4) textToDraw = "Tepl";
+            else if (t.state === 5) textToDraw = "Tepl!";
+            else if (t.state === 6) textToDraw = "Tepl!x";
 
-            if (textToDraw !== "") {
-                ctx.fillText(textToDraw, t.x, t.y);
-            }
+            ctx.fillText(textToDraw, t.x, t.y);
         }
-        
         requestAnimationFrame(drawBackground);
     }
+    
     drawBackground();
 </script>
 </body>
