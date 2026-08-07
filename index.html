@@ -519,9 +519,6 @@
     </div>
 </div>
 
-<!-- ============================================== -->
-<!-- GAME GRID WITH THE ABSOLUTE DOMAIN PATHS       -->
-<!-- ============================================== -->
 <div id="games-grid" style="display: none;">
     <div class="game-card" onclick="loadDisThing('https://ireadymathwork.itfil.com/games/1', 'DELTARUNE')">
         <div class="game-icon" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
@@ -578,7 +575,6 @@
         <span class="game-title">AGAR</span>
     </div>
 </div>
-<!-- ============================================== -->
 
 <div id="game-player">
     <iframe id="iframe-canvas" src="" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
@@ -665,9 +661,6 @@
         }
     });
 
-    // ==============================================
-    // LOAD GAME FUNCTION FIX (Removed cache buster)
-    // ==============================================
     async function loadDisThing(url, name) {
         await checkLiveBanPulse();
         if (localStorage.getItem('imgui_device_block') === 'true') return;
@@ -676,8 +669,8 @@
         document.getElementById('current-game-name').textContent = name;
         theFrame.removeAttribute('srcdoc');
         
-        // This is exactly what fixes the breaking URLs
-        theFrame.src = url; 
+        // Exact URL is loaded here without adding Date.now cachebusters that break routes
+        theFrame.src = url;
         
         document.getElementById('game-player').classList.add('show');
     }
