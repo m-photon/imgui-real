@@ -184,6 +184,28 @@
             to { opacity: 1; transform: scale(1); }
         }
 
+        /* --- NEW CSS FOR LOGIN SIDE GIFS --- */
+        .side-gif {
+            position: absolute;
+            top: 50%;
+            width: 250px;
+            max-width: 25vw;
+            pointer-events: none; /* Prevents them from blocking clicks */
+            z-index: 10;
+        }
+
+        .left-gif {
+            left: 5%;
+            transform: translateY(-50%);
+        }
+
+        .right-gif {
+            right: 5%;
+            /* Flips the right image horizontally so they face each other */
+            transform: translateY(-50%) scaleX(-1); 
+        }
+        /* ---------------------------------- */
+
         .settings-box {
             background: rgba(20, 20, 20, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -194,6 +216,7 @@
             text-align: center;
             position: relative;
             box-shadow: 0 0 60px rgba(255, 255, 255, 0.05);
+            z-index: 20; /* Ensures login box is above gifs if they overlap */
         }
 
         .close-btn {
@@ -463,6 +486,10 @@
 </div>
 
 <div id="login-overlay" class="overlay show">
+    
+    <!-- LEFT SIDE GIF -->
+    <img src="https://media.tenor.com/2s_1l5F5X1gAAAAi/boykisser.gif" class="side-gif left-gif" alt="Boykisser Left">
+
     <div class="settings-box">
         <div class="panel-title">Authentication</div>
         <div id="auth-status" class="panel-sub">Login or register to continue</div>
@@ -481,6 +508,10 @@
             </p>
         </div>
     </div>
+
+    <!-- RIGHT SIDE GIF -->
+    <img src="https://media.tenor.com/2s_1l5F5X1gAAAAi/boykisser.gif" class="side-gif right-gif" alt="Boykisser Right">
+    
 </div>
 
 <div id="soverlay" class="overlay" onclick="if(event.target === this) this.classList.remove('show')">
