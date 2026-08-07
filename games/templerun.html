@@ -1,51 +1,133 @@
-<!doctype html>
-<html lang="en">
+<Module>
 
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<Module>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Subway Surfers</title>
-  <link rel="stylesheet" href="../webgl.css" type="text/css">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>really cool flash game</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+    #flash-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: black;
+      overflow: hidden;
+    }
+    .black-box {
+      position: fixed;
+      background: black;
+      z-index: 10;
+    }
+    #box-top {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+    }
+    #box-bottom {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+    }
+    #box-left {
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+    }
+    #box-right {
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 100%;
+    }
+    ruffle-player {
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: block;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.2/ruffle.min.js"></script>
 </head>
-
 <body>
-  <div id="wrapper" align="center" style="margin-left:auto; margin-right:auto;">
-    <h1 id="heading"
-      style="background-color: #a59e9a; text-decoration-style: solid; color: #F8F8F8; width: 40%; margin-top: 0px; margin-bottom: 10px; text-align: center;">
-      Subway Surfers</h1>
-    <div id="maze">
-      <div id="c"
-        style="margin-left:auto; margin-right:auto;margin-bottom: 10px;text-align: center;width: 10%;font-size: large">
-      </div>
-
-      <canvas id="glcanvas" width="1280" height="720" style="margin-left:auto; margin-right:auto">This text is displayed
-        if your browser does not support HTML5 Canvas.</canvas>
-      <div id="timerel"
-        style="margin-left:auto; margin-right:auto;margin-top:0px;text-align: center;width: 15%;font-size: large"></div>
-      <div>
-        <audio src='./assets/Theme.mp3' id="music" loop></audio>
-        <audio src='./assets//Crash.mp3' id="crash"></audio>
-      </div>
-    </div>
+  <div id="flash-container"></div>
+  <div class="black-box" id="box-top"></div>
+  <div class="black-box" id="box-bottom"></div>
+  <div class="black-box" id="box-left"></div>
+  <div class="black-box" id="box-right"></div>
+  <script>
+    const container = document.getElementById("flash-container");
+    const boxTop = document.getElementById("box-top");
+    const boxBottom = document.getElementById("box-bottom");
+    const boxLeft = document.getElementById("box-left");
+    const boxRight = document.getElementById("box-right");
+    
+    function resizeGame() {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const aspectRatio = 5.5 / 3;
+      
+      // Use 95% of available space instead of 100%
+      let width = Math.floor(windowWidth * 1);
+      let height = Math.floor(width / aspectRatio);
+      
+      if (height > windowHeight * 1) {
+        height = Math.floor(windowHeight * 1);
+        width = Math.floor(height * aspectRatio);
+      }
+      
+      container.style.width = `${width}px`;
+      container.style.height = `${height}px`;
+      
+      // Calculate margins
+      const topMargin = (windowHeight - height) / 2;
+      const leftMargin = (windowWidth - width) / 2;
+      
+      // Set black box sizes
+      boxTop.style.height = `${topMargin}px`;
+      boxBottom.style.height = `${topMargin}px`;
+      boxLeft.style.width = `${leftMargin}px`;
+      boxRight.style.width = `${leftMargin}px`;
+    }
+    
+    window.addEventListener("resize", resizeGame);
+    window.addEventListener("DOMContentLoaded", () => {
+      resizeGame();
+      const ruffle = window.RufflePlayer?.newest() || window.RufflePlayer?.createPlayer();
+      if (ruffle && container) {
+        const player = ruffle.createPlayer();
+        player.style.width = "100%";
+        player.style.height = "100%";
+        player.style.background = "black";
+        container.appendChild(player);
+        player.load("$1");
+      } else {
+        container.textContent = "Ruffle failed to load."; 
+      }
+    });
+  </script>
+    <param name="movie" value="https://cdn.jsdelivr.net/gh/illusionTBA/React-Ruffle@f37551ff7c55cc61002445a0f1e334742f6832e4/public/swf/Bloxors.swf">
+    <embed src="https://cdn.jsdelivr.net/gh/illusionTBA/React-Ruffle@f37551ff7c55cc61002445a0f1e334742f6832e4/public/swf/Bloxors.swf" width="100%" height="100%">
 </body>
-
-<script src="./gl-matrix.js"></script>
-<script src="./cube.js"></script>
-<script src="./track.js"></script>
-<script src="./wall.js"></script>
-<script src="./city.js"></script>
-<script src="./handlekeys.js"></script>
-<script src="./player.js"></script>
-<script src="./police.js"></script>
-<script src="./dog.js"></script>
-<script src="./coin.js"></script>
-<script src="./train.js"></script>
-<script src="./box.js"></script>
-<script src="./manhole.js"></script>
-<script src="./stop.js"></script>
-<script src="./stand.js"></script>
-<script src="./boots.js"></script>
-<script src="./flying_boost.js"></script>
-<script src="./hoverboard.js"></script>
-<script src="./main.js"></script>
-
 </html>
+]]></Content>
+</Module>
