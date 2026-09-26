@@ -109,14 +109,14 @@
             -webkit-backdrop-filter: blur(10px);
         }
 
-        #app-grid {
+        #games-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 35px 25px;
             justify-content: center;
         }
 
-        .app-card {
+        .game-card {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -126,11 +126,11 @@
             text-decoration: none;
         }
 
-        .app-card:hover {
+        .game-card:hover {
             transform: translateY(-4px);
         }
 
-        .app-icon {
+        .game-icon {
             width: 110px;
             height: 110px;
             border-radius: 22px;
@@ -142,11 +142,11 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .app-icon.contain {
+        .game-icon.contain {
             background-size: 70%;
         }
 
-        .app-title {
+        .game-title {
             font-family: 'Segoe UI', Roboto, sans-serif;
             font-size: 13px;
             font-weight: 600;
@@ -156,7 +156,7 @@
             word-wrap: break-word;
         }
 
-        #media-player {
+        #game-player {
             display: none;
             position: fixed;
             inset: 0;
@@ -165,11 +165,11 @@
             background: #000;
         }
 
-        #media-player.show {
+        #game-player.show {
             display: flex;
         }
 
-        #media-player iframe {
+        #game-player iframe {
             width: 100%;
             flex: 1;
             border: none;
@@ -193,7 +193,7 @@
             gap: 15px;
         }
 
-        #current-media-name {
+        #current-game-name {
             color: #fff;
             font-weight: 600;
             font-size: 14px;
@@ -296,31 +296,82 @@
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> 
             </button>
             
-            <button class="btn" onclick="closeMedia()" title="Close Player">
+            <button class="btn" onclick="nukeGame()" title="Close Player">
                 <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
         </div>
     </div>
 
     <div id="main-container">
-        <!-- Rendered safely via JS to avoid static scanner detection -->
-        <div id="app-grid"></div>
+        <div id="games-grid">
+            
+            <div class="game-card" onclick="loadDisThing('games/deltarune.html', 'DELTARUNE', 1)">
+                <div class="game-icon contain" style="background-image: url('https://cdn.jsdelivr.net/gh/technonyte00/deltarune@main/logo.png');"></div>
+                <span class="game-title">Deltarune</span>
+            </div>
+        
+            <div class="game-card" onclick="loadDisThing('games/baldi.html', 'BALDIS BASICS PLUS', 2)">
+                <div class="game-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/en/1/13/Baldis_Basics_in_Education_and_Learining_cover_art.webp?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original');"></div>
+                <span class="game-title">Baldi's Basics</span>
+            </div>
+        
+            <div class="game-card" onclick="loadDisThing('games/fm.html', '(FAKE MINECRAFT)', 3)">
+                <div class="game-icon contain" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRs4Cw_DVlR5TwTp0yIOg8Pyg-H5JHB7-Coz-jncxnUxQ&s');"></div>
+                <span class="game-title">(Fake Minecraft)</span>
+            </div>
+            
+            <div class="game-card" onclick="loadDisThing('games/escaperoad.html', 'DINO GAME', 4)">
+                <div class="game-icon contain" style="background-image: url('https://www.coolmathgames.com/sites/default/files/DinoGame_OG-logo.jpg');"></div>
+                <span class="game-title">Dino</span>
+            </div>
+            
+            <div class="game-card" onclick="loadDisThing('games/hardestgame.html', 'WORLDS HARDEST GAME', 5)">
+                <div class="game-icon" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.jt-JIRVjML9A_aLx5PO-UAHaEJ?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+                <span class="game-title">World's Hardest Game</span>
+            </div>
+            
+            <div class="game-card" onclick="loadDisThing('games/sansfight.html', 'BAD TIME SIMULATOR', 6)">
+                <div class="game-icon" style="background-image: url('https://tse2.mm.bing.net/th/id/OIP.5tR11T_i4_Pc50PzDD1v7gAAAA?r=0&cb=thfc1falcon&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+                <span class="game-title">Sans Fight</span>
+            </div>
+            
+            <div class="game-card" onclick="loadDisThing('games/geodash.html', 'GEOMETRY DASH', 7)">
+                <div class="game-icon" style="background-image: url('https://www.dologame.com/games/images/20230425/geometry_dash.jpg');"></div>
+                <span class="game-title">Geometry Dash</span>
+            </div>
+            
+            <div class="game-card" onclick="loadDisThing('games/ragdollhit.html', 'RAGDOLL HIT', 8)">
+                <div class="game-icon" style="background-image: url('https://tse3.mm.bing.net/th/id/OIP.V1bvMxTr_yNWr1_KR4EuAAHaD3?r=0&cb=thfc1falcon&w=1408&h=736&rs=1&pid=ImgDetMain&o=7&rm=3');"></div>
+                <span class="game-title">Ragdoll Hit</span>
+            </div>
+            
+            <div class="game-card" onclick="loadDisThing('games/ragdollarchers.html', 'RAGDOLL ARCHERS', 9)">
+                <div class="game-icon" style="background-image: url('https://play-lh.googleusercontent.com/15zkozUZzNZXG2Hx_FdE0S9paEUGP6ufaKr_VXDK6Tl2ytLDjA7967wb561g1B39oqp30loRsHFQpIKjbO3l-A=w240-h480-rw');"></div>
+                <span class="game-title">Ragdoll Archers</span>
+            </div>
+            
+            <div class="game-card" onclick="loadDisThing('games/templerun.html', 'BLOXORZ', 10)">
+                <div class="game-icon" style="background-image: url('https://i.redd.it/r8fmzwwk4umf1.png');"></div>
+                <span class="game-title">Bloxorz</span>
+            </div>
+
+        </div>
     </div>
 
-    <div id="media-player">
+    <div id="game-player">
         <iframe id="iframe-canvas" src="" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-popups"></iframe>
         <div id="player-bar">
             <div class="player-controls">
-                <button class="btn" onclick="closeMedia()" style="width: 32px; height: 32px;">
+                <button class="btn" onclick="nukeGame()" style="width: 32px; height: 32px;">
                     <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 </button>
-                <span id="current-media-name"></span>
+                <span id="current-game-name"></span>
             </div>
             <div class="player-controls">
                 <button class="btn" onclick="document.getElementById('iframe-canvas').src = document.getElementById('iframe-canvas').src" style="width: 32px; height: 32px;" title="Reload">
                     <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                 </button>
-                <button class="btn" onclick="document.getElementById('media-player').requestFullscreen()" style="width: 32px; height: 32px;" title="Fullscreen">
+                <button class="btn" onclick="document.getElementById('game-player').requestFullscreen()" style="width: 32px; height: 32px;" title="Fullscreen">
                     <svg viewBox="0 0 24 24"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
                 </button>
             </div>
@@ -350,13 +401,12 @@
             <h2 style="margin-bottom: 5px;">About</h2>
             <p style="color: rgba(255,255,255,0.5); font-size: 14px;">Information & Credits</p>
             <div class="about-text">
-                <p>Welcome to Emerald. Enjoy seamless interactive applications with our beautifully designed interface.</p>
+                <p>Welcome to Emerald. Enjoy seamless browser gaming with our beautifully designed interface.</p>
             </div>
         </div>
     </div>
 
-    <!-- Ensure this sound file is hosted locally so the domain isn't flagged -->
-    <audio id="sfx-click" src="assets/click.wav" preload="auto"></audio>
+    <audio id="sfx-click" src="https://www.questfemboys.xyz/assets/ItemSelect.wav" preload="auto"></audio>
 
     <script>
         const clickSound = document.getElementById('sfx-click');
@@ -373,67 +423,32 @@
         }
 
         document.addEventListener('mousedown', (e) => {
-            if (e.target.closest('button, .app-card, .btn, .menu-row')) {
+            if (e.target.closest('button, .game-card, .btn, .menu-row')) {
                 playClickNoise();
             }
         });
 
-        // App definitions encoded in base64 to avoid GoGuardian keyword flags in source code
-        const directory = [
-            { u: "bW9kdWxlcy9kZWx0YXJ1bmUuaHRtbA==", t: "REVMRUFSVU5F", d: "RGVsdGFydW5l", i: "YXNzZXRzL2RlbHRhLnBuZw==", c: true, id: 1 },
-            { u: "bW9kdWxlcy9iYWxkaS5odG1s", t: "QkFMRElTIEJBU0lDUw==", d: "QmFsZGkncyBCYXNpY3M=", i: "YXNzZXRzL2JhbGRpLmpwZw==", c: false, id: 2 },
-            { u: "bW9kdWxlcy9mbS5odG1s", t: "RkFLRSBNSU5FQ1JBRlQ=", d: "KEZha2UgTWluZWNyYWZ0KQ==", i: "YXNzZXRzL2ZtLmpwZw==", c: true, id: 3 },
-            { u: "bW9kdWxlcy9lc2NhcGVyb2FkLmh0bWw=", t: "RElOTyBBUFA=", d: "RGlubw==", i: "YXNzZXRzL2Rpbm8uanBn", c: true, id: 4 },
-            { u: "bW9kdWxlcy9oYXJkZXN0Z2FtZS5odG1s", t: "SEFSREVTVCBBUFA=", d: "V29ybGQncyBIYXJkZXN0", i: "YXNzZXRzL2hhcmRlc3QuanBn", c: false, id: 5 },
-            { u: "bW9kdWxlcy9zYW5zZmlnaHQuaHRtbA==", t: "U0FOUyBGSUdIVA==", d: "U2FucyBGaWdodA==", i: "YXNzZXRzL3NhbnMuanBn", c: false, id: 6 },
-            { u: "bW9kdWxlcy9nZW9kYXNoLmh0bWw=", t: "R0VPTUVUUlkgREFTSA==", d: "R2VvbWV0cnkgRGFzaA==", i: "YXNzZXRzL2dlb2Rhc2guanBn", c: false, id: 7 },
-            { u: "bW9kdWxlcy9yYWdkb2xsaGl0Lmh0bWw=", t: "UkFHRE9MTCBISVQ=", d: "UmFnZG9sbCBIaXQ=", i: "YXNzZXRzL3JhZ2hpdC5qcGc=", c: false, id: 8 },
-            { u: "bW9kdWxlcy9yYWdkb2xsYXJjaGVycy5odG1s", t: "UkFHRE9MTCBBUkNIRVJT", d: "UmFnZG9sbCBBcmNoZXJz", i: "YXNzZXRzL3JhZ2FyY2guanBn", c: false, id: 9 },
-            { u: "bW9kdWxlcy90ZW1wbGVydW4uaHRtbA==", t: "QkxPWE9SWg==", d: "QmxveG9yeg==", i: "YXNzZXRzL2Jsb3guanBn", c: false, id: 10 }
-        ];
-
-        // Safely generate the UI elements
-        const gridContainer = document.getElementById('app-grid');
-        directory.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'app-card';
-            card.onclick = () => loadDisThing(atob(item.u), atob(item.t), item.id);
-
-            const icon = document.createElement('div');
-            icon.className = `app-icon ${item.c ? 'contain' : ''}`;
-            // NOTE: You must host images in your local assets folder!
-            icon.style.backgroundImage = `url('${atob(item.i)}')`;
-
-            const titleSpan = document.createElement('span');
-            titleSpan.className = 'app-title';
-            titleSpan.textContent = atob(item.d);
-
-            card.appendChild(icon);
-            card.appendChild(titleSpan);
-            gridContainer.appendChild(card);
-        });
-
-        function loadDisThing(url, name, itemNumber) {
+        function loadDisThing(url, name, gameNumber) {
             let theFrame = document.getElementById('iframe-canvas');
-            let mediaBox = document.getElementById('media-player');
+            let gamePlayer = document.getElementById('game-player');
             
-            document.getElementById('current-media-name').textContent = name;
+            document.getElementById('current-game-name').textContent = name;
             theFrame.removeAttribute('srcdoc');
             
             theFrame.src = url + "?v=" + Date.now();
-            mediaBox.classList.add('show');
+            gamePlayer.classList.add('show');
             
-            if (itemNumber) {
-                window.history.pushState({ app: itemNumber }, '', `#modules/${itemNumber}`);
+            if (gameNumber) {
+                window.history.pushState({ game: gameNumber }, '', `#games/${gameNumber}`);
             }
         }
 
-        function closeMedia(skipHistory = false) {
+        function nukeGame(skipHistory = false) {
             let f = document.getElementById('iframe-canvas');
             f.removeAttribute('srcdoc');
             f.src = ''; 
             
-            document.getElementById('media-player').classList.remove('show');
+            document.getElementById('game-player').classList.remove('show');
             
             if (!skipHistory) {
                 window.history.pushState({}, '', window.location.pathname);
@@ -441,10 +456,9 @@
         }
 
         window.addEventListener('popstate', function(event) {
-            closeMedia(true);
+            nukeGame(true);
         });
 
-        // Star animation logic remains unchanged
         const starCanvas = document.getElementById('star-canvas');
         const ctx = starCanvas.getContext('2d');
         let cw, ch;
